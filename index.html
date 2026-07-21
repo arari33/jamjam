@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>잠잠 — 묵상 기록</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f8f6f1;
+  --paper-deep:#f0ece4;
+  --ink:#23211e;
+  --muted:#8d887f;
+  --line:#ded9cf;
+  --sage:#77826d;
+  --sage-soft:#e5e9e1;
+  --brown:#8a6f59;
+  --white:#fffdf9;
+  --danger:#9d4c44;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink)}
+body{font-family:"Noto Sans KR",sans-serif;-webkit-font-smoothing:antialiased}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.shell{max-width:760px;margin:0 auto;padding:0 24px 120px}
+
+/* entrance */
+.entrance{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 24px}
+.entrance-inner{width:100%;max-width:420px;text-align:center}
+.brand-mark{width:42px;height:42px;margin:0 auto 30px;border:1px solid var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:"Gowun Batang",serif;font-size:18px}
+.entrance h1{font-family:"Gowun Batang",serif;font-size:40px;font-weight:400;margin:0 0 14px;letter-spacing:-.04em}
+.entrance-copy{font-family:"Gowun Batang",serif;font-size:17px;line-height:1.85;color:#5c5851;margin:0 0 46px}
+.name-form{display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--ink);padding-bottom:8px}
+.name-form input{flex:1;border:0;background:transparent;outline:0;font-size:15px;padding:10px 2px}
+.name-form button{border:0;background:transparent;font-weight:600;font-size:13px;color:var(--sage);padding:10px 2px}
+.entrance-note{font-size:11px;color:var(--muted);margin-top:14px}
+
+/* top bar */
+.topbar{height:84px;display:flex;align-items:center;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(248,246,241,.94);backdrop-filter:blur(12px);z-index:20}
+.wordmark{font-family:"Gowun Batang",serif;font-size:23px;letter-spacing:-.04em}
+.top-actions{margin-left:auto;display:flex;align-items:center;gap:8px;position:relative}
+.icon-btn{border:0;background:transparent;color:var(--ink)}
+.profile-trigger{border:0;background:transparent;color:var(--ink);display:flex;align-items:center;gap:5px;padding:9px 6px;font-size:12px}
+.profile-trigger .chev{font-size:10px;color:var(--muted);transition:.15s}
+.profile-trigger.open .chev{transform:rotate(180deg)}
+.profile-menu{position:absolute;right:46px;top:48px;width:172px;background:var(--white);border:1px solid var(--line);border-radius:14px;padding:8px;box-shadow:0 14px 36px rgba(35,33,30,.12);z-index:40}
+.profile-name{padding:9px 10px 10px;font-family:"Gowun Batang",serif;font-size:16px;border-bottom:1px solid var(--line);margin-bottom:4px}
+.profile-menu button{width:100%;border:0;background:transparent;text-align:left;padding:10px;border-radius:9px;font-size:12px;color:var(--muted)}
+.profile-menu button:hover{background:var(--paper-deep);color:var(--ink)}
+.plus-btn{width:36px;height:36px;border:1px solid var(--line);border-radius:50%;background:var(--white);font-size:21px;line-height:1}
+
+/* home */
+.home-head{padding:52px 0 32px}
+.hello{font-size:13px;color:var(--muted);margin-bottom:10px}
+.home-head h2{font-family:"Gowun Batang",serif;font-size:31px;font-weight:400;line-height:1.45;margin:0;letter-spacing:-.035em}
+.space-list{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.space-row{display:flex;align-items:center;gap:18px;padding:24px 0;border-bottom:1px solid var(--line);background:transparent;border-left:0;border-right:0;text-align:left;width:100%;color:var(--ink)}
+.space-row:hover .space-arrow{transform:translateX(3px)}
+.space-symbol{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 auto;font-family:"Gowun Batang",serif;font-size:18px}
+.space-symbol.solo{background:var(--paper-deep)}
+.space-symbol.group{background:var(--sage-soft);color:#53604c}
+.space-copy{flex:1}
+.space-title{font-family:"Gowun Batang",serif;font-size:21px;margin-bottom:5px}
+.space-desc{font-size:12px;color:var(--muted);line-height:1.6}
+.space-arrow{font-size:18px;color:var(--muted);transition:.15s}
+.section-label{margin:44px 0 12px;font-size:11px;color:var(--muted);letter-spacing:.08em}
+.group-list{display:flex;flex-direction:column}
+.group-row{display:flex;align-items:center;padding:17px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.group-row:first-child{border-top:1px solid var(--line)}
+.group-row .dot{width:7px;height:7px;border-radius:50%;background:var(--sage);margin-right:12px}
+.group-row .name{font-size:14px;font-weight:500}
+.group-row .code{margin-left:auto;font-size:10px;color:var(--muted);letter-spacing:.08em}
+.empty-groups{padding:22px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:12px;color:var(--muted)}
+
+/* journal */
+.journal-head{padding:34px 0 28px;border-bottom:1px solid var(--line)}
+.back-btn{border:0;background:transparent;padding:0;color:var(--muted);font-size:12px;margin-bottom:28px}
+.journal-kicker{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);letter-spacing:.06em;margin-bottom:10px}
+.journal-kicker .code{font-family:monospace;color:var(--brown)}
+.journal-title{font-family:"Gowun Batang",serif;font-size:30px;font-weight:400;margin:0}
+.journal-sub{font-size:12px;color:var(--muted);margin-top:10px}
+.verse-block{padding:36px 0 32px;border-bottom:1px solid var(--line)}
+.verse-label{font-size:10px;color:var(--brown);letter-spacing:.12em;margin-bottom:12px}
+.verse-ref{font-family:"Gowun Batang",serif;font-size:26px;margin-bottom:16px}
+.verse-text{font-family:"Gowun Batang",serif;font-size:20px;line-height:1.85;color:var(--ink);word-break:keep-all;margin-bottom:18px}
+.verse-theme{font-size:13px;line-height:1.8;color:var(--muted);padding-top:16px;border-top:1px solid var(--line)}
+.verse-archive-toggle{margin-top:18px;border:0;background:transparent;padding:0;color:var(--muted);font-size:11px}
+.verse-archive{margin-top:22px;border-top:1px solid var(--line)}
+.archive-row{display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
+.archive-date{width:92px;flex:0 0 auto;font-size:10px;color:var(--muted)}
+.archive-ref{font-family:"Gowun Batang",serif;font-size:15px}
+.archive-empty{padding:18px 0;font-size:11px;color:var(--muted)}
+.composer{padding:34px 0 40px;border-bottom:1px solid var(--line)}
+.composer-tabs{display:flex;gap:18px;margin-bottom:26px}
+.composer-tabs button{border:0;border-bottom:1px solid transparent;background:transparent;padding:0 0 5px;color:var(--muted);font-size:12px}
+.composer-tabs button.active{color:var(--ink);border-color:var(--ink)}
+.field{margin-bottom:24px}
+.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:9px}
+.field textarea{width:100%;border:0;border-bottom:1px solid var(--line);background:transparent;outline:0;resize:vertical;min-height:84px;padding:10px 0;font-family:"Gowun Batang",serif;font-size:16px;line-height:1.9;color:var(--ink)}
+.field textarea:focus{border-color:var(--sage)}
+.composer-foot{display:flex;justify-content:flex-end}
+.save-btn{border:0;background:var(--ink);color:white;border-radius:999px;padding:11px 19px;font-size:12px}
+.save-btn:disabled{opacity:.45}
+.feed-head{display:flex;align-items:center;padding:34px 0 14px}
+.feed-title{font-family:"Gowun Batang",serif;font-size:20px}
+.filter{margin-left:auto;border:0;background:transparent;color:var(--muted);font-size:11px;outline:0}
+.entries{display:flex;flex-direction:column}
+.entry{padding:26px 0;border-bottom:1px solid var(--line)}
+.entry-meta{display:flex;align-items:center;gap:9px;margin-bottom:16px}
+.avatar{width:26px;height:26px;border-radius:50%;background:var(--sage-soft);display:flex;align-items:center;justify-content:center;font-size:11px;color:#53604c}
+.author{font-size:12px;font-weight:600}
+.date{font-size:10px;color:var(--muted)}
+.del{margin-left:auto;border:0;background:transparent;color:var(--muted);font-size:10px;padding:4px}
+.entry-verse{font-family:"Gowun Batang",serif;font-size:14px;color:var(--brown);margin-bottom:13px}
+.entry-label{font-size:10px;color:var(--muted);margin-top:14px;margin-bottom:5px}
+.entry-text{font-family:"Gowun Batang",serif;font-size:16px;line-height:1.9;white-space:pre-wrap}
+.empty{padding:46px 0;text-align:center;color:var(--muted);font-family:"Gowun Batang",serif;font-size:15px}
+
+/* sheet */
+.overlay{position:fixed;inset:0;background:rgba(35,33,30,.28);display:flex;align-items:flex-end;justify-content:center;z-index:50;padding:18px}
+.sheet{width:100%;max-width:520px;background:var(--white);border-radius:24px;padding:26px 24px 28px;box-shadow:0 20px 60px rgba(0,0,0,.16)}
+.sheet-head{display:flex;align-items:center;margin-bottom:24px}
+.sheet h3{font-family:"Gowun Batang",serif;font-weight:400;font-size:23px;margin:0}
+.sheet-close{margin-left:auto;border:0;background:transparent;font-size:20px;color:var(--muted)}
+.sheet-section{padding:18px 0;border-top:1px solid var(--line)}
+.sheet-section:first-of-type{border-top:0}
+.sheet-section h4{font-size:13px;margin:0 0 7px}
+.sheet-section p{font-size:11px;color:var(--muted);line-height:1.6;margin:0 0 14px}
+.sheet-row{display:flex;gap:8px}
+.sheet input{flex:1;min-width:0;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:11px 12px;outline:0;font-size:13px}
+.sheet input:focus{border-color:var(--sage)}
+.sheet-action{border:0;border-radius:10px;background:var(--ink);color:white;padding:0 15px;font-size:12px;white-space:nowrap}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:999px;padding:10px 16px;font-size:11px;opacity:0;pointer-events:none;transition:.2s;z-index:100}
+.toast.show{opacity:1}
+@media(max-width:600px){
+  .shell{padding:0 20px 100px}
+  .topbar{height:72px}
+  .home-head{padding-top:42px}
+  .home-head h2{font-size:28px}
+  .journal-title{font-size:27px}
+  .verse-ref{font-size:23px}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<section class="entrance" id="entranceView">
+  <div class="entrance-inner">
+    <div class="brand-mark">잠</div>
+    <h1>잠잠</h1>
+    <p class="entrance-copy">하루의 말씀 앞에 잠시 머물고,<br>조용히 마음을 기록해요.</p>
+    <div class="name-form">
+      <input id="entranceName" type="text" placeholder="기록에 사용할 이름">
+      <button id="enterBtn">들어가기</button>
+    </div>
+    <div class="entrance-note">회원가입 없이 바로 시작할 수 있어요.</div>
+  </div>
+</section>
+
+<div class="shell hidden" id="appView">
+  <header class="topbar">
+    <div class="wordmark">잠잠</div>
+    <div class="top-actions">
+      <button class="profile-trigger" id="profileTrigger" aria-expanded="false"><span id="topName"></span><span class="chev">⌄</span></button>
+      <div class="profile-menu hidden" id="profileMenu">
+        <div class="profile-name" id="profileName"></div>
+        <button id="renameBtn">닉네임 변경</button>
+      </div>
+      <button class="icon-btn plus-btn" id="openGroupSheet" aria-label="그룹 만들기 또는 참여하기">＋</button>
+    </div>
+  </header>
+
+  <main id="homeView">
+    <section class="home-head">
+      <div class="hello"><span id="homeName"></span>님의 오늘</div>
+      <h2>오늘의 마음은<br>어디에 남겨볼까요?</h2>
+    </section>
+
+    <section class="space-list">
+      <button class="space-row" id="openSolo">
+        <span class="space-symbol solo">나</span>
+        <span class="space-copy">
+          <span class="space-title">나만의 묵상</span>
+          <span class="space-desc">누구에게도 보이지 않는, 나만의 기록 공간</span>
+        </span>
+        <span class="space-arrow">›</span>
+      </button>
+      <button class="space-row" id="openGroupPicker">
+        <span class="space-symbol group">함</span>
+        <span class="space-copy">
+          <span class="space-title">함께하는 묵상</span>
+          <span class="space-desc">친구들과 말씀과 마음을 나누는 공간</span>
+        </span>
+        <span class="space-arrow">›</span>
+      </button>
+    </section>
+
+    <div class="section-label">MY GROUPS</div>
+    <div id="groupList"></div>
+  </main>
+
+  <main id="journalView" class="hidden">
+    <section class="journal-head">
+      <button class="back-btn" id="backHome">← 돌아가기</button>
+      <div class="journal-kicker" id="journalKicker"></div>
+      <h2 class="journal-title" id="journalTitle"></h2>
+      <div class="journal-sub" id="journalSub"></div>
+    </section>
+
+    <section class="verse-block">
+      <div class="verse-label" id="todayDate"></div>
+      <div class="verse-ref" id="verseRef">말씀을 불러오는 중...</div>
+      <button class="verse-archive-toggle" id="toggleVerseArchive">지난 말씀 보기 ↓</button>
+      <div class="verse-archive hidden" id="verseArchive"></div>
+    </section>
+
+    <section class="composer">
+      <div class="composer-tabs" id="modeTabs">
+        <button class="active" data-mode="structured">말씀으로 기록</button>
+        <button data-mode="free">자유 기록</button>
+      </div>
+      <div id="structuredFields">
+        <div class="field"><label>마음에 머문 것</label><textarea id="feelingInput" placeholder="말씀을 읽으며 마음에 남은 것을 적어보세요."></textarea></div>
+        <div class="field"><label>오늘의 기도와 적용</label><textarea id="applicationInput" placeholder="오늘 삶에 가져가고 싶은 마음을 적어보세요."></textarea></div>
+      </div>
+      <div id="freeFields" class="hidden">
+        <div class="field"><label>오늘의 기록</label><textarea id="freeInput" placeholder="형식 없이 자유롭게 적어보세요." style="min-height:150px"></textarea></div>
+      </div>
+      <div class="composer-foot"><button class="save-btn" id="saveEntry">기록 남기기</button></div>
+    </section>
+
+    <section>
+      <div class="feed-head">
+        <div class="feed-title" id="feedTitle">기록</div>
+        <select class="filter" id="filterSelect"><option value="">전체 보기</option></select>
+      </div>
+      <div class="entries" id="entriesArea"></div>
+    </section>
+  </main>
+</div>
+
+<div class="overlay hidden" id="groupSheet">
+  <div class="sheet">
+    <div class="sheet-head"><h3>함께할 공간</h3><button class="sheet-close" id="closeGroupSheet">×</button></div>
+    <div class="sheet-section">
+      <h4>새 그룹 만들기</h4>
+      <p>그룹을 만든 뒤 초대 코드를 친구들에게 보내주세요.</p>
+      <div class="sheet-row"><input id="newGroupName" placeholder="예: 토요일 묵상 모임"><button class="sheet-action" id="createGroup">만들기</button></div>
+    </div>
+    <div class="sheet-section">
+      <h4>초대 코드로 참여하기</h4>
+      <p>받은 6자리 코드를 입력하면 바로 참여할 수 있어요.</p>
+      <div class="sheet-row"><input id="joinCode" placeholder="초대 코드" maxlength="6" style="text-transform:uppercase"><button class="sheet-action" id="joinGroup">참여</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="groupPickerSheet">
+  <div class="sheet">
+    <div class="sheet-head"><h3>함께하는 묵상</h3><button class="sheet-close" id="closeGroupPicker">×</button></div>
+    <div id="pickerList"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const SUPABASE_URL='https://hpuzoneqsasmxshuepff.supabase.co';
+  const SUPABASE_KEY='sb_publishable_EqAvCVFVsQAQUgTxuQ81Sg_C6NlKDpz';
+  const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+  const VERSE_POOL=[
+    '창세기 1:1','출애굽기 14:14','신명기 31:8','여호수아 1:9',
+    '시편 23:1','시편 27:1','시편 37:5','시편 46:10','시편 55:22','시편 119:105',
+    '잠언 3:5-6','이사야 40:31','이사야 41:10','예레미야 29:11',
+    '마태복음 6:33','마태복음 11:28','요한복음 14:27','요한복음 15:5',
+    '로마서 8:28','고린도후서 5:17','빌립보서 4:6-7','빌립보서 4:13',
+    '히브리서 11:1','히브리서 12:2','베드로전서 5:7'
+  ];
+  const storage={
+    async get(k){const v=localStorage.getItem('l:'+k);return v?{value:v}:null},
+    async set(k,v){localStorage.setItem('l:'+k,v)}
+  };
+  let myName='';
+  let myGroups=[];
+  let currentSpace=null;
+  let entries=[];
+  let mode='structured';
+  let currentVerse=null;
+  let verseArchiveLoaded=false;
+
+  const $=id=>document.getElementById(id);
+  const entranceView=$('entranceView'),appView=$('appView'),homeView=$('homeView'),journalView=$('journalView');
+  const toast=$('toast');
+  function showToast(msg){toast.textContent=msg;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1900)}
+  async function copyText(text){
+    try{
+      if(navigator.clipboard && window.isSecureContext){
+        await navigator.clipboard.writeText(text);
+      }else{
+        const area=document.createElement('textarea');
+        area.value=text;area.style.position='fixed';area.style.opacity='0';
+        document.body.appendChild(area);area.select();
+        const ok=document.execCommand('copy');area.remove();
+        if(!ok)throw new Error('copy failed');
+      }
+      showToast('초대 코드를 복사했어요');
+    }catch(e){prompt('아래 초대 코드를 복사해주세요.',text)}
+  }
+  function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+  function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return Math.abs(h)}
+  function koreanDateString(date=new Date()){
+    return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(date);
+  }
+  function archiveDateLabel(dateString){
+    const [y,m,d]=dateString.split('-');return `${y}.${m}.${d}`;
+  }
+  function pickRandomVerse(){return VERSE_POOL[Math.floor(Math.random()*VERSE_POOL.length)]}
+  function code(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<6;i++)s+=c[Math.floor(Math.random()*c.length)];return s}
+  function fmt(iso){const d=new Date(iso);return new Intl.DateTimeFormat('ko-KR',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}).format(d)}
+  function todayLabel(){return new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'long',day:'numeric',weekday:'long'}).format(new Date())}
+  function newId(){return crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0,v=c==='x'?r:(r&3|8);return v.toString(16)})}
+
+  async function getOrCreateTodayVerse(){
+    const today=koreanDateString();
+    const {data:saved,error:selectError}=await supabaseClient.from('daily_verses').select('verse_date,verse_ref').eq('verse_date',today).maybeSingle();
+    if(selectError)console.error('오늘의 말씀 조회 실패:',selectError);
+    if(saved)return {ref:saved.verse_ref,date:saved.verse_date};
+
+    const randomVerse=pickRandomVerse();
+    const {data:created,error:insertError}=await supabaseClient.from('daily_verses').insert({verse_date:today,verse_ref:randomVerse}).select('verse_date,verse_ref').single();
+    if(!insertError&&created)return {ref:created.verse_ref,date:created.verse_date};
+
+    // 여러 사용자가 동시에 첫 접속한 경우, 먼저 저장된 값을 다시 가져온다.
+    const {data:retry,error:retryError}=await supabaseClient.from('daily_verses').select('verse_date,verse_ref').eq('verse_date',today).maybeSingle();
+    if(retry)return {ref:retry.verse_ref,date:retry.verse_date};
+    console.error('오늘의 말씀 생성 실패:',insertError,retryError);
+    showToast('오늘의 말씀을 저장하지 못했어요');
+    return {ref:randomVerse,date:today};
+  }
+  async function loadVerseArchive(){
+    const today=koreanDateString();
+    const {data,error}=await supabaseClient.from('daily_verses').select('verse_date,verse_ref').lt('verse_date',today).order('verse_date',{ascending:false}).limit(60);
+    if(error){console.error('지난 말씀 조회 실패:',error);$('verseArchive').innerHTML='<div class="archive-empty">지난 말씀을 불러오지 못했어요.</div>';return}
+    const list=data||[];
+    $('verseArchive').innerHTML=list.length?list.map(v=>`<div class="archive-row"><span class="archive-date">${esc(archiveDateLabel(v.verse_date))}</span><span class="archive-ref">${esc(v.verse_ref)}</span></div>`).join(''):'<div class="archive-empty">아직 쌓인 지난 말씀이 없어요.</div>';
+    verseArchiveLoaded=true;
+  }
+  async function renderTodayVerse(){
+    $('todayDate').textContent=todayLabel();
+    $('verseRef').textContent='말씀을 불러오는 중...';
+    currentVerse=await getOrCreateTodayVerse();
+    $('verseRef').textContent=currentVerse.ref;
+  }
+
+  async function init(){
+    const n=await storage.get('author-name');
+    if(n&&n.value){myName=n.value;showApp()}else entranceView.classList.remove('hidden');
+    await loadGroups();
+    await syncGroupsWithDatabase();
+    renderGroups();
+  }
+  function showApp(){entranceView.classList.add('hidden');appView.classList.remove('hidden');$('homeName').textContent=myName;$('topName').textContent=myName;$('profileName').textContent=myName}
+  async function setName(name){myName=name.trim();if(!myName)return;await storage.set('author-name',myName);showApp();renderFeed()}
+  $('enterBtn').onclick=()=>setName($('entranceName').value);
+  $('entranceName').onkeydown=e=>{if(e.key==='Enter')setName(e.target.value)};
+  const profileTrigger=$('profileTrigger'),profileMenu=$('profileMenu');
+  function closeProfileMenu(){profileMenu.classList.add('hidden');profileTrigger.classList.remove('open');profileTrigger.setAttribute('aria-expanded','false')}
+  profileTrigger.onclick=e=>{e.stopPropagation();const willOpen=profileMenu.classList.contains('hidden');closeProfileMenu();if(willOpen){profileMenu.classList.remove('hidden');profileTrigger.classList.add('open');profileTrigger.setAttribute('aria-expanded','true')}};
+  profileMenu.onclick=e=>e.stopPropagation();
+  document.addEventListener('click',closeProfileMenu);
+  $('renameBtn').onclick=()=>{closeProfileMenu();const n=prompt('새 닉네임을 입력해주세요.',myName);if(n)setName(n)};
+
+  async function loadGroups(){
+    const r=await storage.get('my-groups');
+    try{
+      myGroups=r&&r.value?JSON.parse(r.value):[];
+      if(!Array.isArray(myGroups))myGroups=[];
+    }catch(e){
+      console.error('그룹 로컬 데이터 확인 실패:',e);
+      myGroups=[];
+    }
+  }
+  async function saveGroups(){await storage.set('my-groups',JSON.stringify(myGroups))}
+  async function syncGroupsWithDatabase(){
+    if(!myGroups.length)return;
+
+    const codes=[...new Set(myGroups.map(g=>String(g.code||'').trim().toUpperCase()).filter(Boolean))];
+    if(!codes.length){myGroups=[];await saveGroups();return}
+
+    const {data,error}=await supabaseClient
+      .from('groups')
+      .select('invite_code,name')
+      .in('invite_code',codes);
+
+    // 네트워크 오류 때 로컬 그룹을 지워버리면 안 되므로 기존 목록을 유지한다.
+    if(error){
+      console.error('그룹 동기화 실패:',error);
+      return;
+    }
+
+    const existing=new Map((data||[]).map(g=>[g.invite_code,{code:g.invite_code,name:g.name}]));
+    const synced=[];
+    const seen=new Set();
+
+    for(const group of myGroups){
+      const groupCode=String(group.code||'').trim().toUpperCase();
+      const liveGroup=existing.get(groupCode);
+      if(!liveGroup||seen.has(groupCode))continue;
+      synced.push(liveGroup);
+      seen.add(groupCode);
+    }
+
+    const changed=JSON.stringify(synced)!==JSON.stringify(myGroups);
+    if(changed){
+      myGroups=synced;
+      await saveGroups();
+    }
+  }
+  function renderGroups(){
+    const wrap=$('groupList');
+    if(!myGroups.length){wrap.innerHTML='<div class="empty-groups">아직 함께하는 그룹이 없어요. 우측 상단의 ＋에서 만들 수 있어요.</div>';return}
+    wrap.innerHTML='<div class="group-list">'+myGroups.map(g=>`<div class="group-row" data-code="${esc(g.code)}"><span class="dot"></span><span class="name">${esc(g.name)}</span><span class="code">${esc(g.code)}</span></div>`).join('')+'</div>';
+    wrap.querySelectorAll('[data-code]').forEach(el=>el.onclick=()=>openGroup(el.dataset.code));
+  }
+  function renderPicker(){
+    const wrap=$('pickerList');
+    if(!myGroups.length){wrap.innerHTML='<div class="empty-groups">아직 그룹이 없어요. 먼저 ＋에서 그룹을 만들거나 참여해주세요.</div>';return}
+    wrap.innerHTML='<div class="group-list">'+myGroups.map(g=>`<div class="group-row" data-pick="${esc(g.code)}"><span class="dot"></span><span class="name">${esc(g.name)}</span><span class="code">${esc(g.code)}</span></div>`).join('')+'</div>';
+    wrap.querySelectorAll('[data-pick]').forEach(el=>el.onclick=()=>{closePicker();openGroup(el.dataset.pick)});
+  }
+
+  const groupSheet=$('groupSheet'),picker=$('groupPickerSheet');
+  $('openGroupSheet').onclick=()=>groupSheet.classList.remove('hidden');
+  $('closeGroupSheet').onclick=()=>groupSheet.classList.add('hidden');
+  groupSheet.onclick=e=>{if(e.target===groupSheet)groupSheet.classList.add('hidden')};
+  $('openGroupPicker').onclick=async()=>{
+    await syncGroupsWithDatabase();
+    renderGroups();
+    renderPicker();
+    picker.classList.remove('hidden');
+  };
+  $('closeGroupPicker').onclick=closePicker;
+  picker.onclick=e=>{if(e.target===picker)closePicker()};
+  function closePicker(){picker.classList.add('hidden')}
+
+  $('createGroup').onclick=async()=>{
+    const name=$('newGroupName').value.trim();if(!name)return showToast('그룹 이름을 입력해주세요');
+    let c,error;
+    for(let i=0;i<5;i++){
+      c=code();
+      ({error}=await supabaseClient.from('groups').insert({invite_code:c,name}));
+      if(!error)break;
+      if(error.code!=='23505')break;
+    }
+    if(error){console.error(error);return showToast('그룹을 만들지 못했어요')}
+    myGroups.push({code:c,name});await saveGroups();renderGroups();$('newGroupName').value='';groupSheet.classList.add('hidden');showToast('그룹을 만들었어요');openGroup(c);
+  };
+  $('joinGroup').onclick=async()=>{
+    const c=$('joinCode').value.trim().toUpperCase();if(!c)return showToast('초대 코드를 입력해주세요');
+    const {data,error}=await supabaseClient.from('groups').select('invite_code,name').eq('invite_code',c).maybeSingle();
+    if(error){console.error(error);return showToast('그룹을 확인하지 못했어요')}
+    if(!data)return showToast('그룹을 찾을 수 없어요');
+    if(!myGroups.some(g=>g.code===c)){myGroups.push({code:data.invite_code,name:data.name});await saveGroups();renderGroups()}
+    $('joinCode').value='';groupSheet.classList.add('hidden');showToast('그룹에 참여했어요');openGroup(c);
+  };
+
+  $('openSolo').onclick=()=>openSpace({type:'solo',code:'solo-'+hash(myName),name:'나만의 묵상'});
+  function openGroup(c){const g=myGroups.find(x=>x.code===c);if(g)openSpace({type:'group',code:g.code,name:g.name})}
+  async function openSpace(space){
+    currentSpace=space;homeView.classList.add('hidden');journalView.classList.remove('hidden');
+    $('journalTitle').textContent=space.name;
+    $('journalSub').textContent=space.type==='solo'?'오직 나만 볼 수 있는 기록 공간이에요.':'이 그룹 안에서만 서로의 기록이 보여요.';
+    $('journalKicker').innerHTML=space.type==='solo'?'PRIVATE SPACE':`GROUP <span class="code">${esc(space.code)}</span> <button id="copyInline" style="border:0;background:transparent;color:var(--muted);font-size:10px;padding:0">코드 복사</button>`;
+    if(space.type==='group') setTimeout(()=>$('copyInline').onclick=()=>copyText(space.code),0);
+    await renderTodayVerse();
+    $('verseArchive').classList.add('hidden');$('toggleVerseArchive').textContent='지난 말씀 보기 ↓';
+    await loadEntries();renderFeed();
+  }
+  $('backHome').onclick=async()=>{
+    journalView.classList.add('hidden');
+    homeView.classList.remove('hidden');
+    currentSpace=null;
+    await syncGroupsWithDatabase();
+    renderGroups();
+  };
+
+  async function loadEntries(){
+    if(currentSpace.type==='solo'){
+      const r=await storage.get('entries:'+currentSpace.code);entries=r&&r.value?JSON.parse(r.value):[];return;
+    }
+    const {data,error}=await supabaseClient.from('entries').select('*').eq('group_code',currentSpace.code).order('created_at',{ascending:false});
+    if(error){console.error(error);entries=[];showToast('그룹 기록을 불러오지 못했어요');return}
+    entries=(data||[]).map(item=>({id:item.id,author:item.author,mode:item.mode,verseRef:item.verse_ref,feeling:item.feeling,application:item.application,freeText:item.free_text,createdAt:item.created_at}));
+  }
+  async function saveSoloEntries(){await storage.set('entries:'+currentSpace.code,JSON.stringify(entries))}
+  $('modeTabs').onclick=e=>{const b=e.target.closest('[data-mode]');if(!b)return;mode=b.dataset.mode;[...$('modeTabs').children].forEach(x=>x.classList.toggle('active',x===b));$('structuredFields').classList.toggle('hidden',mode!=='structured');$('freeFields').classList.toggle('hidden',mode!=='free')};
+  $('saveEntry').onclick=async()=>{
+    const entry={id:newId(),author:myName,createdAt:new Date().toISOString(),mode};
+    if(mode==='structured'){
+      entry.feeling=$('feelingInput').value.trim();entry.application=$('applicationInput').value.trim();
+      if(!entry.feeling&&!entry.application)return showToast('기록을 적어주세요');entry.verseRef=currentVerse.ref;
+    }else{entry.freeText=$('freeInput').value.trim();if(!entry.freeText)return showToast('기록을 적어주세요')}
+    if(currentSpace.type==='solo'){
+      entries.push(entry);await saveSoloEntries();
+    }else{
+      const {error}=await supabaseClient.from('entries').insert({id:entry.id,group_code:currentSpace.code,author:entry.author,mode:entry.mode,verse_ref:entry.verseRef||null,feeling:entry.feeling||null,application:entry.application||null,free_text:entry.freeText||null,created_at:entry.createdAt});
+      if(error){console.error(error);return showToast('기록을 저장하지 못했어요')}
+      entries.push(entry);
+    }
+    $('feelingInput').value='';$('applicationInput').value='';$('freeInput').value='';renderFeed();showToast('기록했어요');
+  };
+  async function deleteEntry(id){
+    if(currentSpace.type==='solo'){entries=entries.filter(e=>e.id!==id);await saveSoloEntries();return true}
+    const {error}=await supabaseClient.from('entries').delete().eq('id',id);
+    if(error){console.error(error);showToast('기록을 삭제하지 못했어요');return false}
+    entries=entries.filter(e=>e.id!==id);return true;
+  }
+  function renderFeed(){
+    if(!currentSpace)return;
+    const authors=[...new Set(entries.map(e=>e.author))],current=$('filterSelect').value;
+    $('filterSelect').innerHTML='<option value="">전체 보기</option>'+authors.map(a=>`<option value="${esc(a)}">${esc(a)}</option>`).join('');$('filterSelect').value=authors.includes(current)?current:'';
+    const list=entries.filter(e=>!$('filterSelect').value||e.author===$('filterSelect').value).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+    $('feedTitle').textContent=currentSpace.type==='solo'?'나의 기록':'함께 남긴 기록';
+    $('entriesArea').innerHTML=list.length?list.map(renderEntry).join(''):'<div class="empty">아직 남겨진 기록이 없어요.</div>';
+    $('entriesArea').querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(confirm('이 기록을 삭제할까요?')){if(await deleteEntry(b.dataset.del))renderFeed()}})
+  }
+  function renderEntry(e){
+    const body=e.mode==='free'?`<div class="entry-text">${esc(e.freeText)}</div>`:`${e.verseRef?`<div class="entry-verse">${esc(e.verseRef)}</div>`:''}${e.feeling?`<div class="entry-label">마음에 머문 것</div><div class="entry-text">${esc(e.feeling)}</div>`:''}${e.application?`<div class="entry-label">오늘의 기도와 적용</div><div class="entry-text">${esc(e.application)}</div>`:''}`;
+    return `<article class="entry"><div class="entry-meta"><span class="avatar">${esc((e.author||'?').slice(0,1))}</span><span class="author">${esc(e.author)}</span><span class="date">${esc(fmt(e.createdAt))}</span>${e.author===myName?`<button class="del" data-del="${esc(e.id)}">삭제</button>`:''}</div>${body}</article>`
+  }
+  $('toggleVerseArchive').onclick=async()=>{
+    const box=$('verseArchive');
+    const willOpen=box.classList.contains('hidden');
+    box.classList.toggle('hidden',!willOpen);
+    $('toggleVerseArchive').textContent=willOpen?'지난 말씀 닫기 ↑':'지난 말씀 보기 ↓';
+    if(willOpen&&!verseArchiveLoaded)await loadVerseArchive();
+  };
+  $('filterSelect').onchange=renderFeed;
+  init();
+})();
+</script>
+</body>
+</html>
