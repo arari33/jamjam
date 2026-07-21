@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>잠잠 — 묵상 기록</title>
+<title>잠잠 — 묵상 기록 v0.8</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -54,18 +54,18 @@ button{cursor:pointer}
 .plus-btn{width:36px;height:36px;border:1px solid var(--line);border-radius:50%;background:var(--white);font-size:21px;line-height:1}
 
 /* home */
-.home-head{padding:52px 0 32px}
+.home-head{padding:58px 0 36px}
 .hello{font-size:13px;color:var(--muted);margin-bottom:10px}
-.home-head h2{font-family:"Gowun Batang",serif;font-size:31px;font-weight:400;line-height:1.45;margin:0;letter-spacing:-.035em}
-.space-list{display:flex;flex-direction:column;border-top:1px solid var(--line)}
-.space-row{display:flex;align-items:center;gap:18px;padding:24px 0;border-bottom:1px solid var(--line);background:transparent;border-left:0;border-right:0;text-align:left;width:100%;color:var(--ink)}
+.home-head h2{font-family:"Gowun Batang",serif;font-size:31px;font-weight:400;line-height:1.45;margin:0;letter-spacing:-.035em;word-break:keep-all}
+.space-list{display:flex;flex-direction:column}
+.space-row{display:flex;align-items:center;gap:18px;padding:24px 0;border:0;border-bottom:1px solid var(--line);background:transparent;text-align:left;width:100%;color:var(--ink)}
 .space-row:hover .space-arrow{transform:translateX(3px)}
 .space-symbol{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 auto;font-family:"Gowun Batang",serif;font-size:18px}
 .space-symbol.solo{background:var(--paper-deep)}
 .space-symbol.group{background:var(--sage-soft);color:#53604c}
 .space-copy{flex:1}
 .space-title{font-family:"Gowun Batang",serif;font-size:21px;margin-bottom:5px}
-.space-desc{font-size:12px;color:var(--muted);line-height:1.6}
+.space-desc{display:block;font-size:12px;color:var(--muted);line-height:1.65}
 .space-arrow{font-size:18px;color:var(--muted);transition:.15s}
 .section-label{margin:44px 0 12px;font-size:11px;color:var(--muted);letter-spacing:.08em}
 .group-list{display:flex;flex-direction:column}
@@ -77,23 +77,23 @@ button{cursor:pointer}
 .empty-groups{padding:22px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:12px;color:var(--muted)}
 
 /* journal */
-.journal-head{padding:34px 0 28px;border-bottom:1px solid var(--line)}
-.back-btn{border:0;background:transparent;padding:0;color:var(--muted);font-size:12px;margin-bottom:28px}
-.journal-kicker{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);letter-spacing:.06em;margin-bottom:10px}
+.journal-head{position:relative;padding:34px 48px 28px;border-bottom:1px solid var(--line);text-align:center}
+.back-btn{position:absolute;left:0;top:36px;border:0;background:transparent;padding:0;color:var(--muted);font-size:20px;line-height:1}
+.journal-kicker{display:flex;align-items:center;justify-content:center;gap:8px;font-size:11px;color:var(--muted);letter-spacing:.06em;margin-bottom:10px}
 .journal-kicker .code{font-family:monospace;color:var(--brown)}
 .journal-title{font-family:"Gowun Batang",serif;font-size:30px;font-weight:400;margin:0}
 .journal-sub{font-size:12px;color:var(--muted);margin-top:10px}
-.verse-block{padding:36px 0 32px;border-bottom:1px solid var(--line)}
+.verse-block{padding:28px 0 32px;border-bottom:1px solid var(--line)}
 .verse-label{font-size:10px;color:var(--brown);letter-spacing:.12em;margin-bottom:12px}
 .verse-ref{font-family:"Gowun Batang",serif;font-size:26px;margin-bottom:16px}
 .verse-text{font-family:"Gowun Batang",serif;font-size:20px;line-height:1.85;color:var(--ink);word-break:keep-all;margin-bottom:18px}
 .verse-theme{font-size:13px;line-height:1.8;color:var(--muted);padding-top:16px;border-top:1px solid var(--line)}
-.verse-archive-toggle{margin-top:18px;border:0;background:transparent;padding:0;color:var(--muted);font-size:11px}
-.verse-archive{margin-top:22px;border-top:1px solid var(--line)}
-.archive-row{display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
-.archive-date{width:92px;flex:0 0 auto;font-size:10px;color:var(--muted)}
-.archive-ref{font-family:"Gowun Batang",serif;font-size:15px}
-.archive-empty{padding:18px 0;font-size:11px;color:var(--muted)}
+.date-nav{display:grid;grid-template-columns:40px 1fr 40px;align-items:center;gap:8px;margin-bottom:12px}
+.date-nav-btn{width:40px;height:40px;border:0;background:transparent;color:var(--ink);font-size:30px;line-height:1;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.date-nav-btn:disabled{opacity:0;pointer-events:none}
+.date-nav-center{text-align:center}
+.date-nav-state{font-size:10px;color:var(--muted);margin-bottom:3px}
+.date-nav-date{font-size:12px;color:var(--muted)}
 .composer{padding:34px 0 40px;border-bottom:1px solid var(--line)}
 .composer-tabs{display:flex;gap:18px;margin-bottom:26px}
 .composer-tabs button{border:0;border-bottom:1px solid transparent;background:transparent;padding:0 0 5px;color:var(--muted);font-size:12px}
@@ -107,14 +107,15 @@ button{cursor:pointer}
 .save-btn:disabled{opacity:.45}
 .feed-head{display:flex;align-items:center;padding:34px 0 14px}
 .feed-title{font-family:"Gowun Batang",serif;font-size:20px}
-.filter{margin-left:auto;border:0;background:transparent;color:var(--muted);font-size:11px;outline:0}
 .entries{display:flex;flex-direction:column}
+.infinite-sentinel{height:1px}
+.feed-loading{padding:18px 0;text-align:center;color:var(--muted);font-size:11px}
 .entry{padding:26px 0;border-bottom:1px solid var(--line)}
 .entry-meta{display:flex;align-items:center;gap:9px;margin-bottom:16px}
 .avatar{width:26px;height:26px;border-radius:50%;background:var(--sage-soft);display:flex;align-items:center;justify-content:center;font-size:11px;color:#53604c}
 .author{font-size:12px;font-weight:600}
 .date{font-size:10px;color:var(--muted)}
-.del{margin-left:auto;border:0;background:transparent;color:var(--muted);font-size:10px;padding:4px}
+.entry-actions{margin-left:auto;display:flex;align-items:center;gap:8px}.edit,.del{display:none!important}.edit,.del,.heart{border:0;background:transparent;color:var(--muted);font-size:11px;padding:4px}.heart{display:inline-flex;align-items:center;gap:3px}.heart-icon{font-size:18px;line-height:1;display:inline-block;transform-origin:center}.heart.active{color:#b75562}.heart.active .heart-icon{color:#b75562}.heart.pulse .heart-icon{animation:heart-pop .22s ease-out}@keyframes heart-pop{0%{transform:scale(.8)}55%{transform:scale(1.35)}100%{transform:scale(1)}}.heart-count{font-size:10px}
 .entry-verse{font-family:"Gowun Batang",serif;font-size:14px;color:var(--brown);margin-bottom:13px}
 .entry-label{font-size:10px;color:var(--muted);margin-top:14px;margin-bottom:5px}
 .entry-text{font-family:"Gowun Batang",serif;font-size:16px;line-height:1.9;white-space:pre-wrap}
@@ -134,8 +135,8 @@ button{cursor:pointer}
 .sheet input{flex:1;min-width:0;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:11px 12px;outline:0;font-size:13px}
 .sheet input:focus{border-color:var(--sage)}
 .sheet-action{border:0;border-radius:10px;background:var(--ink);color:white;padding:0 15px;font-size:12px;white-space:nowrap}
-.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:999px;padding:10px 16px;font-size:11px;opacity:0;pointer-events:none;transition:.2s;z-index:100}
-.toast.show{opacity:1}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,12px);background:var(--ink);color:#fff;border-radius:999px;padding:11px 17px;font-size:11px;opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;z-index:100}
+.toast.show{opacity:1;transform:translate(-50%,0)}
 @media(max-width:600px){
   .shell{padding:0 20px 100px}
   .topbar{height:72px}
@@ -177,8 +178,7 @@ button{cursor:pointer}
 
   <main id="homeView">
     <section class="home-head">
-      <div class="hello"><span id="homeName"></span>님의 오늘</div>
-      <h2>오늘의 마음은<br>어디에 남겨볼까요?</h2>
+      <h2>오늘의 묵상을 남겨볼까요?</h2>
     </section>
 
     <section class="space-list">
@@ -186,7 +186,7 @@ button{cursor:pointer}
         <span class="space-symbol solo">나</span>
         <span class="space-copy">
           <span class="space-title">나만의 묵상</span>
-          <span class="space-desc">누구에게도 보이지 않는, 나만의 기록 공간</span>
+          <span class="space-desc">누구에게도 보이지 않는,<br>나만의 기록 공간</span>
         </span>
         <span class="space-arrow">›</span>
       </button>
@@ -194,39 +194,43 @@ button{cursor:pointer}
         <span class="space-symbol group">함</span>
         <span class="space-copy">
           <span class="space-title">함께하는 묵상</span>
-          <span class="space-desc">친구들과 말씀과 마음을 나누는 공간</span>
+          <span class="space-desc">친구들과 말씀과 마음을<br>나누는 공간</span>
         </span>
         <span class="space-arrow">›</span>
       </button>
     </section>
 
-    <div class="section-label">MY GROUPS</div>
-    <div id="groupList"></div>
+    <div id="groupList" class="hidden"></div>
   </main>
 
   <main id="journalView" class="hidden">
     <section class="journal-head">
-      <button class="back-btn" id="backHome">← 돌아가기</button>
+      <button class="back-btn" id="backHome" aria-label="뒤로가기">←</button>
       <div class="journal-kicker" id="journalKicker"></div>
       <h2 class="journal-title" id="journalTitle"></h2>
       <div class="journal-sub" id="journalSub"></div>
     </section>
 
     <section class="verse-block">
-      <div class="verse-label" id="todayDate"></div>
+      <div class="date-nav">
+        <button class="date-nav-btn" id="prevRecordDate" aria-label="이전 기록">‹</button>
+        <div class="date-nav-center">
+          <div class="date-nav-state" id="dateNavState">오늘</div>
+          <div class="date-nav-date" id="todayDate"></div>
+        </div>
+        <button class="date-nav-btn" id="nextRecordDate" aria-label="다음 기록">›</button>
+      </div>
       <div class="verse-ref" id="verseRef">말씀을 불러오는 중...</div>
-      <button class="verse-archive-toggle" id="toggleVerseArchive">지난 말씀 보기 ↓</button>
-      <div class="verse-archive hidden" id="verseArchive"></div>
     </section>
 
-    <section class="composer">
+    <section class="composer" id="composer">
       <div class="composer-tabs" id="modeTabs">
-        <button class="active" data-mode="structured">말씀으로 기록</button>
+        <button class="active" data-mode="structured">묵상 기록</button>
         <button data-mode="free">자유 기록</button>
       </div>
       <div id="structuredFields">
-        <div class="field"><label>마음에 머문 것</label><textarea id="feelingInput" placeholder="말씀을 읽으며 마음에 남은 것을 적어보세요."></textarea></div>
-        <div class="field"><label>오늘의 기도와 적용</label><textarea id="applicationInput" placeholder="오늘 삶에 가져가고 싶은 마음을 적어보세요."></textarea></div>
+        <div class="field"><label>마음에 머문 것</label><textarea id="feelingInput" placeholder="오늘 하나님께서 들려주신 마음을 적어보세요."></textarea></div>
+        <div class="field"><label>기도와 다짐</label><textarea id="applicationInput" placeholder="오늘 하나님께 드리는 기도와 삶의 다짐을 적어보세요."></textarea></div>
       </div>
       <div id="freeFields" class="hidden">
         <div class="field"><label>오늘의 기록</label><textarea id="freeInput" placeholder="형식 없이 자유롭게 적어보세요." style="min-height:150px"></textarea></div>
@@ -237,9 +241,9 @@ button{cursor:pointer}
     <section>
       <div class="feed-head">
         <div class="feed-title" id="feedTitle">기록</div>
-        <select class="filter" id="filterSelect"><option value="">전체 보기</option></select>
       </div>
       <div class="entries" id="entriesArea"></div>
+      <div class="infinite-sentinel" id="infiniteSentinel" aria-hidden="true"></div>
     </section>
   </main>
 </div>
@@ -291,9 +295,16 @@ button{cursor:pointer}
   let myGroups=[];
   let currentSpace=null;
   let entries=[];
+  let ownedEntryIds=new Set();
+  let likedEntryIds=new Set();
+  let likeCounts={};
   let mode='structured';
   let currentVerse=null;
-  let verseArchiveLoaded=false;
+  let selectedDate=null;
+  let recordDates=[];
+  const FEED_BATCH_SIZE=10;
+  let visibleEntryCount=FEED_BATCH_SIZE;
+  let infiniteObserver=null;
 
   const $=id=>document.getElementById(id);
   const entranceView=$('entranceView'),appView=$('appView'),homeView=$('homeView'),journalView=$('journalView');
@@ -344,29 +355,58 @@ button{cursor:pointer}
     showToast('오늘의 말씀을 저장하지 못했어요');
     return {ref:randomVerse,date:today};
   }
-  async function loadVerseArchive(){
-    const today=koreanDateString();
-    const {data,error}=await supabaseClient.from('daily_verses').select('verse_date,verse_ref').lt('verse_date',today).order('verse_date',{ascending:false}).limit(60);
-    if(error){console.error('지난 말씀 조회 실패:',error);$('verseArchive').innerHTML='<div class="archive-empty">지난 말씀을 불러오지 못했어요.</div>';return}
-    const list=data||[];
-    $('verseArchive').innerHTML=list.length?list.map(v=>`<div class="archive-row"><span class="archive-date">${esc(archiveDateLabel(v.verse_date))}</span><span class="archive-ref">${esc(v.verse_ref)}</span></div>`).join(''):'<div class="archive-empty">아직 쌓인 지난 말씀이 없어요.</div>';
-    verseArchiveLoaded=true;
+  function dateLabel(dateString){
+    const [y,m,d]=dateString.split('-').map(Number);
+    const date=new Date(Date.UTC(y,m-1,d));
+    return new Intl.DateTimeFormat('ko-KR',{timeZone:'UTC',year:'numeric',month:'long',day:'numeric',weekday:'long'}).format(date);
   }
-  async function renderTodayVerse(){
-    $('todayDate').textContent=todayLabel();
+  function entryDate(entry){return koreanDateString(new Date(entry.createdAt))}
+  async function getVerseForDate(date){
+    if(date===koreanDateString())return await getOrCreateTodayVerse();
+    const {data,error}=await supabaseClient.from('daily_verses').select('verse_date,verse_ref').eq('verse_date',date).maybeSingle();
+    if(error)console.error('말씀 조회 실패:',error);
+    if(data)return {ref:data.verse_ref,date:data.verse_date};
+    const matching=entries.find(e=>entryDate(e)===date&&e.verseRef);
+    return {ref:matching?.verseRef||'기록된 말씀이 없어요.',date};
+  }
+  function rebuildRecordDates(){
+    const today=koreanDateString();
+    recordDates=[...new Set(entries.map(entryDate))].sort();
+    if(!recordDates.includes(today))recordDates.push(today);
+    recordDates.sort();
+  }
+  async function renderSelectedDate(){
+    const today=koreanDateString();
+    if(!selectedDate)selectedDate=today;
+    $('todayDate').textContent=dateLabel(selectedDate);
+    $('dateNavState').textContent=selectedDate===today?'오늘':'기록한 날';
     $('verseRef').textContent='말씀을 불러오는 중...';
-    currentVerse=await getOrCreateTodayVerse();
+    currentVerse=await getVerseForDate(selectedDate);
     $('verseRef').textContent=currentVerse.ref;
+    const index=recordDates.indexOf(selectedDate);
+    $('prevRecordDate').disabled=index<=0;
+    $('nextRecordDate').disabled=index<0||index>=recordDates.length-1;
+    $('composer').classList.toggle('hidden',selectedDate!==today);
+    visibleEntryCount=FEED_BATCH_SIZE;
+    renderFeed();
+  }
+  async function moveRecordDate(direction){
+    const index=recordDates.indexOf(selectedDate);
+    const nextIndex=index+direction;
+    if(nextIndex<0||nextIndex>=recordDates.length)return;
+    selectedDate=recordDates[nextIndex];
+    await renderSelectedDate();
   }
 
   async function init(){
+    try{ownedEntryIds=new Set(JSON.parse(localStorage.getItem('jamjam-owned-entry-ids')||'[]'));likedEntryIds=new Set(JSON.parse(localStorage.getItem('jamjam-liked-entry-ids')||'[]'))}catch(e){}
     const n=await storage.get('author-name');
     if(n&&n.value){myName=n.value;showApp()}else entranceView.classList.remove('hidden');
     await loadGroups();
     await syncGroupsWithDatabase();
     renderGroups();
   }
-  function showApp(){entranceView.classList.add('hidden');appView.classList.remove('hidden');$('homeName').textContent=myName;$('topName').textContent=myName;$('profileName').textContent=myName}
+  function showApp(){entranceView.classList.add('hidden');appView.classList.remove('hidden');$('topName').textContent=myName;$('profileName').textContent=myName}
   async function setName(name){myName=name.trim();if(!myName)return;await storage.set('author-name',myName);showApp();renderFeed()}
   $('enterBtn').onclick=()=>setName($('entranceName').value);
   $('entranceName').onkeydown=e=>{if(e.key==='Enter')setName(e.target.value)};
@@ -431,7 +471,7 @@ button{cursor:pointer}
   }
   function renderPicker(){
     const wrap=$('pickerList');
-    if(!myGroups.length){wrap.innerHTML='<div class="empty-groups">아직 그룹이 없어요. 먼저 ＋에서 그룹을 만들거나 참여해주세요.</div>';return}
+    if(!myGroups.length){wrap.innerHTML='<div class="empty-groups">아직 그룹이 없어요.<br>우측 상단의 ＋에서 그룹을 만들거나 참여해 주세요.</div>';return}
     wrap.innerHTML='<div class="group-list">'+myGroups.map(g=>`<div class="group-row" data-pick="${esc(g.code)}"><span class="dot"></span><span class="name">${esc(g.name)}</span><span class="code">${esc(g.code)}</span></div>`).join('')+'</div>';
     wrap.querySelectorAll('[data-pick]').forEach(el=>el.onclick=()=>{closePicker();openGroup(el.dataset.pick)});
   }
@@ -479,9 +519,10 @@ button{cursor:pointer}
     $('journalSub').textContent=space.type==='solo'?'오직 나만 볼 수 있는 기록 공간이에요.':'이 그룹 안에서만 서로의 기록이 보여요.';
     $('journalKicker').innerHTML=space.type==='solo'?'PRIVATE SPACE':`GROUP <span class="code">${esc(space.code)}</span> <button id="copyInline" style="border:0;background:transparent;color:var(--muted);font-size:10px;padding:0">코드 복사</button>`;
     if(space.type==='group') setTimeout(()=>$('copyInline').onclick=()=>copyText(space.code),0);
-    await renderTodayVerse();
-    $('verseArchive').classList.add('hidden');$('toggleVerseArchive').textContent='지난 말씀 보기 ↓';
-    await loadEntries();renderFeed();
+    await loadEntries();
+    selectedDate=koreanDateString();
+    rebuildRecordDates();
+    await renderSelectedDate();
   }
   $('backHome').onclick=async()=>{
     journalView.classList.add('hidden');
@@ -493,11 +534,12 @@ button{cursor:pointer}
 
   async function loadEntries(){
     if(currentSpace.type==='solo'){
-      const r=await storage.get('entries:'+currentSpace.code);entries=r&&r.value?JSON.parse(r.value):[];return;
+      const r=await storage.get('entries:'+currentSpace.code);entries=r&&r.value?JSON.parse(r.value):[];likeCounts={};entries.forEach(e=>{likeCounts[e.id]=likedEntryIds.has(e.id)?1:0});return;
     }
     const {data,error}=await supabaseClient.from('entries').select('*').eq('group_code',currentSpace.code).order('created_at',{ascending:false});
     if(error){console.error(error);entries=[];showToast('그룹 기록을 불러오지 못했어요');return}
     entries=(data||[]).map(item=>({id:item.id,author:item.author,mode:item.mode,verseRef:item.verse_ref,feeling:item.feeling,application:item.application,freeText:item.free_text,createdAt:item.created_at}));
+    await loadLikes();
   }
   async function saveSoloEntries(){await storage.set('entries:'+currentSpace.code,JSON.stringify(entries))}
   $('modeTabs').onclick=e=>{const b=e.target.closest('[data-mode]');if(!b)return;mode=b.dataset.mode;[...$('modeTabs').children].forEach(x=>x.classList.toggle('active',x===b));$('structuredFields').classList.toggle('hidden',mode!=='structured');$('freeFields').classList.toggle('hidden',mode!=='free')};
@@ -514,7 +556,8 @@ button{cursor:pointer}
       if(error){console.error(error);return showToast('기록을 저장하지 못했어요')}
       entries.push(entry);
     }
-    $('feelingInput').value='';$('applicationInput').value='';$('freeInput').value='';renderFeed();showToast('기록했어요');
+    ownedEntryIds.add(entry.id);localStorage.setItem('jamjam-owned-entry-ids',JSON.stringify([...ownedEntryIds]));
+    $('feelingInput').value='';$('applicationInput').value='';$('freeInput').value='';selectedDate=koreanDateString();rebuildRecordDates();await renderSelectedDate();showToast('오늘의 묵상을 남겼어요💫');
   };
   async function deleteEntry(id){
     if(currentSpace.type==='solo'){entries=entries.filter(e=>e.id!==id);await saveSoloEntries();return true}
@@ -522,27 +565,74 @@ button{cursor:pointer}
     if(error){console.error(error);showToast('기록을 삭제하지 못했어요');return false}
     entries=entries.filter(e=>e.id!==id);return true;
   }
+  function getSelectedDateEntries(){
+    return entries
+      .filter(e=>entryDate(e)===selectedDate)
+      .sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+  }
   function renderFeed(){
     if(!currentSpace)return;
-    const authors=[...new Set(entries.map(e=>e.author))],current=$('filterSelect').value;
-    $('filterSelect').innerHTML='<option value="">전체 보기</option>'+authors.map(a=>`<option value="${esc(a)}">${esc(a)}</option>`).join('');$('filterSelect').value=authors.includes(current)?current:'';
-    const list=entries.filter(e=>!$('filterSelect').value||e.author===$('filterSelect').value).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+    const all=getSelectedDateEntries();
+    const list=all.slice(0,visibleEntryCount);
     $('feedTitle').textContent=currentSpace.type==='solo'?'나의 기록':'함께 남긴 기록';
     $('entriesArea').innerHTML=list.length?list.map(renderEntry).join(''):'<div class="empty">아직 남겨진 기록이 없어요.</div>';
-    $('entriesArea').querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(confirm('이 기록을 삭제할까요?')){if(await deleteEntry(b.dataset.del))renderFeed()}})
+    $('entriesArea').querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(confirm('이 기록을 삭제할까요?')){if(await deleteEntry(b.dataset.del)){ownedEntryIds.delete(b.dataset.del);localStorage.setItem('jamjam-owned-entry-ids',JSON.stringify([...ownedEntryIds]));rebuildRecordDates();if(!recordDates.includes(selectedDate))selectedDate=recordDates[recordDates.length-1]||koreanDateString();await renderSelectedDate()}}});
+    $('entriesArea').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editEntry(b.dataset.edit));
+    $('entriesArea').querySelectorAll('[data-heart]').forEach(b=>b.onclick=()=>toggleHeart(b.dataset.heart));
+    $('infiniteSentinel').classList.toggle('hidden',list.length>=all.length);
   }
+  function loadMoreEntries(){
+    const total=getSelectedDateEntries().length;
+    if(visibleEntryCount>=total)return;
+    visibleEntryCount=Math.min(total,visibleEntryCount+FEED_BATCH_SIZE);
+    renderFeed();
+  }
+  function setupInfiniteScroll(){
+    if(infiniteObserver)infiniteObserver.disconnect();
+    infiniteObserver=new IntersectionObserver(entries=>{
+      if(entries.some(entry=>entry.isIntersecting))loadMoreEntries();
+    },{rootMargin:'240px 0px'});
+    infiniteObserver.observe($('infiniteSentinel'));
+  }
+  async function editEntry(id){
+    const e=entries.find(x=>x.id===id);if(!e||!ownedEntryIds.has(id))return;
+    if(e.mode==='free'){const v=prompt('기록을 수정해주세요.',e.freeText||'');if(v===null)return;e.freeText=v.trim();if(!e.freeText)return showToast('기록을 적어주세요')}
+    else{const f=prompt('마음에 머문 것을 수정해주세요.',e.feeling||'');if(f===null)return;const a=prompt('기도와 다짐을 수정해주세요.',e.application||'');if(a===null)return;e.feeling=f.trim();e.application=a.trim();if(!e.feeling&&!e.application)return showToast('기록을 적어주세요')}
+    if(currentSpace.type==='solo')await saveSoloEntries();else{const {error}=await supabaseClient.from('entries').update({feeling:e.feeling||null,application:e.application||null,free_text:e.freeText||null}).eq('id',id);if(error){console.error(error);return showToast('기록을 수정하지 못했어요')}}renderFeed();showToast('수정했어요')
+  }
+  async function loadLikes(){
+    likeCounts={};if(!entries.length)return;const ids=entries.map(e=>e.id);const {data,error}=await supabaseClient.from('entry_likes').select('entry_id,device_id').in('entry_id',ids);if(error){console.warn('하트 테이블 미설정:',error.message);return}(data||[]).forEach(x=>{likeCounts[x.entry_id]=(likeCounts[x.entry_id]||0)+1})
+  }
+  async function toggleHeart(id){
+    const liked=likedEntryIds.has(id);
+    if(currentSpace.type==='solo'){
+      if(liked){likedEntryIds.delete(id);likeCounts[id]=0}else{likedEntryIds.add(id);likeCounts[id]=1}
+      localStorage.setItem('jamjam-liked-entry-ids',JSON.stringify([...likedEntryIds]));
+      renderFeed();
+      if(!liked){const btn=$('entriesArea').querySelector(`[data-heart="${id}"]`);if(btn){btn.classList.add('pulse');setTimeout(()=>btn.classList.remove('pulse'),260)}}
+      return;
+    }
+    const deviceId=getDeviceId();
+    const q=supabaseClient.from('entry_likes');
+    const {error}=liked?await q.delete().eq('entry_id',id).eq('device_id',deviceId):await q.insert({entry_id:id,device_id:deviceId});
+    if(error){console.error(error);return showToast('하트를 반영하지 못했어요')}
+    if(liked){likedEntryIds.delete(id);likeCounts[id]=Math.max(0,(likeCounts[id]||1)-1)}else{likedEntryIds.add(id);likeCounts[id]=(likeCounts[id]||0)+1}
+    localStorage.setItem('jamjam-liked-entry-ids',JSON.stringify([...likedEntryIds]));
+    renderFeed();
+    if(!liked){const btn=$('entriesArea').querySelector(`[data-heart="${id}"]`);if(btn){btn.classList.add('pulse');setTimeout(()=>btn.classList.remove('pulse'),260)}}
+  }
+  function getDeviceId(){let id=localStorage.getItem('jamjam-device-id');if(!id){id='d-'+newId();localStorage.setItem('jamjam-device-id',id)}return id}
   function renderEntry(e){
-    const body=e.mode==='free'?`<div class="entry-text">${esc(e.freeText)}</div>`:`${e.verseRef?`<div class="entry-verse">${esc(e.verseRef)}</div>`:''}${e.feeling?`<div class="entry-label">마음에 머문 것</div><div class="entry-text">${esc(e.feeling)}</div>`:''}${e.application?`<div class="entry-label">오늘의 기도와 적용</div><div class="entry-text">${esc(e.application)}</div>`:''}`;
-    return `<article class="entry"><div class="entry-meta"><span class="avatar">${esc((e.author||'?').slice(0,1))}</span><span class="author">${esc(e.author)}</span><span class="date">${esc(fmt(e.createdAt))}</span>${e.author===myName?`<button class="del" data-del="${esc(e.id)}">삭제</button>`:''}</div>${body}</article>`
+    const body=e.mode==='free'?`<div class="entry-text">${esc(e.freeText)}</div>`:`${e.verseRef?`<div class="entry-verse">${esc(e.verseRef)}</div>`:''}${e.feeling?`<div class="entry-label">마음에 머문 것</div><div class="entry-text">${esc(e.feeling)}</div>`:''}${e.application?`<div class="entry-label">기도와 다짐</div><div class="entry-text">${esc(e.application)}</div>`:''}`;
+    const mine=ownedEntryIds.has(e.id)||currentSpace.type==='solo';
+    const heart=`<button class="heart ${likedEntryIds.has(e.id)?'active':''}" data-heart="${esc(e.id)}" aria-label="공감하기" aria-pressed="${likedEntryIds.has(e.id)}"><span class="heart-icon">${likedEntryIds.has(e.id)?'♥':'♡'}</span><span class="heart-count">${likeCounts[e.id]||0}</span></button>`;
+    const manage=mine?`<button class="edit" data-edit="${esc(e.id)}">수정</button><button class="del" data-del="${esc(e.id)}">삭제</button>`:'';
+    const actions=`<span class="entry-actions">${heart}${manage}</span>`;
+    return `<article class="entry"><div class="entry-meta"><span class="avatar">${esc((e.author||'?').slice(0,1))}</span><span class="author">${esc(e.author)}</span><span class="date">${esc(fmt(e.createdAt))}</span>${actions}</div>${body}</article>`
   }
-  $('toggleVerseArchive').onclick=async()=>{
-    const box=$('verseArchive');
-    const willOpen=box.classList.contains('hidden');
-    box.classList.toggle('hidden',!willOpen);
-    $('toggleVerseArchive').textContent=willOpen?'지난 말씀 닫기 ↑':'지난 말씀 보기 ↓';
-    if(willOpen&&!verseArchiveLoaded)await loadVerseArchive();
-  };
-  $('filterSelect').onchange=renderFeed;
+  $('prevRecordDate').onclick=()=>moveRecordDate(-1);
+  $('nextRecordDate').onclick=()=>moveRecordDate(1);
+  setupInfiniteScroll();
   init();
 })();
 </script>
