@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>잠잠 — 묵상 기록 v0.8</title>
+<title>잠잠 — 묵상 기록 v0.8.3</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -369,17 +369,26 @@ button{cursor:pointer}
     const matching=entries.find(e=>entryDate(e)===date&&e.verseRef);
     return {ref:matching?.verseRef||'기록된 말씀이 없어요.',date};
   }
-  function rebuildRecordDates(){
+  async function rebuildRecordDates(){
     const today=koreanDateString();
-    recordDates=[...new Set(entries.map(entryDate))].sort();
-    if(!recordDates.includes(today))recordDates.push(today);
-    recordDates.sort();
+
+    // 날짜 이동은 묵상 기록 유무가 아니라 daily_verses에 등록된 말씀 날짜를 기준으로 한다.
+    // 기존 기록 날짜도 함께 포함해 과거 기록이 날짜 목록에서 사라지지 않도록 한다.
+    const {data,error}=await supabaseClient
+      .from('daily_verses')
+      .select('verse_date')
+      .order('verse_date',{ascending:true});
+
+    if(error)console.error('말씀 날짜 목록 조회 실패:',error);
+
+    const verseDates=(data||[]).map(item=>item.verse_date).filter(Boolean);
+    recordDates=[...new Set([...verseDates,...entries.map(entryDate),today])].sort();
   }
   async function renderSelectedDate(){
     const today=koreanDateString();
     if(!selectedDate)selectedDate=today;
     $('todayDate').textContent=dateLabel(selectedDate);
-    $('dateNavState').textContent=selectedDate===today?'오늘':'기록한 날';
+    $('dateNavState').textContent=selectedDate===today?'오늘':selectedDate<today?'지난 말씀':'다가올 말씀';
     $('verseRef').textContent='말씀을 불러오는 중...';
     currentVerse=await getVerseForDate(selectedDate);
     $('verseRef').textContent=currentVerse.ref;
@@ -521,7 +530,7 @@ button{cursor:pointer}
     if(space.type==='group') setTimeout(()=>$('copyInline').onclick=()=>copyText(space.code),0);
     await loadEntries();
     selectedDate=koreanDateString();
-    rebuildRecordDates();
+    await rebuildRecordDates();
     await renderSelectedDate();
   }
   $('backHome').onclick=async()=>{
@@ -557,7 +566,7 @@ button{cursor:pointer}
       entries.push(entry);
     }
     ownedEntryIds.add(entry.id);localStorage.setItem('jamjam-owned-entry-ids',JSON.stringify([...ownedEntryIds]));
-    $('feelingInput').value='';$('applicationInput').value='';$('freeInput').value='';selectedDate=koreanDateString();rebuildRecordDates();await renderSelectedDate();showToast('오늘의 묵상을 남겼어요💫');
+    $('feelingInput').value='';$('applicationInput').value='';$('freeInput').value='';selectedDate=koreanDateString();await rebuildRecordDates();await renderSelectedDate();showToast('오늘의 묵상을 남겼어요💫');
   };
   async function deleteEntry(id){
     if(currentSpace.type==='solo'){entries=entries.filter(e=>e.id!==id);await saveSoloEntries();return true}
@@ -576,7 +585,7 @@ button{cursor:pointer}
     const list=all.slice(0,visibleEntryCount);
     $('feedTitle').textContent=currentSpace.type==='solo'?'나의 기록':'함께 남긴 기록';
     $('entriesArea').innerHTML=list.length?list.map(renderEntry).join(''):'<div class="empty">아직 남겨진 기록이 없어요.</div>';
-    $('entriesArea').querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(confirm('이 기록을 삭제할까요?')){if(await deleteEntry(b.dataset.del)){ownedEntryIds.delete(b.dataset.del);localStorage.setItem('jamjam-owned-entry-ids',JSON.stringify([...ownedEntryIds]));rebuildRecordDates();if(!recordDates.includes(selectedDate))selectedDate=recordDates[recordDates.length-1]||koreanDateString();await renderSelectedDate()}}});
+    $('entriesArea').querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(confirm('이 기록을 삭제할까요?')){if(await deleteEntry(b.dataset.del)){ownedEntryIds.delete(b.dataset.del);localStorage.setItem('jamjam-owned-entry-ids',JSON.stringify([...ownedEntryIds]));await rebuildRecordDates();if(!recordDates.includes(selectedDate))selectedDate=recordDates[recordDates.length-1]||koreanDateString();await renderSelectedDate()}}});
     $('entriesArea').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editEntry(b.dataset.edit));
     $('entriesArea').querySelectorAll('[data-heart]').forEach(b=>b.onclick=()=>toggleHeart(b.dataset.heart));
     $('infiniteSentinel').classList.toggle('hidden',list.length>=all.length);
