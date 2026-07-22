@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>잠잠 — 묵상 기록 v0.8.3</title>
+<title>잠잠 — 묵상 기록</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -57,8 +57,8 @@ button{cursor:pointer}
 .home-head{padding:58px 0 36px}
 .hello{font-size:13px;color:var(--muted);margin-bottom:10px}
 .home-head h2{font-family:"Gowun Batang",serif;font-size:31px;font-weight:400;line-height:1.45;margin:0;letter-spacing:-.035em;word-break:keep-all}
-.space-list{display:flex;flex-direction:column}
-.space-row{display:flex;align-items:center;gap:18px;padding:24px 0;border:0;border-bottom:1px solid var(--line);background:transparent;text-align:left;width:100%;color:var(--ink)}
+.space-list{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.space-row{display:flex;align-items:center;gap:18px;padding:24px 0;border-bottom:1px solid var(--line);background:transparent;border-left:0;border-right:0;text-align:left;width:100%;color:var(--ink)}
 .space-row:hover .space-arrow{transform:translateX(3px)}
 .space-symbol{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 auto;font-family:"Gowun Batang",serif;font-size:18px}
 .space-symbol.solo{background:var(--paper-deep)}
@@ -68,32 +68,36 @@ button{cursor:pointer}
 .space-desc{display:block;font-size:12px;color:var(--muted);line-height:1.65}
 .space-arrow{font-size:18px;color:var(--muted);transition:.15s}
 .section-label{margin:44px 0 12px;font-size:11px;color:var(--muted);letter-spacing:.08em}
-.group-list{display:flex;flex-direction:column}
-.group-row{display:flex;align-items:center;padding:17px 0;border-bottom:1px solid var(--line);cursor:pointer}
-.group-row:first-child{border-top:1px solid var(--line)}
-.group-row .dot{width:7px;height:7px;border-radius:50%;background:var(--sage);margin-right:12px}
-.group-row .name{font-size:14px;font-weight:500}
-.group-row .code{margin-left:auto;font-size:10px;color:var(--muted);letter-spacing:.08em}
-.empty-groups{padding:22px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:12px;color:var(--muted)}
+.group-list{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.group-row{display:flex;align-items:center;gap:16px;width:100%;padding:21px 0;border:0;border-bottom:1px solid var(--line);background:transparent;text-align:left;color:var(--ink);cursor:pointer}
+.group-row:hover .group-arrow{transform:translateX(3px)}
+.group-mark{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 auto;background:var(--sage-soft);color:#53604c;font-family:"Gowun Batang",serif;font-size:17px}
+.group-copy{flex:1;min-width:0}
+.group-name{display:block;font-family:"Gowun Batang",serif;font-size:19px;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.group-status{display:block;font-size:12px;color:var(--muted);line-height:1.6}
+.invite-copy-btn{background:transparent;border:1px solid var(--line);border-radius:999px;padding:8px 12px;cursor:pointer;font:inherit;color:var(--ink)}
+.invite-copy-btn:hover{background:#f8f8f5}
+.group-arrow{font-size:18px;color:var(--muted);transition:.15s}
+.empty-groups{padding:22px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:12px;color:var(--muted);line-height:1.7}
 
 /* journal */
-.journal-head{position:relative;padding:34px 48px 28px;border-bottom:1px solid var(--line);text-align:center}
-.back-btn{position:absolute;left:0;top:36px;border:0;background:transparent;padding:0;color:var(--muted);font-size:20px;line-height:1}
-.journal-kicker{display:flex;align-items:center;justify-content:center;gap:8px;font-size:11px;color:var(--muted);letter-spacing:.06em;margin-bottom:10px}
+.journal-head{padding:34px 0 28px;border-bottom:1px solid var(--line)}
+.back-btn{border:0;background:transparent;padding:0;color:var(--muted);font-size:12px;margin-bottom:28px}
+.journal-kicker{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);letter-spacing:.06em;margin-bottom:10px}
 .journal-kicker .code{font-family:monospace;color:var(--brown)}
 .journal-title{font-family:"Gowun Batang",serif;font-size:30px;font-weight:400;margin:0}
 .journal-sub{font-size:12px;color:var(--muted);margin-top:10px}
-.verse-block{padding:28px 0 32px;border-bottom:1px solid var(--line)}
+.verse-block{padding:36px 0 32px;border-bottom:1px solid var(--line)}
 .verse-label{font-size:10px;color:var(--brown);letter-spacing:.12em;margin-bottom:12px}
 .verse-ref{font-family:"Gowun Batang",serif;font-size:26px;margin-bottom:16px}
 .verse-text{font-family:"Gowun Batang",serif;font-size:20px;line-height:1.85;color:var(--ink);word-break:keep-all;margin-bottom:18px}
 .verse-theme{font-size:13px;line-height:1.8;color:var(--muted);padding-top:16px;border-top:1px solid var(--line)}
-.date-nav{display:grid;grid-template-columns:40px 1fr 40px;align-items:center;gap:8px;margin-bottom:12px}
-.date-nav-btn{width:40px;height:40px;border:0;background:transparent;color:var(--ink);font-size:30px;line-height:1;border-radius:50%;display:flex;align-items:center;justify-content:center}
-.date-nav-btn:disabled{opacity:0;pointer-events:none}
-.date-nav-center{text-align:center}
-.date-nav-state{font-size:10px;color:var(--muted);margin-bottom:3px}
-.date-nav-date{font-size:12px;color:var(--muted)}
+.verse-archive-toggle{margin-top:18px;border:0;background:transparent;padding:0;color:var(--muted);font-size:11px}
+.verse-archive{margin-top:22px;border-top:1px solid var(--line)}
+.archive-row{display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
+.archive-date{width:92px;flex:0 0 auto;font-size:10px;color:var(--muted)}
+.archive-ref{font-family:"Gowun Batang",serif;font-size:15px}
+.archive-empty{padding:18px 0;font-size:11px;color:var(--muted)}
 .composer{padding:34px 0 40px;border-bottom:1px solid var(--line)}
 .composer-tabs{display:flex;gap:18px;margin-bottom:26px}
 .composer-tabs button{border:0;border-bottom:1px solid transparent;background:transparent;padding:0 0 5px;color:var(--muted);font-size:12px}
@@ -107,19 +111,71 @@ button{cursor:pointer}
 .save-btn:disabled{opacity:.45}
 .feed-head{display:flex;align-items:center;padding:34px 0 14px}
 .feed-title{font-family:"Gowun Batang",serif;font-size:20px}
+.filter{margin-left:auto;border:0;background:transparent;color:var(--muted);font-size:11px;outline:0}
 .entries{display:flex;flex-direction:column}
-.infinite-sentinel{height:1px}
-.feed-loading{padding:18px 0;text-align:center;color:var(--muted);font-size:11px}
 .entry{padding:26px 0;border-bottom:1px solid var(--line)}
 .entry-meta{display:flex;align-items:center;gap:9px;margin-bottom:16px}
 .avatar{width:26px;height:26px;border-radius:50%;background:var(--sage-soft);display:flex;align-items:center;justify-content:center;font-size:11px;color:#53604c}
 .author{font-size:12px;font-weight:600}
 .date{font-size:10px;color:var(--muted)}
-.entry-actions{margin-left:auto;display:flex;align-items:center;gap:8px}.edit,.del{display:none!important}.edit,.del,.heart{border:0;background:transparent;color:var(--muted);font-size:11px;padding:4px}.heart{display:inline-flex;align-items:center;gap:3px}.heart-icon{font-size:18px;line-height:1;display:inline-block;transform-origin:center}.heart.active{color:#b75562}.heart.active .heart-icon{color:#b75562}.heart.pulse .heart-icon{animation:heart-pop .22s ease-out}@keyframes heart-pop{0%{transform:scale(.8)}55%{transform:scale(1.35)}100%{transform:scale(1)}}.heart-count{font-size:10px}
+.del{margin-left:auto;border:0;background:transparent;color:var(--muted);font-size:10px;padding:4px}
 .entry-verse{font-family:"Gowun Batang",serif;font-size:14px;color:var(--brown);margin-bottom:13px}
 .entry-label{font-size:10px;color:var(--muted);margin-top:14px;margin-bottom:5px}
 .entry-text{font-family:"Gowun Batang",serif;font-size:16px;line-height:1.9;white-space:pre-wrap}
 .empty{padding:46px 0;text-align:center;color:var(--muted);font-family:"Gowun Batang",serif;font-size:15px}
+
+
+.reading-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}
+.reading-copy{min-width:0}
+.reading-date{font-size:10px;color:var(--brown);letter-spacing:.08em;margin-bottom:10px}
+.reading-ref{font-family:"Gowun Batang",serif;font-size:26px;line-height:1.45}
+.reading-switch{border:1px solid var(--line);background:var(--white);border-radius:999px;padding:9px 13px;font-size:11px;color:var(--muted);white-space:nowrap}
+.reading-switch.active{color:var(--ink);border-color:var(--ink)}
+.reading-body{
+  margin-top:26px;
+  max-height:520px;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  padding-right:12px;
+  scrollbar-gutter:stable;
+}
+.reading-body::-webkit-scrollbar,
+.selected-passage::-webkit-scrollbar{width:6px}
+.reading-body::-webkit-scrollbar-thumb,
+.selected-passage::-webkit-scrollbar-thumb{background:var(--line);border-radius:999px}
+.reading-body::-webkit-scrollbar-track,
+.selected-passage::-webkit-scrollbar-track{background:transparent}
+.passage-chapter{padding:24px 0;border-top:1px solid var(--line)}
+.passage-chapter:first-child{border-top:0;padding-top:0}
+.passage-title{font-family:"Gowun Batang",serif;font-size:20px;margin-bottom:15px}
+.passage-verse{display:grid;grid-template-columns:28px 1fr;gap:8px;font-family:"Gowun Batang",serif;font-size:16px;line-height:1.9;margin-bottom:5px}
+.passage-number{font-size:11px;color:var(--muted);padding-top:5px}
+.reading-loading,.reading-empty{font-family:"Gowun Batang",serif;font-size:15px;color:var(--muted);padding:18px 0}
+.verse-picker{margin-top:24px;padding:22px;border:1px solid var(--line);border-radius:18px;background:var(--white)}
+.picker-title{font-family:"Gowun Batang",serif;font-size:19px;margin-bottom:6px}
+.picker-desc{font-size:11px;color:var(--muted);line-height:1.65;margin-bottom:18px}
+.picker-grid{display:grid;grid-template-columns:1.4fr .8fr .8fr .8fr;gap:8px}
+.picker-grid select{width:100%;min-width:0;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:11px 10px;font-size:12px;color:var(--ink);outline:0}
+.picker-grid select:focus{border-color:var(--sage)}
+.picker-action{display:flex;justify-content:flex-end;margin-top:12px}
+.picker-action button{border:0;background:var(--ink);color:white;border-radius:999px;padding:10px 16px;font-size:11px}
+.selected-passage{
+  margin-top:22px;
+  padding:22px 12px 0 0;
+  border-top:1px solid var(--line);
+  max-height:420px;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable;
+}
+.reading-note{margin-top:20px;font-size:11px;line-height:1.7;color:var(--muted)}
+@media(max-width:600px){
+  .reading-head{display:block}
+  .reading-switch{margin-top:16px}
+  .picker-grid{grid-template-columns:1fr 1fr}
+  .reading-body{max-height:430px;padding-right:8px}
+  .selected-passage{max-height:360px;padding-right:8px}
+}
 
 /* sheet */
 .overlay{position:fixed;inset:0;background:rgba(35,33,30,.28);display:flex;align-items:flex-end;justify-content:center;z-index:50;padding:18px}
@@ -135,8 +191,8 @@ button{cursor:pointer}
 .sheet input{flex:1;min-width:0;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:11px 12px;outline:0;font-size:13px}
 .sheet input:focus{border-color:var(--sage)}
 .sheet-action{border:0;border-radius:10px;background:var(--ink);color:white;padding:0 15px;font-size:12px;white-space:nowrap}
-.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,12px);background:var(--ink);color:#fff;border-radius:999px;padding:11px 17px;font-size:11px;opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;z-index:100}
-.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:999px;padding:10px 16px;font-size:11px;opacity:0;pointer-events:none;transition:.2s;z-index:100}
+.toast.show{opacity:1}
 @media(max-width:600px){
   .shell{padding:0 20px 100px}
   .topbar{height:72px}
@@ -146,7 +202,26 @@ button{cursor:pointer}
   .verse-ref{font-size:23px}
 }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">$('copyInviteCode').onclick=async()=>{
+  const code=$('groupInviteCode').textContent.trim();
+  try{
+    if(navigator.clipboard&&window.isSecureContext){
+      await navigator.clipboard.writeText(code);
+    }else{
+      const ta=document.createElement('textarea');
+      ta.value=code;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+    }
+    alert('초대 코드가 복사되었어요.');
+  }catch(e){
+    alert('복사에 실패했어요.');
+    console.error(e);
+  }
+};
+</script>
 </head>
 <body>
 
@@ -167,7 +242,10 @@ button{cursor:pointer}
   <header class="topbar">
     <div class="wordmark">잠잠</div>
     <div class="top-actions">
-      <button class="profile-trigger" id="profileTrigger" aria-expanded="false"><span id="topName"></span><span class="chev">⌄</span></button>
+      <button class="profile-trigger" id="profileTrigger" aria-expanded="false">
+        <span id="topName"></span>
+        <span class="chev">⌄</span>
+      </button>
       <div class="profile-menu hidden" id="profileMenu">
         <div class="profile-name" id="profileName"></div>
         <button id="renameBtn">닉네임 변경</button>
@@ -190,47 +268,57 @@ button{cursor:pointer}
         </span>
         <span class="space-arrow">›</span>
       </button>
-      <button class="space-row" id="openGroupPicker">
-        <span class="space-symbol group">함</span>
-        <span class="space-copy">
-          <span class="space-title">함께하는 묵상</span>
-          <span class="space-desc">친구들과 말씀과 마음을<br>나누는 공간</span>
-        </span>
-        <span class="space-arrow">›</span>
-      </button>
     </section>
 
-    <div id="groupList" class="hidden"></div>
+    <div class="section-label">함께하는 묵상</div>
+    <div id="groupList"></div>
   </main>
 
   <main id="journalView" class="hidden">
     <section class="journal-head">
-      <button class="back-btn" id="backHome" aria-label="뒤로가기">←</button>
+      <button class="back-btn" id="backHome">← 돌아가기</button>
       <div class="journal-kicker" id="journalKicker"></div>
       <h2 class="journal-title" id="journalTitle"></h2>
       <div class="journal-sub" id="journalSub"></div>
     </section>
 
     <section class="verse-block">
-      <div class="date-nav">
-        <button class="date-nav-btn" id="prevRecordDate" aria-label="이전 기록">‹</button>
-        <div class="date-nav-center">
-          <div class="date-nav-state" id="dateNavState">오늘</div>
-          <div class="date-nav-date" id="todayDate"></div>
+      <div class="reading-head">
+        <div class="reading-copy">
+          <div class="reading-date" id="todayDate"></div>
+          <div class="reading-ref" id="verseRef">오늘 읽을 말씀을 불러오는 중...</div>
         </div>
-        <button class="date-nav-btn" id="nextRecordDate" aria-label="다음 기록">›</button>
+        <button class="reading-switch" id="toggleCustomVerse">다른 말씀 선택</button>
       </div>
-      <div class="verse-ref" id="verseRef">말씀을 불러오는 중...</div>
+
+      <div class="reading-body" id="dailyReadingBody">
+        <div class="reading-loading">본문을 불러오는 중이에요.</div>
+      </div>
+
+      <div class="verse-picker hidden" id="customVersePicker">
+        <div class="picker-title">직접 말씀 선택하기</div>
+        <div class="picker-desc">묵상하고 싶은 성경과 장, 시작 절과 마지막 절을 선택해 주세요.</div>
+        <div class="picker-grid">
+          <select id="bookSelect" aria-label="성경 선택"></select>
+          <select id="chapterSelect" aria-label="장 선택"></select>
+          <select id="startVerseSelect" aria-label="시작 절 선택"></select>
+          <select id="endVerseSelect" aria-label="마지막 절 선택"></select>
+        </div>
+        <div class="picker-action"><button id="showCustomPassage">이 말씀 보기</button></div>
+        <div class="selected-passage hidden" id="customPassageBody"></div>
+      </div>
+
+      <div class="reading-note" id="readingNote">오늘의 성경 읽기표 본문으로 바로 묵상하거나, 원하는 말씀을 직접 선택할 수 있어요.</div>
     </section>
 
-    <section class="composer" id="composer">
+    <section class="composer">
       <div class="composer-tabs" id="modeTabs">
-        <button class="active" data-mode="structured">묵상 기록</button>
+        <button class="active" data-mode="structured">말씀으로 기록</button>
         <button data-mode="free">자유 기록</button>
       </div>
       <div id="structuredFields">
-        <div class="field"><label>마음에 머문 것</label><textarea id="feelingInput" placeholder="오늘 하나님께서 들려주신 마음을 적어보세요."></textarea></div>
-        <div class="field"><label>기도와 다짐</label><textarea id="applicationInput" placeholder="오늘 하나님께 드리는 기도와 삶의 다짐을 적어보세요."></textarea></div>
+        <div class="field"><label>마음에 머문 것</label><textarea id="feelingInput" placeholder="말씀을 읽으며 마음에 남은 것을 적어보세요."></textarea></div>
+        <div class="field"><label>오늘의 기도와 적용</label><textarea id="applicationInput" placeholder="오늘 삶에 가져가고 싶은 마음을 적어보세요."></textarea></div>
       </div>
       <div id="freeFields" class="hidden">
         <div class="field"><label>오늘의 기록</label><textarea id="freeInput" placeholder="형식 없이 자유롭게 적어보세요." style="min-height:150px"></textarea></div>
@@ -241,9 +329,9 @@ button{cursor:pointer}
     <section>
       <div class="feed-head">
         <div class="feed-title" id="feedTitle">기록</div>
+        <select class="filter" id="filterSelect"><option value="">전체 보기</option></select>
       </div>
       <div class="entries" id="entriesArea"></div>
-      <div class="infinite-sentinel" id="infiniteSentinel" aria-hidden="true"></div>
     </section>
   </main>
 </div>
@@ -279,14 +367,95 @@ button{cursor:pointer}
   const SUPABASE_KEY='sb_publishable_EqAvCVFVsQAQUgTxuQ81Sg_C6NlKDpz';
   const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-  const VERSE_POOL=[
-    '창세기 1:1','출애굽기 14:14','신명기 31:8','여호수아 1:9',
-    '시편 23:1','시편 27:1','시편 37:5','시편 46:10','시편 55:22','시편 119:105',
-    '잠언 3:5-6','이사야 40:31','이사야 41:10','예레미야 29:11',
-    '마태복음 6:33','마태복음 11:28','요한복음 14:27','요한복음 15:5',
-    '로마서 8:28','고린도후서 5:17','빌립보서 4:6-7','빌립보서 4:13',
-    '히브리서 11:1','히브리서 12:2','베드로전서 5:7'
+
+  const DAILY_READING_PREVIEW={
+    '2026-07-20':{
+      label:'잠언 22–25장',
+      ranges:[{bookName:'잠언',startChapter:22,endChapter:25}]
+    },
+    '2026-07-21':{
+      label:'잠언 26–29장',
+      ranges:[{bookName:'잠언',startChapter:26,endChapter:29}]
+    },
+    '2026-07-22':{
+      label:'잠언 30장–전도서 1장',
+      ranges:[
+        {bookName:'잠언',startChapter:30,endChapter:31},
+        {bookName:'전도서',startChapter:1,endChapter:1}
+      ]
+    }
+  };
+  const BIBLE_TRANSLATION_CODE='KRV_TEST';
+  const BIBLE_BOOKS=[
+    {code:'GEN',name:'창세기',chapters:50,order:1},
+    {code:'EXO',name:'출애굽기',chapters:40,order:2},
+    {code:'LEV',name:'레위기',chapters:27,order:3},
+    {code:'NUM',name:'민수기',chapters:36,order:4},
+    {code:'DEU',name:'신명기',chapters:34,order:5},
+    {code:'JOS',name:'여호수아',chapters:24,order:6},
+    {code:'JDG',name:'사사기',chapters:21,order:7},
+    {code:'RUT',name:'룻기',chapters:4,order:8},
+    {code:'1SA',name:'사무엘상',chapters:31,order:9},
+    {code:'2SA',name:'사무엘하',chapters:24,order:10},
+    {code:'1KI',name:'열왕기상',chapters:22,order:11},
+    {code:'2KI',name:'열왕기하',chapters:25,order:12},
+    {code:'1CH',name:'역대상',chapters:29,order:13},
+    {code:'2CH',name:'역대하',chapters:36,order:14},
+    {code:'EZR',name:'에스라',chapters:10,order:15},
+    {code:'NEH',name:'느헤미야',chapters:13,order:16},
+    {code:'EST',name:'에스더',chapters:10,order:17},
+    {code:'JOB',name:'욥기',chapters:42,order:18},
+    {code:'PSA',name:'시편',chapters:150,order:19},
+    {code:'PRO',name:'잠언',chapters:31,order:20},
+    {code:'ECC',name:'전도서',chapters:12,order:21},
+    {code:'SNG',name:'아가',chapters:8,order:22},
+    {code:'ISA',name:'이사야',chapters:66,order:23},
+    {code:'JER',name:'예레미야',chapters:52,order:24},
+    {code:'LAM',name:'예레미야애가',chapters:5,order:25},
+    {code:'EZK',name:'에스겔',chapters:48,order:26},
+    {code:'DAN',name:'다니엘',chapters:12,order:27},
+    {code:'HOS',name:'호세아',chapters:14,order:28},
+    {code:'JOL',name:'요엘',chapters:3,order:29},
+    {code:'AMO',name:'아모스',chapters:9,order:30},
+    {code:'OBA',name:'오바댜',chapters:1,order:31},
+    {code:'JON',name:'요나',chapters:4,order:32},
+    {code:'MIC',name:'미가',chapters:7,order:33},
+    {code:'NAM',name:'나훔',chapters:3,order:34},
+    {code:'HAB',name:'하박국',chapters:3,order:35},
+    {code:'ZEP',name:'스바냐',chapters:3,order:36},
+    {code:'HAG',name:'학개',chapters:2,order:37},
+    {code:'ZEC',name:'스가랴',chapters:14,order:38},
+    {code:'MAL',name:'말라기',chapters:4,order:39},
+    {code:'MAT',name:'마태복음',chapters:28,order:40},
+    {code:'MRK',name:'마가복음',chapters:16,order:41},
+    {code:'LUK',name:'누가복음',chapters:24,order:42},
+    {code:'JHN',name:'요한복음',chapters:21,order:43},
+    {code:'ACT',name:'사도행전',chapters:28,order:44},
+    {code:'ROM',name:'로마서',chapters:16,order:45},
+    {code:'1CO',name:'고린도전서',chapters:16,order:46},
+    {code:'2CO',name:'고린도후서',chapters:13,order:47},
+    {code:'GAL',name:'갈라디아서',chapters:6,order:48},
+    {code:'EPH',name:'에베소서',chapters:6,order:49},
+    {code:'PHP',name:'빌립보서',chapters:4,order:50},
+    {code:'COL',name:'골로새서',chapters:4,order:51},
+    {code:'1TH',name:'데살로니가전서',chapters:5,order:52},
+    {code:'2TH',name:'데살로니가후서',chapters:3,order:53},
+    {code:'1TI',name:'디모데전서',chapters:6,order:54},
+    {code:'2TI',name:'디모데후서',chapters:4,order:55},
+    {code:'TIT',name:'디도서',chapters:3,order:56},
+    {code:'PHM',name:'빌레몬서',chapters:1,order:57},
+    {code:'HEB',name:'히브리서',chapters:13,order:58},
+    {code:'JAS',name:'야고보서',chapters:5,order:59},
+    {code:'1PE',name:'베드로전서',chapters:5,order:60},
+    {code:'2PE',name:'베드로후서',chapters:3,order:61},
+    {code:'1JN',name:'요한일서',chapters:5,order:62},
+    {code:'2JN',name:'요한이서',chapters:1,order:63},
+    {code:'3JN',name:'요한삼서',chapters:1,order:64},
+    {code:'JUD',name:'유다서',chapters:1,order:65},
+    {code:'REV',name:'요한계시록',chapters:22,order:66}
   ];
+  let bibleBooksCache=[...BIBLE_BOOKS];
+
   const storage={
     async get(k){const v=localStorage.getItem('l:'+k);return v?{value:v}:null},
     async set(k,v){localStorage.setItem('l:'+k,v)}
@@ -295,16 +464,8 @@ button{cursor:pointer}
   let myGroups=[];
   let currentSpace=null;
   let entries=[];
-  let ownedEntryIds=new Set();
-  let likedEntryIds=new Set();
-  let likeCounts={};
   let mode='structured';
   let currentVerse=null;
-  let selectedDate=null;
-  let recordDates=[];
-  const FEED_BATCH_SIZE=10;
-  let visibleEntryCount=FEED_BATCH_SIZE;
-  let infiniteObserver=null;
 
   const $=id=>document.getElementById(id);
   const entranceView=$('entranceView'),appView=$('appView'),homeView=$('homeView'),journalView=$('journalView');
@@ -332,88 +493,203 @@ button{cursor:pointer}
   function archiveDateLabel(dateString){
     const [y,m,d]=dateString.split('-');return `${y}.${m}.${d}`;
   }
-  function pickRandomVerse(){return VERSE_POOL[Math.floor(Math.random()*VERSE_POOL.length)]}
   function code(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<6;i++)s+=c[Math.floor(Math.random()*c.length)];return s}
   function fmt(iso){const d=new Date(iso);return new Intl.DateTimeFormat('ko-KR',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}).format(d)}
   function todayLabel(){return new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'long',day:'numeric',weekday:'long'}).format(new Date())}
   function newId(){return crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0,v=c==='x'?r:(r&3|8);return v.toString(16)})}
 
-  async function getOrCreateTodayVerse(){
-    const today=koreanDateString();
-    const {data:saved,error:selectError}=await supabaseClient.from('daily_verses').select('verse_date,verse_ref').eq('verse_date',today).maybeSingle();
-    if(selectError)console.error('오늘의 말씀 조회 실패:',selectError);
-    if(saved)return {ref:saved.verse_ref,date:saved.verse_date};
-
-    const randomVerse=pickRandomVerse();
-    const {data:created,error:insertError}=await supabaseClient.from('daily_verses').insert({verse_date:today,verse_ref:randomVerse}).select('verse_date,verse_ref').single();
-    if(!insertError&&created)return {ref:created.verse_ref,date:created.verse_date};
-
-    // 여러 사용자가 동시에 첫 접속한 경우, 먼저 저장된 값을 다시 가져온다.
-    const {data:retry,error:retryError}=await supabaseClient.from('daily_verses').select('verse_date,verse_ref').eq('verse_date',today).maybeSingle();
-    if(retry)return {ref:retry.verse_ref,date:retry.verse_date};
-    console.error('오늘의 말씀 생성 실패:',insertError,retryError);
-    showToast('오늘의 말씀을 저장하지 못했어요');
-    return {ref:randomVerse,date:today};
+  function readingForDate(date){
+    return DAILY_READING_PREVIEW[date]||DAILY_READING_PREVIEW['2026-07-22'];
   }
-  function dateLabel(dateString){
-    const [y,m,d]=dateString.split('-').map(Number);
-    const date=new Date(Date.UTC(y,m-1,d));
-    return new Intl.DateTimeFormat('ko-KR',{timeZone:'UTC',year:'numeric',month:'long',day:'numeric',weekday:'long'}).format(date);
+  function passageRef(bookName,chapter,startVerse,endVerse){
+    if(startVerse===endVerse)return `${bookName} ${chapter}:${startVerse}`;
+    return `${bookName} ${chapter}:${startVerse}–${endVerse}`;
   }
-  function entryDate(entry){return koreanDateString(new Date(entry.createdAt))}
-  async function getVerseForDate(date){
-    if(date===koreanDateString())return await getOrCreateTodayVerse();
-    const {data,error}=await supabaseClient.from('daily_verses').select('verse_date,verse_ref').eq('verse_date',date).maybeSingle();
-    if(error)console.error('말씀 조회 실패:',error);
-    if(data)return {ref:data.verse_ref,date:data.verse_date};
-    const matching=entries.find(e=>entryDate(e)===date&&e.verseRef);
-    return {ref:matching?.verseRef||'기록된 말씀이 없어요.',date};
+  function normalizeVerse(row){
+    return {
+      chapter:Number(row.chapter),
+      verseStart:Number(row.verse_start),
+      verseEnd:Number(row.verse_end),
+      verseLabel:String(row.verse_label ?? row.verse_start ?? ''),
+      text:row.text ?? ''
+    };
   }
-  async function rebuildRecordDates(){
-    const today=koreanDateString();
-
-    // 날짜 이동은 묵상 기록 유무가 아니라 daily_verses에 등록된 말씀 날짜를 기준으로 한다.
-    // 기존 기록 날짜도 함께 포함해 과거 기록이 날짜 목록에서 사라지지 않도록 한다.
+  function verseRowsHtml(rows){
+    return rows.map(raw=>{
+      const row=normalizeVerse(raw);
+      return `
+        <div class="passage-verse">
+          <span class="passage-number">${esc(row.verseLabel)}</span>
+          <span>${esc(row.text)}</span>
+        </div>
+      `;
+    }).join('');
+  }
+  async function loadBibleBookCache(){
+    // 성경 목록은 정적 메타데이터를 사용한다.
+    // bible_verses 전체 조회는 Supabase 기본 최대 1,000행 제한 때문에 사용할 수 없다.
+    bibleBooksCache=[...BIBLE_BOOKS];
+    return true;
+  }
+  async function fetchVerseRows(bookCode,startChapter,endChapter){
     const {data,error}=await supabaseClient
-      .from('daily_verses')
-      .select('verse_date')
-      .order('verse_date',{ascending:true});
+      .from('bible_verses')
+      .select('book_code,book_name_ko,book_abbr_ko,chapter,verse_start,verse_end,verse_label,heading,text,sort_order')
+      .eq('translation_code',BIBLE_TRANSLATION_CODE)
+      .eq('book_code',bookCode)
+      .gte('chapter',startChapter)
+      .lte('chapter',endChapter)
+      .order('chapter',{ascending:true})
+      .order('verse_start',{ascending:true});
 
-    if(error)console.error('말씀 날짜 목록 조회 실패:',error);
-
-    const verseDates=(data||[]).map(item=>item.verse_date).filter(Boolean);
-    recordDates=[...new Set([...verseDates,...entries.map(entryDate),today])].sort();
+    return {data:data||[],error};
   }
-  async function renderSelectedDate(){
+
+  async function loadDailyReading(){
     const today=koreanDateString();
-    if(!selectedDate)selectedDate=today;
-    $('todayDate').textContent=dateLabel(selectedDate);
-    $('dateNavState').textContent=selectedDate===today?'오늘':selectedDate<today?'지난 말씀':'다가올 말씀';
-    $('verseRef').textContent='말씀을 불러오는 중...';
-    currentVerse=await getVerseForDate(selectedDate);
-    $('verseRef').textContent=currentVerse.ref;
-    const index=recordDates.indexOf(selectedDate);
-    $('prevRecordDate').disabled=index<=0;
-    $('nextRecordDate').disabled=index<0||index>=recordDates.length-1;
-    $('composer').classList.toggle('hidden',selectedDate!==today);
-    visibleEntryCount=FEED_BATCH_SIZE;
-    renderFeed();
+    const reading=readingForDate(today);
+    $('todayDate').textContent=todayLabel();
+    $('verseRef').textContent=reading.label;
+    $('dailyReadingBody').innerHTML='<div class="reading-loading">본문을 불러오는 중이에요.</div>';
+
+    const ready=await loadBibleBookCache();
+    if(!ready){
+      $('dailyReadingBody').innerHTML='<div class="reading-empty">성경 데이터를 불러오지 못했어요.</div>';
+      currentVerse={ref:reading.label,date:today,sourceType:'daily_reading'};
+      return;
+    }
+
+    const sections=[];
+    for(const range of reading.ranges){
+      const book=bibleBooksCache.find(item=>item.name===range.bookName);
+      if(!book){
+        console.error('성경 정보를 찾지 못했습니다:',range.bookName);
+        continue;
+      }
+
+      const {data,error}=await fetchVerseRows(book.code,range.startChapter,range.endChapter);
+      if(error){
+        console.error('오늘 읽을 본문 조회 실패:',error);
+        continue;
+      }
+
+      const grouped={};
+      data.forEach(raw=>{
+        const row=normalizeVerse(raw);
+        if(!grouped[row.chapter])grouped[row.chapter]=[];
+        grouped[row.chapter].push(raw);
+      });
+
+      Object.keys(grouped).sort((a,b)=>Number(a)-Number(b)).forEach(chapter=>{
+        sections.push(`
+          <section class="passage-chapter">
+            <div class="passage-title">${esc(range.bookName)} ${chapter}장</div>
+            ${verseRowsHtml(grouped[chapter])}
+          </section>
+        `);
+      });
+    }
+
+    $('dailyReadingBody').innerHTML=sections.join('')||'<div class="reading-empty">해당 날짜의 본문이 아직 등록되지 않았어요.</div>';
+    currentVerse={ref:reading.label,date:today,sourceType:'daily_reading'};
   }
-  async function moveRecordDate(direction){
-    const index=recordDates.indexOf(selectedDate);
-    const nextIndex=index+direction;
-    if(nextIndex<0||nextIndex>=recordDates.length)return;
-    selectedDate=recordDates[nextIndex];
-    await renderSelectedDate();
+
+  async function loadBibleBooks(){
+    $('bookSelect').innerHTML='<option>불러오는 중...</option>';
+    const ready=await loadBibleBookCache();
+
+    if(!ready){
+      $('bookSelect').innerHTML='<option value="">성경 목록 없음</option>';
+      showToast('성경 목록을 불러오지 못했어요');
+      return;
+    }
+
+    $('bookSelect').innerHTML=bibleBooksCache
+      .map(book=>`<option value="${esc(book.code)}">${esc(book.name)}</option>`)
+      .join('');
+
+    await loadChapters();
+  }
+  async function loadChapters(){
+    const bookCode=$('bookSelect').value;
+    const book=bibleBooksCache.find(item=>item.code===bookCode);
+    $('startVerseSelect').innerHTML='';
+    $('endVerseSelect').innerHTML='';
+
+    if(!book){
+      $('chapterSelect').innerHTML='<option value="">장 목록 없음</option>';
+      return;
+    }
+
+    $('chapterSelect').innerHTML=Array.from({length:book.chapters},(_,index)=>{
+      const chapter=index+1;
+      return `<option value="${chapter}">${chapter}장</option>`;
+    }).join('');
+
+    await loadVerseOptions();
+  }
+  async function loadVerseOptions(){
+    const bookCode=$('bookSelect').value;
+    const chapter=Number($('chapterSelect').value);
+    if(!bookCode||!chapter)return;
+
+    const {data,error}=await fetchVerseRows(bookCode,chapter,chapter);
+    if(error){
+      console.error('절 목록 조회 실패:',error);
+      return;
+    }
+
+    const rows=data.map(normalizeVerse).sort((a,b)=>a.verseStart-b.verseStart);
+    const options=rows.map(row=>`<option value="${row.verseStart}" data-end="${row.verseEnd}">${esc(row.verseLabel)}절</option>`).join('');
+
+    $('startVerseSelect').innerHTML=options;
+    $('endVerseSelect').innerHTML=options;
+
+    if($('endVerseSelect').options.length){
+      $('endVerseSelect').selectedIndex=$('endVerseSelect').options.length-1;
+    }
+  }
+  async function showCustomPassage(){
+    const bookCode=$('bookSelect').value;
+    const bookName=$('bookSelect').selectedOptions[0]?.textContent||'';
+    const chapter=Number($('chapterSelect').value);
+    const startVerse=Number($('startVerseSelect').value);
+    const endVerse=Number($('endVerseSelect').value);
+
+    if(!bookCode||!chapter||!startVerse||!endVerse){
+      return showToast('성경과 장·절을 먼저 선택해 주세요');
+    }
+    if(endVerse<startVerse){
+      return showToast('마지막 절을 다시 선택해 주세요');
+    }
+
+    const {data,error}=await fetchVerseRows(bookCode,chapter,chapter);
+    if(error){
+      console.error(error);
+      return showToast('선택한 말씀을 불러오지 못했어요');
+    }
+
+    const selected=data.filter(raw=>{
+      const row=normalizeVerse(raw);
+      return row.verseStart<=endVerse && row.verseEnd>=startVerse;
+    });
+
+    const ref=passageRef(bookName,chapter,startVerse,endVerse);
+    $('customPassageBody').innerHTML=`
+      <div class="passage-title">${esc(ref)}</div>
+      ${verseRowsHtml(selected)}
+    `;
+    $('customPassageBody').classList.remove('hidden');
+    currentVerse={ref,date:koreanDateString(),sourceType:'custom',bookCode,chapter,startVerse,endVerse};
+    $('readingNote').textContent='현재 선택한 말씀으로 묵상 기록이 저장돼요.';
   }
 
   async function init(){
-    try{ownedEntryIds=new Set(JSON.parse(localStorage.getItem('jamjam-owned-entry-ids')||'[]'));likedEntryIds=new Set(JSON.parse(localStorage.getItem('jamjam-liked-entry-ids')||'[]'))}catch(e){}
     const n=await storage.get('author-name');
     if(n&&n.value){myName=n.value;showApp()}else entranceView.classList.remove('hidden');
     await loadGroups();
     await syncGroupsWithDatabase();
-    renderGroups();
+    await renderGroups();
   }
   function showApp(){entranceView.classList.add('hidden');appView.classList.remove('hidden');$('topName').textContent=myName;$('profileName').textContent=myName}
   async function setName(name){myName=name.trim();if(!myName)return;await storage.set('author-name',myName);showApp();renderFeed()}
@@ -425,6 +701,32 @@ button{cursor:pointer}
   profileMenu.onclick=e=>e.stopPropagation();
   document.addEventListener('click',closeProfileMenu);
   $('renameBtn').onclick=()=>{closeProfileMenu();const n=prompt('새 닉네임을 입력해주세요.',myName);if(n)setName(n)};
+
+  let bibleBooksLoaded=false;
+  $('toggleCustomVerse').onclick=async()=>{
+    const picker=$('customVersePicker');
+    const willOpen=picker.classList.contains('hidden');
+    picker.classList.toggle('hidden',!willOpen);
+    $('toggleCustomVerse').classList.toggle('active',willOpen);
+    $('toggleCustomVerse').textContent=willOpen?'오늘 말씀 보기':'다른 말씀 선택';
+    $('dailyReadingBody').classList.toggle('hidden',willOpen);
+    if(willOpen){
+      if(!bibleBooksLoaded){await loadBibleBooks();bibleBooksLoaded=bibleBooksCache.length>0}
+      $('readingNote').textContent='원하는 말씀을 선택한 뒤 “이 말씀 보기”를 눌러 주세요.';
+    }else{
+      $('customPassageBody').classList.add('hidden');
+      await loadDailyReading();
+      $('readingNote').textContent='오늘의 성경 읽기표 본문으로 바로 묵상하거나, 원하는 말씀을 직접 선택할 수 있어요.';
+    }
+  };
+  $('bookSelect').onchange=loadChapters;
+  $('chapterSelect').onchange=loadVerseOptions;
+  $('startVerseSelect').onchange=()=>{
+    const start=Number($('startVerseSelect').value);
+    [...$('endVerseSelect').options].forEach(option=>option.disabled=Number(option.value)<start);
+    if(Number($('endVerseSelect').value)<start)$('endVerseSelect').value=String(start);
+  };
+  $('showCustomPassage').onclick=showCustomPassage;
 
   async function loadGroups(){
     const r=await storage.get('my-groups');
@@ -472,11 +774,64 @@ button{cursor:pointer}
       await saveGroups();
     }
   }
-  function renderGroups(){
+  function localDateKey(value=new Date()){
+    const d=value instanceof Date?value:new Date(value);
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+  function groupStatusText(total,completed){
+    if(completed<=0)return '오늘 묵상한 사람이 없어요.';
+    if(total>0&&completed>=total)return '오늘 모두 묵상했어요. 💫';
+    return `오늘 ${total}명 중 ${completed}명이 묵상했어요.`;
+  }
+  async function getGroupParticipation(groupCode){
+    const today=localDateKey();
+    const {data,error}=await supabaseClient
+      .from('entries')
+      .select('author,created_at')
+      .eq('group_code',groupCode);
+
+    if(error){
+      console.error('그룹 참여 현황 조회 실패:',error);
+      return {total:0,completed:0};
+    }
+
+    const allAuthors=new Set();
+    const todayAuthors=new Set();
+    (data||[]).forEach(item=>{
+      if(!item.author)return;
+      allAuthors.add(item.author);
+      if(localDateKey(item.created_at)===today)todayAuthors.add(item.author);
+    });
+
+    // 현재 구조에는 별도 그룹원 테이블이 없으므로,
+    // 지금까지 기록을 남긴 사람과 현재 사용자를 기준으로 그룹 인원을 계산한다.
+    if(myName)allAuthors.add(myName);
+    return {total:allAuthors.size,completed:todayAuthors.size};
+  }
+  async function renderGroups(){
     const wrap=$('groupList');
-    if(!myGroups.length){wrap.innerHTML='<div class="empty-groups">아직 함께하는 그룹이 없어요. 우측 상단의 ＋에서 만들 수 있어요.</div>';return}
-    wrap.innerHTML='<div class="group-list">'+myGroups.map(g=>`<div class="group-row" data-code="${esc(g.code)}"><span class="dot"></span><span class="name">${esc(g.name)}</span><span class="code">${esc(g.code)}</span></div>`).join('')+'</div>';
+    if(!myGroups.length){
+      wrap.innerHTML='<div class="empty-groups">아직 함께하는 그룹이 없어요.<br>우측 상단의 ＋에서 만들거나 참여할 수 있어요.</div>';
+      return;
+    }
+
+    wrap.innerHTML='<div class="group-list">'+myGroups.map(g=>`
+      <button class="group-row" data-code="${esc(g.code)}">
+        <span class="group-mark">함</span>
+        <span class="group-copy">
+          <span class="group-name">${esc(g.name)}</span>
+          <span class="group-status" data-status="${esc(g.code)}">오늘 참여 현황을 불러오는 중이에요.</span>
+        </span>
+        <span class="group-arrow">›</span>
+      </button>`).join('')+'</div>';
+
     wrap.querySelectorAll('[data-code]').forEach(el=>el.onclick=()=>openGroup(el.dataset.code));
+
+    await Promise.all(myGroups.map(async g=>{
+      const status=await getGroupParticipation(g.code);
+      const target=wrap.querySelector(`[data-status="${CSS.escape(g.code)}"]`);
+      if(target)target.textContent=groupStatusText(status.total,status.completed);
+    }));
   }
   function renderPicker(){
     const wrap=$('pickerList');
@@ -489,9 +844,10 @@ button{cursor:pointer}
   $('openGroupSheet').onclick=()=>groupSheet.classList.remove('hidden');
   $('closeGroupSheet').onclick=()=>groupSheet.classList.add('hidden');
   groupSheet.onclick=e=>{if(e.target===groupSheet)groupSheet.classList.add('hidden')};
-  $('openGroupPicker').onclick=async()=>{
+  const openGroupPickerButton=$('openGroupPicker');
+  if(openGroupPickerButton)openGroupPickerButton.onclick=async()=>{
     await syncGroupsWithDatabase();
-    renderGroups();
+    await renderGroups();
     renderPicker();
     picker.classList.remove('hidden');
   };
@@ -509,14 +865,14 @@ button{cursor:pointer}
       if(error.code!=='23505')break;
     }
     if(error){console.error(error);return showToast('그룹을 만들지 못했어요')}
-    myGroups.push({code:c,name});await saveGroups();renderGroups();$('newGroupName').value='';groupSheet.classList.add('hidden');showToast('그룹을 만들었어요');openGroup(c);
+    myGroups.push({code:c,name});await saveGroups();await renderGroups();$('newGroupName').value='';groupSheet.classList.add('hidden');showToast('그룹을 만들었어요');openGroup(c);
   };
   $('joinGroup').onclick=async()=>{
     const c=$('joinCode').value.trim().toUpperCase();if(!c)return showToast('초대 코드를 입력해주세요');
     const {data,error}=await supabaseClient.from('groups').select('invite_code,name').eq('invite_code',c).maybeSingle();
     if(error){console.error(error);return showToast('그룹을 확인하지 못했어요')}
     if(!data)return showToast('그룹을 찾을 수 없어요');
-    if(!myGroups.some(g=>g.code===c)){myGroups.push({code:data.invite_code,name:data.name});await saveGroups();renderGroups()}
+    if(!myGroups.some(g=>g.code===c)){myGroups.push({code:data.invite_code,name:data.name});await saveGroups();await renderGroups()}
     $('joinCode').value='';groupSheet.classList.add('hidden');showToast('그룹에 참여했어요');openGroup(c);
   };
 
@@ -528,27 +884,24 @@ button{cursor:pointer}
     $('journalSub').textContent=space.type==='solo'?'오직 나만 볼 수 있는 기록 공간이에요.':'이 그룹 안에서만 서로의 기록이 보여요.';
     $('journalKicker').innerHTML=space.type==='solo'?'PRIVATE SPACE':`GROUP <span class="code">${esc(space.code)}</span> <button id="copyInline" style="border:0;background:transparent;color:var(--muted);font-size:10px;padding:0">코드 복사</button>`;
     if(space.type==='group') setTimeout(()=>$('copyInline').onclick=()=>copyText(space.code),0);
-    await loadEntries();
-    selectedDate=koreanDateString();
-    await rebuildRecordDates();
-    await renderSelectedDate();
+    await loadDailyReading();
+    await loadEntries();renderFeed();
   }
   $('backHome').onclick=async()=>{
     journalView.classList.add('hidden');
     homeView.classList.remove('hidden');
     currentSpace=null;
     await syncGroupsWithDatabase();
-    renderGroups();
+    await renderGroups();
   };
 
   async function loadEntries(){
     if(currentSpace.type==='solo'){
-      const r=await storage.get('entries:'+currentSpace.code);entries=r&&r.value?JSON.parse(r.value):[];likeCounts={};entries.forEach(e=>{likeCounts[e.id]=likedEntryIds.has(e.id)?1:0});return;
+      const r=await storage.get('entries:'+currentSpace.code);entries=r&&r.value?JSON.parse(r.value):[];return;
     }
     const {data,error}=await supabaseClient.from('entries').select('*').eq('group_code',currentSpace.code).order('created_at',{ascending:false});
     if(error){console.error(error);entries=[];showToast('그룹 기록을 불러오지 못했어요');return}
     entries=(data||[]).map(item=>({id:item.id,author:item.author,mode:item.mode,verseRef:item.verse_ref,feeling:item.feeling,application:item.application,freeText:item.free_text,createdAt:item.created_at}));
-    await loadLikes();
   }
   async function saveSoloEntries(){await storage.set('entries:'+currentSpace.code,JSON.stringify(entries))}
   $('modeTabs').onclick=e=>{const b=e.target.closest('[data-mode]');if(!b)return;mode=b.dataset.mode;[...$('modeTabs').children].forEach(x=>x.classList.toggle('active',x===b));$('structuredFields').classList.toggle('hidden',mode!=='structured');$('freeFields').classList.toggle('hidden',mode!=='free')};
@@ -565,8 +918,7 @@ button{cursor:pointer}
       if(error){console.error(error);return showToast('기록을 저장하지 못했어요')}
       entries.push(entry);
     }
-    ownedEntryIds.add(entry.id);localStorage.setItem('jamjam-owned-entry-ids',JSON.stringify([...ownedEntryIds]));
-    $('feelingInput').value='';$('applicationInput').value='';$('freeInput').value='';selectedDate=koreanDateString();await rebuildRecordDates();await renderSelectedDate();showToast('오늘의 묵상을 남겼어요💫');
+    $('feelingInput').value='';$('applicationInput').value='';$('freeInput').value='';renderFeed();showToast('기록했어요');
   };
   async function deleteEntry(id){
     if(currentSpace.type==='solo'){entries=entries.filter(e=>e.id!==id);await saveSoloEntries();return true}
@@ -574,74 +926,20 @@ button{cursor:pointer}
     if(error){console.error(error);showToast('기록을 삭제하지 못했어요');return false}
     entries=entries.filter(e=>e.id!==id);return true;
   }
-  function getSelectedDateEntries(){
-    return entries
-      .filter(e=>entryDate(e)===selectedDate)
-      .sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
-  }
   function renderFeed(){
     if(!currentSpace)return;
-    const all=getSelectedDateEntries();
-    const list=all.slice(0,visibleEntryCount);
+    const authors=[...new Set(entries.map(e=>e.author))],current=$('filterSelect').value;
+    $('filterSelect').innerHTML='<option value="">전체 보기</option>'+authors.map(a=>`<option value="${esc(a)}">${esc(a)}</option>`).join('');$('filterSelect').value=authors.includes(current)?current:'';
+    const list=entries.filter(e=>!$('filterSelect').value||e.author===$('filterSelect').value).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
     $('feedTitle').textContent=currentSpace.type==='solo'?'나의 기록':'함께 남긴 기록';
     $('entriesArea').innerHTML=list.length?list.map(renderEntry).join(''):'<div class="empty">아직 남겨진 기록이 없어요.</div>';
-    $('entriesArea').querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(confirm('이 기록을 삭제할까요?')){if(await deleteEntry(b.dataset.del)){ownedEntryIds.delete(b.dataset.del);localStorage.setItem('jamjam-owned-entry-ids',JSON.stringify([...ownedEntryIds]));await rebuildRecordDates();if(!recordDates.includes(selectedDate))selectedDate=recordDates[recordDates.length-1]||koreanDateString();await renderSelectedDate()}}});
-    $('entriesArea').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editEntry(b.dataset.edit));
-    $('entriesArea').querySelectorAll('[data-heart]').forEach(b=>b.onclick=()=>toggleHeart(b.dataset.heart));
-    $('infiniteSentinel').classList.toggle('hidden',list.length>=all.length);
+    $('entriesArea').querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(confirm('이 기록을 삭제할까요?')){if(await deleteEntry(b.dataset.del))renderFeed()}})
   }
-  function loadMoreEntries(){
-    const total=getSelectedDateEntries().length;
-    if(visibleEntryCount>=total)return;
-    visibleEntryCount=Math.min(total,visibleEntryCount+FEED_BATCH_SIZE);
-    renderFeed();
-  }
-  function setupInfiniteScroll(){
-    if(infiniteObserver)infiniteObserver.disconnect();
-    infiniteObserver=new IntersectionObserver(entries=>{
-      if(entries.some(entry=>entry.isIntersecting))loadMoreEntries();
-    },{rootMargin:'240px 0px'});
-    infiniteObserver.observe($('infiniteSentinel'));
-  }
-  async function editEntry(id){
-    const e=entries.find(x=>x.id===id);if(!e||!ownedEntryIds.has(id))return;
-    if(e.mode==='free'){const v=prompt('기록을 수정해주세요.',e.freeText||'');if(v===null)return;e.freeText=v.trim();if(!e.freeText)return showToast('기록을 적어주세요')}
-    else{const f=prompt('마음에 머문 것을 수정해주세요.',e.feeling||'');if(f===null)return;const a=prompt('기도와 다짐을 수정해주세요.',e.application||'');if(a===null)return;e.feeling=f.trim();e.application=a.trim();if(!e.feeling&&!e.application)return showToast('기록을 적어주세요')}
-    if(currentSpace.type==='solo')await saveSoloEntries();else{const {error}=await supabaseClient.from('entries').update({feeling:e.feeling||null,application:e.application||null,free_text:e.freeText||null}).eq('id',id);if(error){console.error(error);return showToast('기록을 수정하지 못했어요')}}renderFeed();showToast('수정했어요')
-  }
-  async function loadLikes(){
-    likeCounts={};if(!entries.length)return;const ids=entries.map(e=>e.id);const {data,error}=await supabaseClient.from('entry_likes').select('entry_id,device_id').in('entry_id',ids);if(error){console.warn('하트 테이블 미설정:',error.message);return}(data||[]).forEach(x=>{likeCounts[x.entry_id]=(likeCounts[x.entry_id]||0)+1})
-  }
-  async function toggleHeart(id){
-    const liked=likedEntryIds.has(id);
-    if(currentSpace.type==='solo'){
-      if(liked){likedEntryIds.delete(id);likeCounts[id]=0}else{likedEntryIds.add(id);likeCounts[id]=1}
-      localStorage.setItem('jamjam-liked-entry-ids',JSON.stringify([...likedEntryIds]));
-      renderFeed();
-      if(!liked){const btn=$('entriesArea').querySelector(`[data-heart="${id}"]`);if(btn){btn.classList.add('pulse');setTimeout(()=>btn.classList.remove('pulse'),260)}}
-      return;
-    }
-    const deviceId=getDeviceId();
-    const q=supabaseClient.from('entry_likes');
-    const {error}=liked?await q.delete().eq('entry_id',id).eq('device_id',deviceId):await q.insert({entry_id:id,device_id:deviceId});
-    if(error){console.error(error);return showToast('하트를 반영하지 못했어요')}
-    if(liked){likedEntryIds.delete(id);likeCounts[id]=Math.max(0,(likeCounts[id]||1)-1)}else{likedEntryIds.add(id);likeCounts[id]=(likeCounts[id]||0)+1}
-    localStorage.setItem('jamjam-liked-entry-ids',JSON.stringify([...likedEntryIds]));
-    renderFeed();
-    if(!liked){const btn=$('entriesArea').querySelector(`[data-heart="${id}"]`);if(btn){btn.classList.add('pulse');setTimeout(()=>btn.classList.remove('pulse'),260)}}
-  }
-  function getDeviceId(){let id=localStorage.getItem('jamjam-device-id');if(!id){id='d-'+newId();localStorage.setItem('jamjam-device-id',id)}return id}
   function renderEntry(e){
-    const body=e.mode==='free'?`<div class="entry-text">${esc(e.freeText)}</div>`:`${e.verseRef?`<div class="entry-verse">${esc(e.verseRef)}</div>`:''}${e.feeling?`<div class="entry-label">마음에 머문 것</div><div class="entry-text">${esc(e.feeling)}</div>`:''}${e.application?`<div class="entry-label">기도와 다짐</div><div class="entry-text">${esc(e.application)}</div>`:''}`;
-    const mine=ownedEntryIds.has(e.id)||currentSpace.type==='solo';
-    const heart=`<button class="heart ${likedEntryIds.has(e.id)?'active':''}" data-heart="${esc(e.id)}" aria-label="공감하기" aria-pressed="${likedEntryIds.has(e.id)}"><span class="heart-icon">${likedEntryIds.has(e.id)?'♥':'♡'}</span><span class="heart-count">${likeCounts[e.id]||0}</span></button>`;
-    const manage=mine?`<button class="edit" data-edit="${esc(e.id)}">수정</button><button class="del" data-del="${esc(e.id)}">삭제</button>`:'';
-    const actions=`<span class="entry-actions">${heart}${manage}</span>`;
-    return `<article class="entry"><div class="entry-meta"><span class="avatar">${esc((e.author||'?').slice(0,1))}</span><span class="author">${esc(e.author)}</span><span class="date">${esc(fmt(e.createdAt))}</span>${actions}</div>${body}</article>`
+    const body=e.mode==='free'?`<div class="entry-text">${esc(e.freeText)}</div>`:`${e.verseRef?`<div class="entry-verse">${esc(e.verseRef)}</div>`:''}${e.feeling?`<div class="entry-label">마음에 머문 것</div><div class="entry-text">${esc(e.feeling)}</div>`:''}${e.application?`<div class="entry-label">오늘의 기도와 적용</div><div class="entry-text">${esc(e.application)}</div>`:''}`;
+    return `<article class="entry"><div class="entry-meta"><span class="avatar">${esc((e.author||'?').slice(0,1))}</span><span class="author">${esc(e.author)}</span><span class="date">${esc(fmt(e.createdAt))}</span>${e.author===myName?`<button class="del" data-del="${esc(e.id)}">삭제</button>`:''}</div>${body}</article>`
   }
-  $('prevRecordDate').onclick=()=>moveRecordDate(-1);
-  $('nextRecordDate').onclick=()=>moveRecordDate(1);
-  setupInfiniteScroll();
+  $('filterSelect').onchange=renderFeed;
   init();
 })();
 </script>
