@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>잠잠</title>
+<title>잠잠 — 날짜별 묵상 기록</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -103,11 +103,8 @@ button{cursor:pointer}
 .meditation-reference-select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 20px) 22px,calc(100% - 15px) 22px;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:44px}
 .meditation-reference-select:focus{outline:none;border-color:var(--sage);background-color:var(--white);box-shadow:0 0 0 3px var(--sage-soft)}
 .meditation-reference-select:disabled{color:var(--muted);cursor:default;background-image:none}
-.selected-verse-preview{margin-top:14px;padding:16px 17px;background:var(--paper);border-left:2px solid var(--sage);border-radius:0 12px 12px 0;font-family:"Gowun Batang",serif;font-size:14px;line-height:1.85}
-@media(max-width:380px){
-  .meditation-reference-picker{gap:12px}
-  .meditation-fixed-value,.meditation-reference-select{min-height:48px;padding-left:14px;font-size:13px}
-}
+.meditation-verse-select{width:100%;border:1px solid var(--line);background:var(--white);color:var(--ink);border-radius:2px;padding:13px;font:inherit;font-size:13px}
+.selected-verse-preview{margin-top:10px;padding:14px 15px;background:var(--paper);border-left:2px solid var(--sage);font-family:"Gowun Batang",serif;font-size:14px;line-height:1.8}
 .entry-selected-verse{margin:18px 0 20px;padding:15px 16px;background:var(--paper);border-left:2px solid var(--sage)}
 .entry-selected-ref{font-size:11px;color:var(--brown);font-weight:600;margin-bottom:8px}
 .entry-selected-text{font-family:"Gowun Batang",serif;font-size:14px;line-height:1.8;white-space:pre-wrap}
@@ -167,6 +164,15 @@ button{cursor:pointer}
 
 
 .reading-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}
+
+.date-switcher{display:grid;grid-template-columns:38px minmax(0,1fr) 38px;align-items:center;gap:8px;width:100%}
+.date-switcher-center{text-align:center;min-width:0}
+.date-switcher-btn{width:38px;height:38px;border:0;background:transparent;border-radius:50%;color:var(--ink);font-family:"Gowun Batang",serif;font-size:28px;line-height:1;display:flex;align-items:center;justify-content:center}
+.date-switcher-btn:hover{background:var(--paper-deep)}
+.date-switcher-btn:disabled{opacity:.18;cursor:default;background:transparent}
+.reading-date{font-size:11px;color:var(--muted);margin-bottom:5px}
+.reading-ref{text-align:center}
+.reading-switch-row{display:flex;justify-content:center;margin-top:16px}
 .reading-copy{min-width:0}
 .reading-date{font-size:10px;color:var(--brown);letter-spacing:.08em;margin-bottom:10px}
 .reading-ref{font-family:"Gowun Batang",serif;font-size:26px;line-height:1.45}
@@ -323,10 +329,16 @@ button{cursor:pointer}
 
     <section class="verse-block">
       <div class="reading-head">
-        <div class="reading-copy">
-          <div class="reading-date" id="todayDate"></div>
-          <div class="reading-ref" id="verseRef">오늘 읽을 말씀을 불러오는 중...</div>
+        <div class="date-switcher">
+          <button class="date-switcher-btn" id="prevReadingDate" type="button" aria-label="이전 날짜">‹</button>
+          <div class="date-switcher-center">
+            <div class="reading-date" id="todayDate"></div>
+            <div class="reading-ref" id="verseRef">읽을 말씀을 불러오는 중...</div>
+          </div>
+          <button class="date-switcher-btn" id="nextReadingDate" type="button" aria-label="다음 날짜">›</button>
         </div>
+      </div>
+      <div class="reading-switch-row">
         <button class="reading-switch" id="toggleCustomVerse">다른 말씀 선택</button>
       </div>
 
@@ -449,6 +461,10 @@ button{cursor:pointer}
         {bookName:'잠언',startChapter:30,endChapter:31},
         {bookName:'전도서',startChapter:1,endChapter:1}
       ]
+    },
+    '2026-07-23':{
+      label:'전도서 2–4장',
+      ranges:[{bookName:'전도서',startChapter:2,endChapter:4}]
     }
   };
   const BIBLE_TRANSLATION_CODE='KRV_TEST';
@@ -530,8 +546,8 @@ button{cursor:pointer}
   let myGroups=[];
   let currentSpace=null;
   let entries=[];
-  let selectableMeditationPassages=[];
   let selectableMeditationVerses=[];
+  let selectableMeditationPassages=[];
   let mode='structured';
   let currentVerse=null;
 
@@ -566,8 +582,42 @@ button{cursor:pointer}
   function todayLabel(){return new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'long',day:'numeric',weekday:'long'}).format(new Date())}
   function newId(){return crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0,v=c==='x'?r:(r&3|8);return v.toString(16)})}
 
+  const READING_DATES=Object.keys(DAILY_READING_PREVIEW).sort();
+  let selectedReadingDate=READING_DATES.includes(koreanDateString())?koreanDateString():READING_DATES[READING_DATES.length-1];
+
   function readingForDate(date){
-    return DAILY_READING_PREVIEW[date]||DAILY_READING_PREVIEW['2026-07-22'];
+    return DAILY_READING_PREVIEW[date]||null;
+  }
+  function dateLabelFor(dateString){
+    const [year,month,day]=dateString.split('-').map(Number);
+    const date=new Date(Date.UTC(year,month-1,day));
+    return new Intl.DateTimeFormat('ko-KR',{timeZone:'UTC',year:'numeric',month:'long',day:'numeric',weekday:'long'}).format(date);
+  }
+  function entryDate(entry){
+    return koreanDateString(new Date(entry.createdAt));
+  }
+  function updateDateControls(){
+    const index=READING_DATES.indexOf(selectedReadingDate);
+    $('prevReadingDate').disabled=index<=0;
+    $('nextReadingDate').disabled=index<0||index>=READING_DATES.length-1;
+    const isToday=selectedReadingDate===koreanDateString();
+    document.querySelector('.composer').classList.toggle('hidden',!isToday);
+    $('toggleCustomVerse').classList.toggle('hidden',!isToday);
+    if(!isToday){
+      $('customVersePicker').classList.add('hidden');
+      $('dailyReadingBody').classList.remove('hidden');
+      $('toggleCustomVerse').classList.remove('active');
+      $('toggleCustomVerse').textContent='다른 말씀 선택';
+    }
+  }
+  async function moveReadingDate(direction){
+    const index=READING_DATES.indexOf(selectedReadingDate);
+    const nextIndex=index+direction;
+    if(nextIndex<0||nextIndex>=READING_DATES.length)return;
+    selectedReadingDate=READING_DATES[nextIndex];
+    await loadDailyReading(selectedReadingDate);
+    updateDateControls();
+    renderFeed();
   }
   function passageRef(bookName,chapter,startVerse,endVerse){
     if(startVerse===endVerse)return `${bookName} ${chapter}:${startVerse}`;
@@ -732,17 +782,22 @@ button{cursor:pointer}
     return {data:data||[],error};
   }
 
-  async function loadDailyReading(){
-    const today=koreanDateString();
-    const reading=readingForDate(today);
-    $('todayDate').textContent=todayLabel();
-    $('verseRef').textContent=reading.label;
+  async function loadDailyReading(date=selectedReadingDate){
+    const reading=readingForDate(date);
+    $('todayDate').textContent=dateLabelFor(date);
+    $('verseRef').textContent=reading?reading.label:'등록된 읽기표가 없어요.';
+    if(!reading){
+      $('dailyReadingBody').innerHTML='<div class="reading-empty">해당 날짜의 성경 읽기표가 아직 등록되지 않았어요.</div>';
+      setMeditationVerseOptions([]);
+      currentVerse={ref:'',date,sourceType:'daily_reading'};
+      return;
+    }
     $('dailyReadingBody').innerHTML='<div class="reading-loading">본문을 불러오는 중이에요.</div>';
 
     const ready=await loadBibleBookCache();
     if(!ready){
       $('dailyReadingBody').innerHTML='<div class="reading-empty">성경 데이터를 불러오지 못했어요.</div>';
-      currentVerse={ref:reading.label,date:today,sourceType:'daily_reading'};
+      currentVerse={ref:reading.label,date,sourceType:'daily_reading'};
       return;
     }
 
@@ -781,7 +836,7 @@ button{cursor:pointer}
 
     $('dailyReadingBody').innerHTML=sections.join('')||'<div class="reading-empty">해당 날짜의 본문이 아직 등록되지 않았어요.</div>';
     setMeditationVerseOptions(verseChoices);
-    currentVerse={ref:reading.label,date:today,sourceType:'daily_reading'};
+    currentVerse={ref:reading.label,date,sourceType:'daily_reading'};
   }
 
   async function loadBibleBooks(){
@@ -871,7 +926,7 @@ button{cursor:pointer}
       ${verseRowsHtml(selected)}
     `;
     $('customPassageBody').classList.remove('hidden');
-    currentVerse={ref,date:koreanDateString(),sourceType:'custom',bookCode,chapter,startVerse,endVerse};
+    currentVerse={ref,date:selectedReadingDate,sourceType:'custom',bookCode,chapter,startVerse,endVerse};
     $('readingNote').textContent='현재 선택한 말씀으로 묵상 기록이 저장돼요.';
   }
 
@@ -915,7 +970,7 @@ button{cursor:pointer}
       $('readingNote').textContent='원하는 말씀을 선택한 뒤 “이 말씀 보기”를 눌러 주세요.';
     }else{
       $('customPassageBody').classList.add('hidden');
-      await loadDailyReading();
+      await loadDailyReading(selectedReadingDate);
       $('readingNote').textContent='오늘의 성경 읽기표 본문으로 바로 묵상하거나, 원하는 말씀을 직접 선택할 수 있어요.';
     }
   };
@@ -930,6 +985,8 @@ button{cursor:pointer}
   $('meditationBookSelect').onchange=renderMeditationChapterControl;
   $('meditationChapterSelect').onchange=updateMeditationVerseNumbers;
   $('meditationVerseSelect').onchange=updateSelectedVersePreview;
+  $('prevReadingDate').onclick=()=>moveReadingDate(-1);
+  $('nextReadingDate').onclick=()=>moveReadingDate(1);
 
   async function loadGroups(){
     const r=await storage.get('my-groups');
@@ -1163,7 +1220,9 @@ button{cursor:pointer}
       setTimeout(()=>$('copyInline').onclick=()=>copyText(space.code),0);
       await ensureGroupMembership(space.code,myName);
     }
-    await loadDailyReading();
+    selectedReadingDate=READING_DATES.includes(koreanDateString())?koreanDateString():READING_DATES[READING_DATES.length-1];
+    await loadDailyReading(selectedReadingDate);
+    updateDateControls();
     await loadEntries();
     renderFeed();
     await renderGroupMembers(space.code);
@@ -1221,9 +1280,14 @@ button{cursor:pointer}
   }
   function renderFeed(){
     if(!currentSpace)return;
-    const list=[...entries].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
-    $('feedTitle').textContent=currentSpace.type==='solo'?'나의 기록':'함께 남긴 기록';
-    $('entriesArea').innerHTML=list.length?list.map(renderEntry).join(''):'<div class="empty">아직 남겨진 기록이 없어요.</div>';
+    const list=entries
+      .filter(entry=>entryDate(entry)===selectedReadingDate)
+      .sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+    const selectedIsToday=selectedReadingDate===koreanDateString();
+    $('feedTitle').textContent=selectedIsToday
+      ?(currentSpace.type==='solo'?'나의 기록':'함께 남긴 기록')
+      :`${archiveDateLabel(selectedReadingDate)} 기록`;
+    $('entriesArea').innerHTML=list.length?list.map(renderEntry).join(''):`<div class="empty">${selectedReadingDate===koreanDateString()?'아직 남겨진 기록이 없어요.':'이 날짜에 남겨진 기록이 없어요.'}</div>`;
     $('entriesArea').querySelectorAll('[data-heart]').forEach(button=>{
       button.onclick=()=>{
         const hearts=getHeartedEntries();
