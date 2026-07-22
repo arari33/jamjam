@@ -118,7 +118,10 @@ button{cursor:pointer}
 .avatar{width:26px;height:26px;border-radius:50%;background:var(--sage-soft);display:flex;align-items:center;justify-content:center;font-size:11px;color:#53604c}
 .author{font-size:12px;font-weight:600}
 .date{font-size:10px;color:var(--muted)}
-.del{margin-left:auto;border:0;background:transparent;color:var(--muted);font-size:10px;padding:4px}
+.heart-btn{margin-left:auto;border:0;background:transparent;color:var(--muted);font-size:20px;line-height:1;padding:5px;cursor:pointer;transition:transform .15s,color .15s}
+.heart-btn:hover{transform:scale(1.08)}
+.heart-btn.active{color:var(--brown)}
+.heart-btn:focus-visible{outline:1px solid var(--brown);outline-offset:3px;border-radius:50%}
 .entry-verse{font-family:"Gowun Batang",serif;font-size:14px;color:var(--brown);margin-bottom:13px}
 .entry-label{font-size:10px;color:var(--muted);margin-top:14px;margin-bottom:5px}
 .entry-text{font-family:"Gowun Batang",serif;font-size:16px;line-height:1.9;white-space:pre-wrap}
@@ -202,26 +205,7 @@ button{cursor:pointer}
   .verse-ref{font-size:23px}
 }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">$('copyInviteCode').onclick=async()=>{
-  const code=$('groupInviteCode').textContent.trim();
-  try{
-    if(navigator.clipboard&&window.isSecureContext){
-      await navigator.clipboard.writeText(code);
-    }else{
-      const ta=document.createElement('textarea');
-      ta.value=code;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      ta.remove();
-    }
-    alert('초대 코드가 복사되었어요.');
-  }catch(e){
-    alert('복사에 실패했어요.');
-    console.error(e);
-  }
-};
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <meta property="og:title" content="잠잠">
   <meta property="og:description" content="오늘의 말씀을 읽고 묵상을 기록하는 공간">
@@ -338,7 +322,6 @@ button{cursor:pointer}
     <section>
       <div class="feed-head">
         <div class="feed-title" id="feedTitle">기록</div>
-        <select class="filter" id="filterSelect"><option value="">전체 보기</option></select>
       </div>
       <div class="entries" id="entriesArea"></div>
     </section>
@@ -929,26 +912,38 @@ button{cursor:pointer}
     }
     $('feelingInput').value='';$('applicationInput').value='';$('freeInput').value='';renderFeed();showToast('기록했어요');
   };
-  async function deleteEntry(id){
-    if(currentSpace.type==='solo'){entries=entries.filter(e=>e.id!==id);await saveSoloEntries();return true}
-    const {error}=await supabaseClient.from('entries').delete().eq('id',id);
-    if(error){console.error(error);showToast('기록을 삭제하지 못했어요');return false}
-    entries=entries.filter(e=>e.id!==id);return true;
+  const HEARTS_KEY='jamjam-entry-hearts';
+  function getHeartedEntries(){
+    try{return new Set(JSON.parse(localStorage.getItem(HEARTS_KEY)||'[]'))}
+    catch(e){return new Set()}
+  }
+  function saveHeartedEntries(hearts){
+    localStorage.setItem(HEARTS_KEY,JSON.stringify([...hearts]));
   }
   function renderFeed(){
     if(!currentSpace)return;
-    const authors=[...new Set(entries.map(e=>e.author))],current=$('filterSelect').value;
-    $('filterSelect').innerHTML='<option value="">전체 보기</option>'+authors.map(a=>`<option value="${esc(a)}">${esc(a)}</option>`).join('');$('filterSelect').value=authors.includes(current)?current:'';
-    const list=entries.filter(e=>!$('filterSelect').value||e.author===$('filterSelect').value).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+    const list=[...entries].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
     $('feedTitle').textContent=currentSpace.type==='solo'?'나의 기록':'함께 남긴 기록';
     $('entriesArea').innerHTML=list.length?list.map(renderEntry).join(''):'<div class="empty">아직 남겨진 기록이 없어요.</div>';
-    $('entriesArea').querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(confirm('이 기록을 삭제할까요?')){if(await deleteEntry(b.dataset.del))renderFeed()}})
+    $('entriesArea').querySelectorAll('[data-heart]').forEach(button=>{
+      button.onclick=()=>{
+        const hearts=getHeartedEntries();
+        const id=button.dataset.heart;
+        hearts.has(id)?hearts.delete(id):hearts.add(id);
+        saveHeartedEntries(hearts);
+        const active=hearts.has(id);
+        button.classList.toggle('active',active);
+        button.textContent=active?'♥':'♡';
+        button.setAttribute('aria-label',active?'공감 취소':'공감하기');
+        button.setAttribute('aria-pressed',String(active));
+      };
+    });
   }
   function renderEntry(e){
     const body=e.mode==='free'?`<div class="entry-text">${esc(e.freeText)}</div>`:`${e.verseRef?`<div class="entry-verse">${esc(e.verseRef)}</div>`:''}${e.feeling?`<div class="entry-label">마음에 머문 것</div><div class="entry-text">${esc(e.feeling)}</div>`:''}${e.application?`<div class="entry-label">오늘의 기도와 적용</div><div class="entry-text">${esc(e.application)}</div>`:''}`;
-    return `<article class="entry"><div class="entry-meta"><span class="avatar">${esc((e.author||'?').slice(0,1))}</span><span class="author">${esc(e.author)}</span><span class="date">${esc(fmt(e.createdAt))}</span>${e.author===myName?`<button class="del" data-del="${esc(e.id)}">삭제</button>`:''}</div>${body}</article>`
+    const hearted=getHeartedEntries().has(String(e.id));
+    return `<article class="entry"><div class="entry-meta"><span class="avatar">${esc((e.author||'?').slice(0,1))}</span><span class="author">${esc(e.author)}</span><span class="date">${esc(fmt(e.createdAt))}</span><button type="button" class="heart-btn${hearted?' active':''}" data-heart="${esc(e.id)}" aria-label="${hearted?'공감 취소':'공감하기'}" aria-pressed="${hearted?'true':'false'}">${hearted?'♥':'♡'}</button></div>${body}</article>`;
   }
-  $('filterSelect').onchange=renderFeed;
   init();
 })();
 </script>
