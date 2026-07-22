@@ -79,6 +79,15 @@ button{cursor:pointer}
 .invite-copy-btn:hover{background:#f8f8f5}
 .group-arrow{font-size:18px;color:var(--muted);transition:.15s}
 .empty-groups{padding:22px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:12px;color:var(--muted);line-height:1.7}
+.members-section{margin-bottom:44px}
+.members-count{font-size:11px;color:var(--muted)}
+.members-list{border-top:1px solid var(--line)}
+.member-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.member-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 auto;background:var(--sage-soft);color:#53604c;font-family:"Gowun Batang",serif;font-size:14px}
+.member-name{min-width:0;flex:1;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.member-state{font-size:11px;color:var(--muted)}
+.member-state.done{color:var(--sage);font-weight:600}
+.members-empty{padding:18px 0;border-bottom:1px solid var(--line);font-size:12px;color:var(--muted)}
 
 /* journal */
 .journal-head{padding:34px 0 28px;border-bottom:1px solid var(--line)}
@@ -317,6 +326,14 @@ button{cursor:pointer}
         <div class="field"><label>오늘의 기록</label><textarea id="freeInput" placeholder="형식 없이 자유롭게 적어보세요." style="min-height:150px"></textarea></div>
       </div>
       <div class="composer-foot"><button class="save-btn" id="saveEntry">기록 남기기</button></div>
+    </section>
+
+    <section class="members-section hidden" id="membersSection">
+      <div class="feed-head">
+        <div class="feed-title">그룹원</div>
+        <div class="members-count" id="membersCount"></div>
+      </div>
+      <div class="members-list" id="membersList"></div>
     </section>
 
     <section>
@@ -681,10 +698,19 @@ button{cursor:pointer}
     if(n&&n.value){myName=n.value;showApp()}else entranceView.classList.remove('hidden');
     await loadGroups();
     await syncGroupsWithDatabase();
+    if(myName)await ensureLocalMemberships();
     await renderGroups();
   }
   function showApp(){entranceView.classList.add('hidden');appView.classList.remove('hidden');$('topName').textContent=myName;$('profileName').textContent=myName}
-  async function setName(name){myName=name.trim();if(!myName)return;await storage.set('author-name',myName);showApp();renderFeed()}
+  async function setName(name){
+    myName=name.trim();
+    if(!myName)return;
+    await storage.set('author-name',myName);
+    showApp();
+    await ensureLocalMemberships();
+    await renderGroups();
+    renderFeed();
+  }
   $('enterBtn').onclick=()=>setName($('entranceName').value);
   $('entranceName').onkeydown=e=>{if(e.key==='Enter')setName(e.target.value)};
   const profileTrigger=$('profileTrigger'),profileMenu=$('profileMenu');
@@ -775,30 +801,99 @@ button{cursor:pointer}
     if(total>0&&completed>=total)return '오늘 모두 묵상했어요. 💫';
     return `오늘 ${total}명 중 ${completed}명이 묵상했어요.`;
   }
-  async function getGroupParticipation(groupCode){
-    const today=localDateKey();
-    const {data,error}=await supabaseClient
-      .from('entries')
-      .select('author,created_at')
-      .eq('group_code',groupCode);
+  async function ensureGroupMembership(groupCode,nickname=myName){
+    const cleanCode=String(groupCode||'').trim().toUpperCase();
+    const cleanName=String(nickname||'').trim();
+    if(!cleanCode||!cleanName)return false;
+
+    const {error}=await supabaseClient
+      .from('group_members')
+      .upsert(
+        {group_code:cleanCode,nickname:cleanName},
+        {onConflict:'group_code,nickname',ignoreDuplicates:true}
+      );
 
     if(error){
-      console.error('그룹 참여 현황 조회 실패:',error);
-      return {total:0,completed:0};
+      console.error('그룹원 등록 실패:',error);
+      showToast('그룹원 정보를 저장하지 못했어요');
+      return false;
+    }
+    return true;
+  }
+
+  async function ensureLocalMemberships(){
+    if(!myName||!myGroups.length)return;
+    await Promise.all(myGroups.map(group=>ensureGroupMembership(group.code,myName)));
+  }
+
+  async function getGroupParticipation(groupCode){
+    const today=localDateKey();
+
+    const [{data:members,error:memberError},{data:todayEntries,error:entryError}]
+      =await Promise.all([
+        supabaseClient
+          .from('group_members')
+          .select('nickname,joined_at')
+          .eq('group_code',groupCode)
+          .order('joined_at',{ascending:true}),
+        supabaseClient
+          .from('entries')
+          .select('author,created_at')
+          .eq('group_code',groupCode)
+      ]);
+
+    if(memberError||entryError){
+      if(memberError)console.error('그룹원 조회 실패:',memberError);
+      if(entryError)console.error('그룹 참여 현황 조회 실패:',entryError);
+      return {total:0,completed:0,members:[]};
     }
 
-    const allAuthors=new Set();
-    const todayAuthors=new Set();
-    (data||[]).forEach(item=>{
-      if(!item.author)return;
-      allAuthors.add(item.author);
-      if(localDateKey(item.created_at)===today)todayAuthors.add(item.author);
-    });
+    const memberNames=new Set((members||[]).map(member=>member.nickname).filter(Boolean));
+    const completedNames=new Set(
+      (todayEntries||[])
+        .filter(entry=>entry.author&&localDateKey(entry.created_at)===today&&memberNames.has(entry.author))
+        .map(entry=>entry.author)
+    );
 
-    // 현재 구조에는 별도 그룹원 테이블이 없으므로,
-    // 지금까지 기록을 남긴 사람과 현재 사용자를 기준으로 그룹 인원을 계산한다.
-    if(myName)allAuthors.add(myName);
-    return {total:allAuthors.size,completed:todayAuthors.size};
+    return {
+      total:memberNames.size,
+      completed:completedNames.size,
+      members:(members||[]).map(member=>({
+        nickname:member.nickname,
+        completed:completedNames.has(member.nickname)
+      }))
+    };
+  }
+
+  async function renderGroupMembers(groupCode){
+    const section=$('membersSection');
+    const list=$('membersList');
+    const count=$('membersCount');
+
+    if(!currentSpace||currentSpace.type!=='group'){
+      section.classList.add('hidden');
+      list.innerHTML='';
+      count.textContent='';
+      return;
+    }
+
+    section.classList.remove('hidden');
+    list.innerHTML='<div class="members-empty">그룹원을 불러오는 중이에요.</div>';
+    count.textContent='';
+
+    const status=await getGroupParticipation(groupCode);
+    count.textContent=`${status.total}명`;
+
+    list.innerHTML=status.members.length
+      ?status.members.map(member=>`
+        <div class="member-row">
+          <span class="member-avatar">${esc((member.nickname||'?').slice(0,1))}</span>
+          <span class="member-name">${esc(member.nickname)}</span>
+          <span class="member-state${member.completed?' done':''}">
+            ${member.completed?'묵상 완료':'아직 참여 전'}
+          </span>
+        </div>`).join('')
+      :'<div class="members-empty">등록된 그룹원이 없어요.</div>';
   }
   async function renderGroups(){
     const wrap=$('groupList');
@@ -857,6 +952,8 @@ button{cursor:pointer}
       if(error.code!=='23505')break;
     }
     if(error){console.error(error);return showToast('그룹을 만들지 못했어요')}
+    const memberSaved=await ensureGroupMembership(c,myName);
+    if(!memberSaved)return;
     myGroups.push({code:c,name});await saveGroups();await renderGroups();$('newGroupName').value='';groupSheet.classList.add('hidden');showToast('그룹을 만들었어요');openGroup(c);
   };
   $('joinGroup').onclick=async()=>{
@@ -864,6 +961,8 @@ button{cursor:pointer}
     const {data,error}=await supabaseClient.from('groups').select('invite_code,name').eq('invite_code',c).maybeSingle();
     if(error){console.error(error);return showToast('그룹을 확인하지 못했어요')}
     if(!data)return showToast('그룹을 찾을 수 없어요');
+    const memberSaved=await ensureGroupMembership(c,myName);
+    if(!memberSaved)return;
     if(!myGroups.some(g=>g.code===c)){myGroups.push({code:data.invite_code,name:data.name});await saveGroups();await renderGroups()}
     $('joinCode').value='';groupSheet.classList.add('hidden');showToast('그룹에 참여했어요');openGroup(c);
   };
@@ -875,9 +974,14 @@ button{cursor:pointer}
     $('journalTitle').textContent=space.name;
     $('journalSub').textContent=space.type==='solo'?'오직 나만 볼 수 있는 기록 공간이에요.':'이 그룹 안에서만 서로의 기록이 보여요.';
     $('journalKicker').innerHTML=space.type==='solo'?'PRIVATE SPACE':`GROUP <span class="code">${esc(space.code)}</span> <button id="copyInline" style="border:0;background:transparent;color:var(--muted);font-size:10px;padding:0">코드 복사</button>`;
-    if(space.type==='group') setTimeout(()=>$('copyInline').onclick=()=>copyText(space.code),0);
+    if(space.type==='group'){
+      setTimeout(()=>$('copyInline').onclick=()=>copyText(space.code),0);
+      await ensureGroupMembership(space.code,myName);
+    }
     await loadDailyReading();
-    await loadEntries();renderFeed();
+    await loadEntries();
+    renderFeed();
+    await renderGroupMembers(space.code);
   }
   $('backHome').onclick=async()=>{
     journalView.classList.add('hidden');
@@ -910,7 +1014,12 @@ button{cursor:pointer}
       if(error){console.error(error);return showToast('기록을 저장하지 못했어요')}
       entries.push(entry);
     }
-    $('feelingInput').value='';$('applicationInput').value='';$('freeInput').value='';renderFeed();showToast('기록했어요');
+    $('feelingInput').value='';$('applicationInput').value='';$('freeInput').value='';renderFeed();
+    if(currentSpace.type==='group'){
+      await renderGroupMembers(currentSpace.code);
+      await renderGroups();
+    }
+    showToast('기록했어요');
   };
   const HEARTS_KEY='jamjam-entry-hearts';
   function getHeartedEntries(){
