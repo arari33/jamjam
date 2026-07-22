@@ -79,15 +79,44 @@ button{cursor:pointer}
 .invite-copy-btn:hover{background:#f8f8f5}
 .group-arrow{font-size:18px;color:var(--muted);transition:.15s}
 .empty-groups{padding:22px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:12px;color:var(--muted);line-height:1.7}
-.members-section{margin-bottom:44px}
-.members-count{font-size:11px;color:var(--muted)}
+.members-section{margin:-4px 0 34px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.members-summary{display:flex;align-items:center;gap:8px;padding:14px 0;cursor:pointer;list-style:none;font-size:12px;font-weight:600}
+.members-summary::-webkit-details-marker{display:none}
+.members-summary::after{content:'⌄';margin-left:auto;color:var(--muted);font-size:16px;transition:transform .2s ease}
+.members-section[open] .members-summary::after{transform:rotate(180deg)}
+.members-count{font-size:11px;color:var(--muted);font-weight:400}
 .members-list{border-top:1px solid var(--line)}
-.member-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.member-row{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
+.member-row:last-child{border-bottom:0}
 .member-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 auto;background:var(--sage-soft);color:#53604c;font-family:"Gowun Batang",serif;font-size:14px}
 .member-name{min-width:0;flex:1;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .member-state{font-size:11px;color:var(--muted)}
 .member-state.done{color:var(--sage);font-weight:600}
-.members-empty{padding:18px 0;border-bottom:1px solid var(--line);font-size:12px;color:var(--muted)}
+.members-empty{padding:16px 0;font-size:12px;color:var(--muted)}
+.selected-verse-field{margin-bottom:26px}
+.meditation-reference-picker{display:flex;flex-direction:column;gap:14px;margin-top:10px}
+.meditation-reference-field{display:flex;flex-direction:column;gap:7px}
+.meditation-reference-label{font-family:"Gowun Batang",serif;font-size:12px;color:var(--muted);letter-spacing:.02em}
+.meditation-passage-control{min-width:0}
+.meditation-fixed-value,.meditation-reference-select{display:flex;align-items:center;width:100%;min-height:50px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:14px;padding:0 16px;font-family:"Gowun Batang",serif;font-size:14px;box-sizing:border-box;transition:border-color .18s ease,background .18s ease,box-shadow .18s ease}
+.meditation-fixed-value{cursor:default}
+.meditation-reference-select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 20px) 22px,calc(100% - 15px) 22px;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:44px}
+.meditation-reference-select:focus{outline:none;border-color:var(--sage);background-color:var(--white);box-shadow:0 0 0 3px var(--sage-soft)}
+.meditation-reference-select:disabled{color:var(--muted);cursor:default;background-image:none}
+.selected-verse-preview{margin-top:14px;padding:16px 17px;background:var(--paper);border-left:2px solid var(--sage);border-radius:0 12px 12px 0;font-family:"Gowun Batang",serif;font-size:14px;line-height:1.85}
+@media(max-width:380px){
+  .meditation-reference-picker{gap:12px}
+  .meditation-fixed-value,.meditation-reference-select{min-height:48px;padding-left:14px;font-size:13px}
+}
+.entry-selected-verse{margin:18px 0 20px;padding:15px 16px;background:var(--paper);border-left:2px solid var(--sage)}
+.entry-selected-ref{font-size:11px;color:var(--brown);font-weight:600;margin-bottom:8px}
+.entry-selected-text{font-family:"Gowun Batang",serif;font-size:14px;line-height:1.8;white-space:pre-wrap}
+.heart-btn{position:relative}
+.heart-btn.heart-pop{animation:heartButtonPop .42s ease}
+.heart-btn.heart-pop::after{content:'♥';position:absolute;left:50%;top:50%;pointer-events:none;color:var(--brown);font-size:17px;animation:heartFloat .72s ease-out forwards}
+@keyframes heartButtonPop{0%{transform:scale(1)}35%{transform:scale(1.28)}70%{transform:scale(.94)}100%{transform:scale(1)}}
+@keyframes heartFloat{0%{opacity:0;transform:translate(-50%,-35%) scale(.65)}25%{opacity:.9}100%{opacity:0;transform:translate(-50%,-145%) scale(1.2)}}
+@media (prefers-reduced-motion:reduce){.heart-btn.heart-pop,.heart-btn.heart-pop::after{animation:none}}
 
 /* journal */
 .journal-head{padding:34px 0 28px;border-bottom:1px solid var(--line)}
@@ -284,6 +313,14 @@ button{cursor:pointer}
       <div class="journal-sub" id="journalSub"></div>
     </section>
 
+    <details class="members-section hidden" id="membersSection">
+      <summary class="members-summary">
+        <span>그룹원</span>
+        <span class="members-count" id="membersCount"></span>
+      </summary>
+      <div class="members-list" id="membersList"></div>
+    </details>
+
     <section class="verse-block">
       <div class="reading-head">
         <div class="reading-copy">
@@ -319,6 +356,34 @@ button{cursor:pointer}
         <button data-mode="free">자유 기록</button>
       </div>
       <div id="structuredFields">
+        <div class="field selected-verse-field">
+          <label>오늘 마음에 머문 한 절</label>
+          <div class="meditation-reference-picker">
+            <div class="meditation-reference-field">
+              <span class="meditation-reference-label">말씀</span>
+              <div class="meditation-passage-control" id="meditationBookControl">
+                <span class="meditation-fixed-value" id="meditationBookFixed">말씀을 불러오는 중이에요.</span>
+                <select id="meditationBookSelect" class="meditation-reference-select hidden" aria-label="성경 말씀 선택"></select>
+              </div>
+            </div>
+
+            <div class="meditation-reference-field">
+              <span class="meditation-reference-label">장</span>
+              <div class="meditation-passage-control" id="meditationChapterControl">
+                <span class="meditation-fixed-value" id="meditationChapterFixed">-</span>
+                <select id="meditationChapterSelect" class="meditation-reference-select hidden" aria-label="장 선택"></select>
+              </div>
+            </div>
+
+            <div class="meditation-reference-field">
+              <span class="meditation-reference-label">절</span>
+              <select id="meditationVerseSelect" class="meditation-reference-select" aria-label="절 선택">
+                <option value="">절을 선택해 주세요.</option>
+              </select>
+            </div>
+          </div>
+          <div class="selected-verse-preview hidden" id="selectedVersePreview"></div>
+        </div>
         <div class="field"><label>마음에 머문 것</label><textarea id="feelingInput" placeholder="말씀을 읽으며 마음에 남은 것을 적어보세요."></textarea></div>
         <div class="field"><label>오늘의 기도와 적용</label><textarea id="applicationInput" placeholder="오늘 삶에 가져가고 싶은 마음을 적어보세요."></textarea></div>
       </div>
@@ -326,14 +391,6 @@ button{cursor:pointer}
         <div class="field"><label>오늘의 기록</label><textarea id="freeInput" placeholder="형식 없이 자유롭게 적어보세요." style="min-height:150px"></textarea></div>
       </div>
       <div class="composer-foot"><button class="save-btn" id="saveEntry">기록 남기기</button></div>
-    </section>
-
-    <section class="members-section hidden" id="membersSection">
-      <div class="feed-head">
-        <div class="feed-title">그룹원</div>
-        <div class="members-count" id="membersCount"></div>
-      </div>
-      <div class="members-list" id="membersList"></div>
     </section>
 
     <section>
@@ -473,6 +530,8 @@ button{cursor:pointer}
   let myGroups=[];
   let currentSpace=null;
   let entries=[];
+  let selectableMeditationPassages=[];
+  let selectableMeditationVerses=[];
   let mode='structured';
   let currentVerse=null;
 
@@ -534,6 +593,125 @@ button{cursor:pointer}
       `;
     }).join('');
   }
+  function verseChoiceFromRow(raw,bookName){
+    const row=normalizeVerse(raw);
+    return {
+      bookName,
+      chapter:String(row.chapter),
+      verseLabel:row.verseLabel,
+      ref:`${bookName} ${row.chapter}:${row.verseLabel}`,
+      text:String(row.text||'').trim()
+    };
+  }
+  function setMeditationVerseOptions(verses){
+    const cleaned=verses.filter(item=>item.ref&&item.text);
+    const bookMap=new Map();
+
+    cleaned.forEach(item=>{
+      if(!bookMap.has(item.bookName)){
+        bookMap.set(item.bookName,{name:item.bookName,chapters:new Map()});
+      }
+      const book=bookMap.get(item.bookName);
+      if(!book.chapters.has(item.chapter)){
+        book.chapters.set(item.chapter,[]);
+      }
+      book.chapters.get(item.chapter).push(item);
+    });
+
+    selectableMeditationPassages=[...bookMap.values()].map(book=>({
+      name:book.name,
+      chapters:[...book.chapters.entries()].map(([chapter,chapterVerses])=>({
+        chapter,
+        verses:chapterVerses
+      }))
+    }));
+
+    renderMeditationBookControl();
+  }
+  function renderMeditationBookControl(){
+    const bookSelect=$('meditationBookSelect');
+    const bookFixed=$('meditationBookFixed');
+
+    if(selectableMeditationPassages.length>1){
+      bookFixed.classList.add('hidden');
+      bookSelect.classList.remove('hidden');
+      bookSelect.innerHTML=selectableMeditationPassages
+        .map((book,index)=>`<option value="${index}">${esc(book.name)}</option>`)
+        .join('');
+      bookSelect.value='0';
+    }else{
+      bookSelect.classList.add('hidden');
+      bookFixed.classList.remove('hidden');
+      bookFixed.textContent=selectableMeditationPassages[0]?.name||'선택 가능한 말씀이 없어요.';
+    }
+
+    renderMeditationChapterControl();
+  }
+  function currentMeditationBook(){
+    if(!selectableMeditationPassages.length)return null;
+    if(selectableMeditationPassages.length===1)return selectableMeditationPassages[0];
+    const index=Number($('meditationBookSelect').value||0);
+    return selectableMeditationPassages[index]||selectableMeditationPassages[0];
+  }
+  function renderMeditationChapterControl(){
+    const book=currentMeditationBook();
+    const chapters=book?.chapters||[];
+    const chapterSelect=$('meditationChapterSelect');
+    const chapterFixed=$('meditationChapterFixed');
+
+    if(chapters.length>1){
+      chapterFixed.classList.add('hidden');
+      chapterSelect.classList.remove('hidden');
+      chapterSelect.innerHTML=chapters
+        .map((item,index)=>`<option value="${index}">${esc(item.chapter)}장</option>`)
+        .join('');
+      chapterSelect.value='0';
+    }else{
+      chapterSelect.classList.add('hidden');
+      chapterFixed.classList.remove('hidden');
+      chapterFixed.textContent=chapters[0]?`${chapters[0].chapter}장`:'-';
+    }
+
+    updateMeditationVerseNumbers();
+  }
+  function currentMeditationChapter(){
+    const book=currentMeditationBook();
+    const chapters=book?.chapters||[];
+    if(!chapters.length)return null;
+    if(chapters.length===1)return chapters[0];
+    const index=Number($('meditationChapterSelect').value||0);
+    return chapters[index]||chapters[0];
+  }
+  function updateMeditationVerseNumbers(){
+    const chapter=currentMeditationChapter();
+    selectableMeditationVerses=chapter?.verses||[];
+    const verseSelect=$('meditationVerseSelect');
+
+    verseSelect.innerHTML='<option value="">절을 선택해 주세요.</option>'+
+      selectableMeditationVerses
+        .map((item,index)=>`<option value="${index}">${esc(item.verseLabel)}절</option>`)
+        .join('');
+    verseSelect.value='';
+    verseSelect.disabled=!selectableMeditationVerses.length;
+    updateSelectedVersePreview();
+  }
+  function selectedMeditationVerse(){
+    const value=$('meditationVerseSelect').value;
+    if(value==='')return null;
+    const index=Number(value);
+    return Number.isInteger(index)?selectableMeditationVerses[index]||null:null;
+  }
+  function updateSelectedVersePreview(){
+    const selected=selectedMeditationVerse();
+    const preview=$('selectedVersePreview');
+    if(!selected){
+      preview.textContent='';
+      preview.classList.add('hidden');
+      return;
+    }
+    preview.innerHTML=`<strong>📖 ${esc(selected.ref)}</strong><br>${esc(selected.text)}`;
+    preview.classList.remove('hidden');
+  }
   async function loadBibleBookCache(){
     // 성경 목록은 정적 메타데이터를 사용한다.
     // bible_verses 전체 조회는 Supabase 기본 최대 1,000행 제한 때문에 사용할 수 없다.
@@ -569,6 +747,7 @@ button{cursor:pointer}
     }
 
     const sections=[];
+    const verseChoices=[];
     for(const range of reading.ranges){
       const book=bibleBooksCache.find(item=>item.name===range.bookName);
       if(!book){
@@ -587,6 +766,7 @@ button{cursor:pointer}
         const row=normalizeVerse(raw);
         if(!grouped[row.chapter])grouped[row.chapter]=[];
         grouped[row.chapter].push(raw);
+        verseChoices.push(verseChoiceFromRow(raw,range.bookName));
       });
 
       Object.keys(grouped).sort((a,b)=>Number(a)-Number(b)).forEach(chapter=>{
@@ -600,6 +780,7 @@ button{cursor:pointer}
     }
 
     $('dailyReadingBody').innerHTML=sections.join('')||'<div class="reading-empty">해당 날짜의 본문이 아직 등록되지 않았어요.</div>';
+    setMeditationVerseOptions(verseChoices);
     currentVerse={ref:reading.label,date:today,sourceType:'daily_reading'};
   }
 
@@ -684,6 +865,7 @@ button{cursor:pointer}
     });
 
     const ref=passageRef(bookName,chapter,startVerse,endVerse);
+    setMeditationVerseOptions(selected.map(raw=>verseChoiceFromRow(raw,bookName)));
     $('customPassageBody').innerHTML=`
       <div class="passage-title">${esc(ref)}</div>
       ${verseRowsHtml(selected)}
@@ -745,6 +927,9 @@ button{cursor:pointer}
     if(Number($('endVerseSelect').value)<start)$('endVerseSelect').value=String(start);
   };
   $('showCustomPassage').onclick=showCustomPassage;
+  $('meditationBookSelect').onchange=renderMeditationChapterControl;
+  $('meditationChapterSelect').onchange=updateMeditationVerseNumbers;
+  $('meditationVerseSelect').onchange=updateSelectedVersePreview;
 
   async function loadGroups(){
     const r=await storage.get('my-groups');
@@ -882,7 +1067,7 @@ button{cursor:pointer}
     count.textContent='';
 
     const status=await getGroupParticipation(groupCode);
-    count.textContent=`${status.total}명`;
+    count.textContent=`(${status.total}명)`;
 
     list.innerHTML=status.members.length
       ?status.members.map(member=>`
@@ -997,24 +1182,29 @@ button{cursor:pointer}
     }
     const {data,error}=await supabaseClient.from('entries').select('*').eq('group_code',currentSpace.code).order('created_at',{ascending:false});
     if(error){console.error(error);entries=[];showToast('그룹 기록을 불러오지 못했어요');return}
-    entries=(data||[]).map(item=>({id:item.id,author:item.author,mode:item.mode,verseRef:item.verse_ref,feeling:item.feeling,application:item.application,freeText:item.free_text,createdAt:item.created_at}));
+    entries=(data||[]).map(item=>({id:item.id,author:item.author,mode:item.mode,verseRef:item.verse_ref,selectedVerseRef:item.selected_verse_ref,selectedVerseText:item.selected_verse_text,feeling:item.feeling,application:item.application,freeText:item.free_text,createdAt:item.created_at}));
   }
   async function saveSoloEntries(){await storage.set('entries:'+currentSpace.code,JSON.stringify(entries))}
   $('modeTabs').onclick=e=>{const b=e.target.closest('[data-mode]');if(!b)return;mode=b.dataset.mode;[...$('modeTabs').children].forEach(x=>x.classList.toggle('active',x===b));$('structuredFields').classList.toggle('hidden',mode!=='structured');$('freeFields').classList.toggle('hidden',mode!=='free')};
   $('saveEntry').onclick=async()=>{
     const entry={id:newId(),author:myName,createdAt:new Date().toISOString(),mode};
     if(mode==='structured'){
+      const selectedVerse=selectedMeditationVerse();
+      if(!selectedVerse)return showToast('마음에 머문 한 절을 선택해 주세요');
       entry.feeling=$('feelingInput').value.trim();entry.application=$('applicationInput').value.trim();
-      if(!entry.feeling&&!entry.application)return showToast('기록을 적어주세요');entry.verseRef=currentVerse.ref;
+      if(!entry.feeling&&!entry.application)return showToast('기록을 적어주세요');
+      entry.verseRef=currentVerse.ref;
+      entry.selectedVerseRef=selectedVerse.ref;
+      entry.selectedVerseText=selectedVerse.text;
     }else{entry.freeText=$('freeInput').value.trim();if(!entry.freeText)return showToast('기록을 적어주세요')}
     if(currentSpace.type==='solo'){
       entries.push(entry);await saveSoloEntries();
     }else{
-      const {error}=await supabaseClient.from('entries').insert({id:entry.id,group_code:currentSpace.code,author:entry.author,mode:entry.mode,verse_ref:entry.verseRef||null,feeling:entry.feeling||null,application:entry.application||null,free_text:entry.freeText||null,created_at:entry.createdAt});
+      const {error}=await supabaseClient.from('entries').insert({id:entry.id,group_code:currentSpace.code,author:entry.author,mode:entry.mode,verse_ref:entry.verseRef||null,selected_verse_ref:entry.selectedVerseRef||null,selected_verse_text:entry.selectedVerseText||null,feeling:entry.feeling||null,application:entry.application||null,free_text:entry.freeText||null,created_at:entry.createdAt});
       if(error){console.error(error);return showToast('기록을 저장하지 못했어요')}
       entries.push(entry);
     }
-    $('feelingInput').value='';$('applicationInput').value='';$('freeInput').value='';renderFeed();
+    $('feelingInput').value='';$('applicationInput').value='';$('freeInput').value='';$('meditationVerseSelect').value='';updateSelectedVersePreview();renderFeed();
     if(currentSpace.type==='group'){
       await renderGroupMembers(currentSpace.code);
       await renderGroups();
@@ -1042,6 +1232,12 @@ button{cursor:pointer}
         saveHeartedEntries(hearts);
         const active=hearts.has(id);
         button.classList.toggle('active',active);
+        if(active){
+          button.classList.remove('heart-pop');
+          void button.offsetWidth;
+          button.classList.add('heart-pop');
+          window.setTimeout(()=>button.classList.remove('heart-pop'),760);
+        }
         button.textContent=active?'♥':'♡';
         button.setAttribute('aria-label',active?'공감 취소':'공감하기');
         button.setAttribute('aria-pressed',String(active));
@@ -1049,7 +1245,14 @@ button{cursor:pointer}
     });
   }
   function renderEntry(e){
-    const body=e.mode==='free'?`<div class="entry-text">${esc(e.freeText)}</div>`:`${e.verseRef?`<div class="entry-verse">${esc(e.verseRef)}</div>`:''}${e.feeling?`<div class="entry-label">마음에 머문 것</div><div class="entry-text">${esc(e.feeling)}</div>`:''}${e.application?`<div class="entry-label">오늘의 기도와 적용</div><div class="entry-text">${esc(e.application)}</div>`:''}`;
+    const selectedVerseBlock=e.selectedVerseRef?`
+      <div class="entry-selected-verse">
+        <div class="entry-selected-ref">${esc(e.selectedVerseRef)}</div>
+        ${e.selectedVerseText?`<div class="entry-selected-text">${esc(e.selectedVerseText)}</div>`:''}
+      </div>`:'';
+    const body=e.mode==='free'
+      ?`<div class="entry-text">${esc(e.freeText)}</div>`
+      :`${selectedVerseBlock}${e.feeling?`<div class="entry-label">마음에 머문 것</div><div class="entry-text">${esc(e.feeling)}</div>`:''}${e.application?`<div class="entry-label">오늘의 기도와 적용</div><div class="entry-text">${esc(e.application)}</div>`:''}`;
     const hearted=getHeartedEntries().has(String(e.id));
     return `<article class="entry"><div class="entry-meta"><span class="avatar">${esc((e.author||'?').slice(0,1))}</span><span class="author">${esc(e.author)}</span><span class="date">${esc(fmt(e.createdAt))}</span><button type="button" class="heart-btn${hearted?' active':''}" data-heart="${esc(e.id)}" aria-label="${hearted?'공감 취소':'공감하기'}" aria-pressed="${hearted?'true':'false'}">${hearted?'♥':'♡'}</button></div>${body}</article>`;
   }
