@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>잠잠 — 날짜별 묵상 기록</title>
+<meta name="app-version" content="1.2.1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -153,7 +154,9 @@ button{cursor:pointer}
 .avatar{width:26px;height:26px;border-radius:50%;background:var(--sage-soft);display:flex;align-items:center;justify-content:center;font-size:11px;color:#53604c}
 .author{font-size:12px;font-weight:600}
 .date{font-size:10px;color:var(--muted)}
-.heart-btn{margin-left:auto;border:0;background:transparent;color:var(--muted);font-size:20px;line-height:1;padding:5px;cursor:pointer;transition:transform .15s,color .15s}
+.heart-wrap{margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:30px}
+.heart-btn{border:0;background:transparent;color:var(--muted);font-size:20px;line-height:1;padding:4px 5px 2px;cursor:pointer;transition:transform .15s,color .15s}
+.heart-count{font-size:10px;line-height:1;color:var(--muted);min-height:10px}
 .heart-btn:hover{transform:scale(1.08)}
 .heart-btn.active{color:var(--brown)}
 .heart-btn:focus-visible{outline:1px solid var(--brown);outline-offset:3px;border-radius:50%}
@@ -238,6 +241,17 @@ button{cursor:pointer}
 .sheet input{flex:1;min-width:0;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:11px 12px;outline:0;font-size:13px}
 .sheet input:focus{border-color:var(--sage)}
 .sheet-action{border:0;border-radius:10px;background:var(--ink);color:white;padding:0 15px;font-size:12px;white-space:nowrap}
+.plan-form{display:flex;flex-direction:column;gap:18px}
+.plan-field{display:flex;flex-direction:column;gap:8px}
+.plan-label{font-size:12px;font-weight:600}
+.plan-options{display:flex;flex-wrap:wrap;gap:8px}
+.plan-option{display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:10px 13px;font-size:12px;background:var(--paper);color:var(--muted);cursor:pointer;transition:background .18s ease,color .18s ease,border-color .18s ease,transform .12s ease}
+.plan-option:hover{border-color:var(--brown);color:var(--brown)}
+.plan-option:active{transform:scale(.97)}
+.plan-option.selected{background:var(--brown);border-color:var(--brown);color:#fff;font-weight:600}
+.plan-option input{position:absolute;opacity:0;pointer-events:none}
+.plan-select{width:100%;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:11px 12px;outline:0;font-size:13px}
+.plan-summary{font-family:"Gowun Batang",serif;font-size:13px;line-height:1.7;color:var(--brown);padding:13px 14px;background:var(--paper);border-radius:12px}
 .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:999px;padding:10px 16px;font-size:11px;opacity:0;pointer-events:none;transition:.2s;z-index:100}
 .toast.show{opacity:1}
 @media(max-width:600px){
@@ -419,8 +433,43 @@ button{cursor:pointer}
     <div class="sheet-head"><h3>함께할 공간</h3><button class="sheet-close" id="closeGroupSheet">×</button></div>
     <div class="sheet-section">
       <h4>새 그룹 만들기</h4>
-      <p>그룹을 만든 뒤 초대 코드를 친구들에게 보내주세요.</p>
-      <div class="sheet-row"><input id="newGroupName" placeholder="예: 토요일 묵상 모임"><button class="sheet-action" id="createGroup">만들기</button></div>
+      <p>그룹 이름과 함께 읽을 말씀의 범위를 정해 주세요.</p>
+      <div class="plan-form">
+        <div class="plan-field">
+          <label class="plan-label" for="newGroupName">그룹 이름</label>
+          <input id="newGroupName" placeholder="예: 함께 묵상방">
+        </div>
+        <div class="plan-field">
+          <span class="plan-label">성경 읽기 플랜</span>
+          <div class="plan-options">
+            <label class="plan-option"><input type="radio" name="planType" value="old"> 구약 전체</label>
+            <label class="plan-option"><input type="radio" name="planType" value="new"> 신약 전체</label>
+            <label class="plan-option"><input type="radio" name="planType" value="custom"> 성경 직접 선택</label>
+            <label class="plan-option"><input type="radio" name="planType" value="today"> 오늘의 말씀 따라가기</label>
+          </div>
+        </div>
+        <div class="plan-field hidden" id="customBookField">
+          <label class="plan-label" for="planStartBook">시작할 말씀</label>
+          <select class="plan-select" id="planStartBook"></select>
+        </div>
+        <div class="plan-field hidden" id="chaptersPerDayField">
+          <label class="plan-label" for="chaptersPerDay">하루에 몇 장 읽으실 계획인가요?</label>
+          <select class="plan-select" id="chaptersPerDay">
+            <option value="1">1장</option>
+            <option value="2">2장</option>
+            <option value="3">3장</option>
+            <option value="4">4장</option>
+            <option value="5" selected>5장</option>
+            <option value="6">6장</option>
+            <option value="7">7장</option>
+            <option value="8">8장</option>
+            <option value="9">9장</option>
+            <option value="10">10장</option>
+          </select>
+        </div>
+        <div class="plan-summary" id="planSummary"></div>
+        <button class="sheet-action" id="createGroup" style="min-height:44px">그룹 만들기</button>
+      </div>
     </div>
     <div class="sheet-section">
       <h4>초대 코드로 참여하기</h4>
@@ -463,8 +512,16 @@ button{cursor:pointer}
       ]
     },
     '2026-07-23':{
-      label:'전도서 2–4장',
-      ranges:[{bookName:'전도서',startChapter:2,endChapter:4}]
+      label:'전도서 2–5장',
+      ranges:[{bookName:'전도서',startChapter:2,endChapter:5}]
+    },
+    '2026-07-24':{
+      label:'전도서 6–9장',
+      ranges:[{bookName:'전도서',startChapter:6,endChapter:9}]
+    },
+    '2026-07-25':{
+      label:'전도서 10–12장',
+      ranges:[{bookName:'전도서',startChapter:10,endChapter:12}]
     }
   };
   const BIBLE_TRANSLATION_CODE='KRV_TEST';
@@ -538,6 +595,50 @@ button{cursor:pointer}
   ];
   let bibleBooksCache=[...BIBLE_BOOKS];
 
+  function planStartBook(planType,customCode){
+    if(planType==='old')return 'GEN';
+    if(planType==='new')return 'MAT';
+    if(planType==='today')return null;
+    return customCode||'GEN';
+  }
+  function bookByCode(code){return BIBLE_BOOKS.find(book=>book.code===code)||BIBLE_BOOKS[0]}
+  function groupPlanDescription(group){
+    if(group.planType==='today')return `${group.name}은 잠잠의 오늘의 말씀을 함께 묵상해요.`;
+    const startBook=bookByCode(group.startBook||planStartBook(group.planType));
+    const scope=group.planType==='old'?'구약':group.planType==='new'?'신약':startBook.name;
+    return `${group.name}은 ${scope}부터 매일 ${group.chaptersPerDay||1}장씩 함께 읽고 묵상해요.`;
+  }
+  function dateDiffDays(fromDate,toDate){
+    const from=new Date(`${fromDate}T00:00:00+09:00`);
+    const to=new Date(`${toDate}T00:00:00+09:00`);
+    return Math.max(0,Math.floor((to-from)/(24*60*60*1000)));
+  }
+  function readingForGroupDate(group,date){
+    const perDay=Number(group.chaptersPerDay)||1;
+    const startDate=group.startedAt||koreanDateString();
+    const offset=dateDiffDays(startDate,date)*perDay;
+    const firstOrder=bookByCode(group.startBook||planStartBook(group.planType)).order;
+    const lastOrder=group.planType==='old'?39:66;
+    let remaining=offset;
+    let bookIndex=BIBLE_BOOKS.findIndex(book=>book.order===firstOrder);
+    while(bookIndex>=0&&bookIndex<BIBLE_BOOKS.length&&BIBLE_BOOKS[bookIndex].order<=lastOrder){
+      const book=BIBLE_BOOKS[bookIndex];
+      if(remaining<book.chapters)break;
+      remaining-=book.chapters;bookIndex++;
+    }
+    if(bookIndex<0||bookIndex>=BIBLE_BOOKS.length||BIBLE_BOOKS[bookIndex].order>lastOrder)return null;
+    let chapter=remaining+1,left=perDay;
+    const ranges=[];
+    while(left>0&&bookIndex<BIBLE_BOOKS.length&&BIBLE_BOOKS[bookIndex].order<=lastOrder){
+      const book=BIBLE_BOOKS[bookIndex];
+      const end=Math.min(book.chapters,chapter+left-1);
+      ranges.push({bookName:book.name,startChapter:chapter,endChapter:end});
+      left-=end-chapter+1;bookIndex++;chapter=1;
+    }
+    const label=ranges.map(range=>range.startChapter===range.endChapter?`${range.bookName} ${range.startChapter}장`:`${range.bookName} ${range.startChapter}–${range.endChapter}장`).join(' · ');
+    return {label,ranges};
+  }
+
   const storage={
     async get(k){const v=localStorage.getItem('l:'+k);return v?{value:v}:null},
     async set(k,v){localStorage.setItem('l:'+k,v)}
@@ -550,6 +651,7 @@ button{cursor:pointer}
   let selectableMeditationPassages=[];
   let mode='structured';
   let currentVerse=null;
+  let heartState=new Map();
 
   const $=id=>document.getElementById(id);
   const entranceView=$('entranceView'),appView=$('appView'),homeView=$('homeView'),journalView=$('journalView');
@@ -577,6 +679,11 @@ button{cursor:pointer}
   function archiveDateLabel(dateString){
     const [y,m,d]=dateString.split('-');return `${y}.${m}.${d}`;
   }
+  function seoulDayRange(dateString){
+    const start=new Date(`${dateString}T00:00:00+09:00`);
+    const end=new Date(start.getTime()+24*60*60*1000);
+    return {start:start.toISOString(),end:end.toISOString()};
+  }
   function code(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<6;i++)s+=c[Math.floor(Math.random()*c.length)];return s}
   function fmt(iso){const d=new Date(iso);return new Intl.DateTimeFormat('ko-KR',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}).format(d)}
   function todayLabel(){return new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'long',day:'numeric',weekday:'long'}).format(new Date())}
@@ -586,6 +693,10 @@ button{cursor:pointer}
   let selectedReadingDate=READING_DATES.includes(koreanDateString())?koreanDateString():READING_DATES[READING_DATES.length-1];
 
   function readingForDate(date){
+    if(currentSpace&&currentSpace.type==='group'){
+      if(currentSpace.planType==='today')return DAILY_READING_PREVIEW[date]||null;
+      return readingForGroupDate(currentSpace,date);
+    }
     return DAILY_READING_PREVIEW[date]||null;
   }
   function dateLabelFor(dateString){
@@ -598,12 +709,15 @@ button{cursor:pointer}
   }
   function updateDateControls(){
     const index=READING_DATES.indexOf(selectedReadingDate);
-    $('prevReadingDate').disabled=index<=0;
-    $('nextReadingDate').disabled=index<0||index>=READING_DATES.length-1;
+    const isGroup=currentSpace&&currentSpace.type==='group';
+    const followsTodayPlan=isGroup&&currentSpace.planType==='today';
+    const groupStart=isGroup?(currentSpace.startedAt||koreanDateString()):null;
+    $('prevReadingDate').disabled=followsTodayPlan?index<=0:isGroup?selectedReadingDate<=groupStart:index<=0;
+    $('nextReadingDate').disabled=followsTodayPlan?(index<0||index>=READING_DATES.length-1):isGroup?selectedReadingDate>=koreanDateString():(index<0||index>=READING_DATES.length-1);
     const isToday=selectedReadingDate===koreanDateString();
     document.querySelector('.composer').classList.toggle('hidden',!isToday);
-    $('toggleCustomVerse').classList.toggle('hidden',!isToday);
-    if(!isToday){
+    $('toggleCustomVerse').classList.toggle('hidden',isGroup||!isToday);
+    if(isGroup||!isToday){
       $('customVersePicker').classList.add('hidden');
       $('dailyReadingBody').classList.remove('hidden');
       $('toggleCustomVerse').classList.remove('active');
@@ -611,12 +725,20 @@ button{cursor:pointer}
     }
   }
   async function moveReadingDate(direction){
-    const index=READING_DATES.indexOf(selectedReadingDate);
-    const nextIndex=index+direction;
-    if(nextIndex<0||nextIndex>=READING_DATES.length)return;
-    selectedReadingDate=READING_DATES[nextIndex];
+    if(currentSpace&&currentSpace.type==='group'&&currentSpace.planType!=='today'){
+      const d=new Date(`${selectedReadingDate}T00:00:00+09:00`);d.setDate(d.getDate()+direction);
+      const next=koreanDateString(d);
+      if(next<(currentSpace.startedAt||koreanDateString())||next>koreanDateString())return;
+      selectedReadingDate=next;
+    }else{
+      const index=READING_DATES.indexOf(selectedReadingDate);
+      const nextIndex=index+direction;
+      if(nextIndex<0||nextIndex>=READING_DATES.length)return;
+      selectedReadingDate=READING_DATES[nextIndex];
+    }
     await loadDailyReading(selectedReadingDate);
     updateDateControls();
+    await loadEntries();
     renderFeed();
   }
   function passageRef(bookName,chapter,startVerse,endVerse){
@@ -1007,7 +1129,7 @@ button{cursor:pointer}
 
     const {data,error}=await supabaseClient
       .from('groups')
-      .select('invite_code,name')
+      .select('invite_code,name,plan_type,start_book,chapters_per_day,started_at')
       .in('invite_code',codes);
 
     // 네트워크 오류 때 로컬 그룹을 지워버리면 안 되므로 기존 목록을 유지한다.
@@ -1016,7 +1138,7 @@ button{cursor:pointer}
       return;
     }
 
-    const existing=new Map((data||[]).map(g=>[g.invite_code,{code:g.invite_code,name:g.name}]));
+    const existing=new Map((data||[]).map(g=>[g.invite_code,{code:g.invite_code,name:g.name,planType:g.plan_type||'new',startBook:g.plan_type==='today'?null:(g.start_book||'MAT'),chaptersPerDay:g.plan_type==='today'?null:(Number(g.chapters_per_day)||5),startedAt:g.started_at||koreanDateString()}]));
     const synced=[];
     const seen=new Set();
 
@@ -1069,7 +1191,8 @@ button{cursor:pointer}
   }
 
   async function getGroupParticipation(groupCode){
-    const today=localDateKey();
+    const today=koreanDateString();
+    const {start,end}=seoulDayRange(today);
 
     const [{data:members,error:memberError},{data:todayEntries,error:entryError}]
       =await Promise.all([
@@ -1080,8 +1203,10 @@ button{cursor:pointer}
           .order('joined_at',{ascending:true}),
         supabaseClient
           .from('entries')
-          .select('author,created_at')
+          .select('author')
           .eq('group_code',groupCode)
+          .gte('created_at',start)
+          .lt('created_at',end)
       ]);
 
     if(memberError||entryError){
@@ -1093,7 +1218,7 @@ button{cursor:pointer}
     const memberNames=new Set((members||[]).map(member=>member.nickname).filter(Boolean));
     const completedNames=new Set(
       (todayEntries||[])
-        .filter(entry=>entry.author&&localDateKey(entry.created_at)===today&&memberNames.has(entry.author))
+        .filter(entry=>entry.author&&memberNames.has(entry.author))
         .map(entry=>entry.author)
     );
 
@@ -1184,43 +1309,73 @@ button{cursor:pointer}
   picker.onclick=e=>{if(e.target===picker)closePicker()};
   function closePicker(){picker.classList.add('hidden')}
 
+  function selectedPlanType(){return document.querySelector('input[name="planType"]:checked')?.value||''}
+  function updatePlanForm(){
+    const type=selectedPlanType();
+    $('customBookField').classList.toggle('hidden',type!=='custom');
+    $('chaptersPerDayField').classList.toggle('hidden',!type||type==='today');
+    document.querySelectorAll('.plan-option').forEach(option=>option.classList.toggle('selected',option.querySelector('input')?.checked));
+    const groupName=$('newGroupName').value.trim()||'이 그룹';
+    if(!type){
+      $('planSummary').textContent='먼저 성경 읽기 플랜을 선택해 주세요.';
+      return;
+    }
+    if(type==='today'){
+      $('planSummary').textContent=`${groupName}은 잠잠의 오늘의 말씀을 함께 묵상해요.`;
+      return;
+    }
+    const start=bookByCode(planStartBook(type,$('planStartBook').value));
+    $('planSummary').textContent=`${groupName}은 ${type==='old'?'구약':type==='new'?'신약':start.name}부터 매일 ${$('chaptersPerDay').value}장씩 함께 읽고 묵상해요.`;
+  }
+  $('planStartBook').innerHTML=BIBLE_BOOKS.map(book=>`<option value="${book.code}">${book.name}</option>`).join('');
+  document.querySelectorAll('input[name="planType"]').forEach(input=>input.onchange=updatePlanForm);
+  $('planStartBook').onchange=updatePlanForm;
+  $('chaptersPerDay').onchange=updatePlanForm;
+  $('newGroupName').oninput=updatePlanForm;
+  updatePlanForm();
+
   $('createGroup').onclick=async()=>{
     const name=$('newGroupName').value.trim();if(!name)return showToast('그룹 이름을 입력해주세요');
+    const planType=selectedPlanType();
+    if(!planType)return showToast('성경 읽기 플랜을 선택해주세요');
+    const startBook=planStartBook(planType,$('planStartBook').value);
+    const chaptersPerDay=planType==='today'?null:(Number($('chaptersPerDay').value)||1);
+    const startedAt=koreanDateString();
     let c,error;
     for(let i=0;i<5;i++){
       c=code();
-      ({error}=await supabaseClient.from('groups').insert({invite_code:c,name}));
+      ({error}=await supabaseClient.from('groups').insert({invite_code:c,name,plan_type:planType,start_book:startBook,chapters_per_day:chaptersPerDay,started_at:startedAt}));
       if(!error)break;
       if(error.code!=='23505')break;
     }
     if(error){console.error(error);return showToast('그룹을 만들지 못했어요')}
     const memberSaved=await ensureGroupMembership(c,myName);
     if(!memberSaved)return;
-    myGroups.push({code:c,name});await saveGroups();await renderGroups();$('newGroupName').value='';groupSheet.classList.add('hidden');showToast('그룹을 만들었어요');openGroup(c);
+    myGroups.push({code:c,name,planType,startBook,chaptersPerDay,startedAt});await saveGroups();await renderGroups();$('newGroupName').value='';document.querySelectorAll('input[name="planType"]').forEach(input=>input.checked=false);updatePlanForm();groupSheet.classList.add('hidden');showToast('그룹을 만들었어요');openGroup(c);
   };
   $('joinGroup').onclick=async()=>{
     const c=$('joinCode').value.trim().toUpperCase();if(!c)return showToast('초대 코드를 입력해주세요');
-    const {data,error}=await supabaseClient.from('groups').select('invite_code,name').eq('invite_code',c).maybeSingle();
+    const {data,error}=await supabaseClient.from('groups').select('invite_code,name,plan_type,start_book,chapters_per_day,started_at').eq('invite_code',c).maybeSingle();
     if(error){console.error(error);return showToast('그룹을 확인하지 못했어요')}
     if(!data)return showToast('그룹을 찾을 수 없어요');
     const memberSaved=await ensureGroupMembership(c,myName);
     if(!memberSaved)return;
-    if(!myGroups.some(g=>g.code===c)){myGroups.push({code:data.invite_code,name:data.name});await saveGroups();await renderGroups()}
+    if(!myGroups.some(g=>g.code===c)){myGroups.push({code:data.invite_code,name:data.name,planType:data.plan_type||'new',startBook:data.start_book||'MAT',chaptersPerDay:Number(data.chapters_per_day)||5,startedAt:data.started_at||koreanDateString()});await saveGroups();await renderGroups()}
     $('joinCode').value='';groupSheet.classList.add('hidden');showToast('그룹에 참여했어요');openGroup(c);
   };
 
   $('openSolo').onclick=()=>openSpace({type:'solo',code:'solo-'+hash(myName),name:'나만의 묵상'});
-  function openGroup(c){const g=myGroups.find(x=>x.code===c);if(g)openSpace({type:'group',code:g.code,name:g.name})}
+  function openGroup(c){const g=myGroups.find(x=>x.code===c);if(g)openSpace({type:'group',...g})}
   async function openSpace(space){
     currentSpace=space;homeView.classList.add('hidden');journalView.classList.remove('hidden');
     $('journalTitle').textContent=space.name;
-    $('journalSub').textContent=space.type==='solo'?'오직 나만 볼 수 있는 기록 공간이에요.':'이 그룹 안에서만 서로의 기록이 보여요.';
+    $('journalSub').textContent=space.type==='solo'?'오직 나만 볼 수 있는 기록 공간이에요.':groupPlanDescription(space);
     $('journalKicker').innerHTML=space.type==='solo'?'PRIVATE SPACE':`GROUP <span class="code">${esc(space.code)}</span> <button id="copyInline" style="border:0;background:transparent;color:var(--muted);font-size:10px;padding:0">코드 복사</button>`;
     if(space.type==='group'){
       setTimeout(()=>$('copyInline').onclick=()=>copyText(space.code),0);
       await ensureGroupMembership(space.code,myName);
     }
-    selectedReadingDate=READING_DATES.includes(koreanDateString())?koreanDateString():READING_DATES[READING_DATES.length-1];
+    selectedReadingDate=koreanDateString();
     await loadDailyReading(selectedReadingDate);
     updateDateControls();
     await loadEntries();
@@ -1236,12 +1391,36 @@ button{cursor:pointer}
   };
 
   async function loadEntries(){
+    if(!currentSpace)return;
     if(currentSpace.type==='solo'){
       const r=await storage.get('entries:'+currentSpace.code);entries=r&&r.value?JSON.parse(r.value):[];return;
     }
-    const {data,error}=await supabaseClient.from('entries').select('*').eq('group_code',currentSpace.code).order('created_at',{ascending:false});
-    if(error){console.error(error);entries=[];showToast('그룹 기록을 불러오지 못했어요');return}
+
+    const requestedSpaceCode=currentSpace.code;
+    const requestedDate=selectedReadingDate;
+    const {start,end}=seoulDayRange(requestedDate);
+    const {data,error}=await supabaseClient
+      .from('entries')
+      .select('id,author,mode,verse_ref,selected_verse_ref,selected_verse_text,feeling,application,free_text,created_at')
+      .eq('group_code',requestedSpaceCode)
+      .gte('created_at',start)
+      .lt('created_at',end)
+      .order('created_at',{ascending:false});
+
+    if(error){
+      console.error(error);
+      if(currentSpace&&currentSpace.code===requestedSpaceCode&&selectedReadingDate===requestedDate){
+        entries=[];
+        showToast('그룹 기록을 불러오지 못했어요');
+      }
+      return;
+    }
+
+    // 날짜를 빠르게 이동했을 때 이전 요청 결과가 현재 화면을 덮어쓰지 않도록 한다.
+    if(!currentSpace||currentSpace.code!==requestedSpaceCode||selectedReadingDate!==requestedDate)return;
+
     entries=(data||[]).map(item=>({id:item.id,author:item.author,mode:item.mode,verseRef:item.verse_ref,selectedVerseRef:item.selected_verse_ref,selectedVerseText:item.selected_verse_text,feeling:item.feeling,application:item.application,freeText:item.free_text,createdAt:item.created_at}));
+    await loadHeartsForEntries(entries.map(entry=>entry.id));
   }
   async function saveSoloEntries(){await storage.set('entries:'+currentSpace.code,JSON.stringify(entries))}
   $('modeTabs').onclick=e=>{const b=e.target.closest('[data-mode]');if(!b)return;mode=b.dataset.mode;[...$('modeTabs').children].forEach(x=>x.classList.toggle('active',x===b));$('structuredFields').classList.toggle('hidden',mode!=='structured');$('freeFields').classList.toggle('hidden',mode!=='free')};
@@ -1275,8 +1454,32 @@ button{cursor:pointer}
     try{return new Set(JSON.parse(localStorage.getItem(HEARTS_KEY)||'[]'))}
     catch(e){return new Set()}
   }
-  function saveHeartedEntries(hearts){
-    localStorage.setItem(HEARTS_KEY,JSON.stringify([...hearts]));
+  function saveHeartedEntries(hearts){localStorage.setItem(HEARTS_KEY,JSON.stringify([...hearts]))}
+  async function loadHeartsForEntries(entryIds){
+    heartState=new Map();
+    if(!entryIds.length)return;
+    const {data,error}=await supabaseClient.from('entry_hearts').select('entry_id,nickname').in('entry_id',entryIds);
+    if(error){console.error('하트 조회 실패:',error);return}
+    for(const row of data||[]){
+      const state=heartState.get(String(row.entry_id))||{count:0,hearted:false};
+      state.count+=1;if(row.nickname===myName)state.hearted=true;heartState.set(String(row.entry_id),state);
+    }
+  }
+  async function toggleHeart(entryId){
+    if(currentSpace.type==='solo'){
+      const hearts=getHeartedEntries();hearts.has(entryId)?hearts.delete(entryId):hearts.add(entryId);saveHeartedEntries(hearts);renderFeed();return;
+    }
+    const current=heartState.get(entryId)||{count:0,hearted:false};
+    if(current.hearted){
+      const {error}=await supabaseClient.from('entry_hearts').delete().eq('entry_id',entryId).eq('nickname',myName);
+      if(error){console.error(error);return showToast('공감을 취소하지 못했어요')}
+      heartState.set(entryId,{count:Math.max(0,current.count-1),hearted:false});
+    }else{
+      const {error}=await supabaseClient.from('entry_hearts').insert({entry_id:entryId,nickname:myName});
+      if(error){console.error(error);return showToast('공감을 남기지 못했어요')}
+      heartState.set(entryId,{count:current.count+1,hearted:true});
+    }
+    renderFeed();
   }
   function renderFeed(){
     if(!currentSpace)return;
@@ -1289,22 +1492,13 @@ button{cursor:pointer}
       :`${archiveDateLabel(selectedReadingDate)} 기록`;
     $('entriesArea').innerHTML=list.length?list.map(renderEntry).join(''):`<div class="empty">${selectedReadingDate===koreanDateString()?'아직 남겨진 기록이 없어요.':'이 날짜에 남겨진 기록이 없어요.'}</div>`;
     $('entriesArea').querySelectorAll('[data-heart]').forEach(button=>{
-      button.onclick=()=>{
-        const hearts=getHeartedEntries();
-        const id=button.dataset.heart;
-        hearts.has(id)?hearts.delete(id):hearts.add(id);
-        saveHeartedEntries(hearts);
-        const active=hearts.has(id);
-        button.classList.toggle('active',active);
-        if(active){
-          button.classList.remove('heart-pop');
-          void button.offsetWidth;
-          button.classList.add('heart-pop');
-          window.setTimeout(()=>button.classList.remove('heart-pop'),760);
+      button.onclick=async()=>{
+        const wasActive=button.classList.contains('active');
+        await toggleHeart(button.dataset.heart);
+        if(!wasActive){
+          const refreshed=$('entriesArea').querySelector(`[data-heart="${CSS.escape(button.dataset.heart)}"]`);
+          if(refreshed){refreshed.classList.add('heart-pop');window.setTimeout(()=>refreshed.classList.remove('heart-pop'),760)}
         }
-        button.textContent=active?'♥':'♡';
-        button.setAttribute('aria-label',active?'공감 취소':'공감하기');
-        button.setAttribute('aria-pressed',String(active));
       };
     });
   }
@@ -1317,8 +1511,9 @@ button{cursor:pointer}
     const body=e.mode==='free'
       ?`<div class="entry-text">${esc(e.freeText)}</div>`
       :`${selectedVerseBlock}${e.feeling?`<div class="entry-label">마음에 머문 것</div><div class="entry-text">${esc(e.feeling)}</div>`:''}${e.application?`<div class="entry-label">오늘의 기도와 적용</div><div class="entry-text">${esc(e.application)}</div>`:''}`;
-    const hearted=getHeartedEntries().has(String(e.id));
-    return `<article class="entry"><div class="entry-meta"><span class="avatar">${esc((e.author||'?').slice(0,1))}</span><span class="author">${esc(e.author)}</span><span class="date">${esc(fmt(e.createdAt))}</span><button type="button" class="heart-btn${hearted?' active':''}" data-heart="${esc(e.id)}" aria-label="${hearted?'공감 취소':'공감하기'}" aria-pressed="${hearted?'true':'false'}">${hearted?'♥':'♡'}</button></div>${body}</article>`;
+    const localHearted=currentSpace.type==='solo'&&getHeartedEntries().has(String(e.id));
+    const state=currentSpace.type==='group'?(heartState.get(String(e.id))||{count:0,hearted:false}):{count:localHearted?1:0,hearted:localHearted};
+    return `<article class="entry"><div class="entry-meta"><span class="avatar">${esc((e.author||'?').slice(0,1))}</span><span class="author">${esc(e.author)}</span><span class="date">${esc(fmt(e.createdAt))}</span><span class="heart-wrap"><button type="button" class="heart-btn${state.hearted?' active':''}" data-heart="${esc(e.id)}" aria-label="${state.hearted?'공감 취소':'공감하기'}" aria-pressed="${state.hearted?'true':'false'}">${state.hearted?'♥':'♡'}</button><span class="heart-count">${state.count||0}</span></span></div>${body}</article>`;
   }
   init();
 })();
