@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>잠잠 — 날짜별 묵상 기록</title>
-<meta name="app-version" content="1.2.1">
+<meta name="app-version" content="1.2.3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -228,9 +228,10 @@ button{cursor:pointer}
 }
 
 /* sheet */
-.overlay{position:fixed;inset:0;background:rgba(35,33,30,.28);display:flex;align-items:flex-end;justify-content:center;z-index:50;padding:18px}
-.sheet{width:100%;max-width:520px;background:var(--white);border-radius:24px;padding:26px 24px 28px;box-shadow:0 20px 60px rgba(0,0,0,.16)}
-.sheet-head{display:flex;align-items:center;margin-bottom:24px}
+.overlay{position:fixed;inset:0;background:rgba(35,33,30,.28);display:flex;align-items:flex-end;justify-content:center;z-index:50;padding:18px;padding-bottom:max(18px,env(safe-area-inset-bottom))}
+.sheet{width:100%;max-width:520px;max-height:calc(100dvh - 36px);background:var(--white);border-radius:24px;padding:26px 24px 28px;box-shadow:0 20px 60px rgba(0,0,0,.16);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-gutter:stable}
+#groupSheet .sheet{height:min(86dvh,760px)}
+.sheet-head{display:flex;align-items:center;margin-bottom:24px;position:sticky;top:-26px;z-index:2;background:var(--white);padding-top:26px;padding-bottom:14px}
 .sheet h3{font-family:"Gowun Batang",serif;font-weight:400;font-size:23px;margin:0}
 .sheet-close{margin-left:auto;border:0;background:transparent;font-size:20px;color:var(--muted)}
 .sheet-section{padding:18px 0;border-top:1px solid var(--line)}
@@ -261,6 +262,41 @@ button{cursor:pointer}
   .home-head h2{font-size:28px}
   .journal-title{font-size:27px}
   .verse-ref{font-size:23px}
+}
+
+@media (max-width:640px){
+  body.sheet-open{overflow:hidden;touch-action:none}
+  .overlay{padding:0;align-items:flex-end;background:rgba(35,33,30,.38)}
+  .sheet{
+    width:100%;
+    max-width:none;
+    height:auto;
+    max-height:90dvh;
+    border-radius:26px 26px 0 0;
+    padding:18px 22px calc(26px + env(safe-area-inset-bottom));
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+    box-shadow:0 -12px 40px rgba(0,0,0,.18);
+    animation:sheetUp .22s ease-out;
+  }
+  .sheet::before{
+    content:"";
+    display:block;
+    width:42px;
+    height:4px;
+    margin:0 auto 10px;
+    border-radius:999px;
+    background:var(--line);
+  }
+  #groupSheet .sheet{height:auto;max-height:90dvh}
+  .sheet-head{
+    top:-18px;
+    margin-bottom:14px;
+    padding-top:18px;
+    padding-bottom:12px;
+  }
+  @keyframes sheetUp{from{transform:translateY(24px);opacity:.7}to{transform:translateY(0);opacity:1}}
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1295,19 +1331,25 @@ button{cursor:pointer}
   }
 
   const groupSheet=$('groupSheet'),picker=$('groupPickerSheet');
-  $('openGroupSheet').onclick=()=>groupSheet.classList.remove('hidden');
-  $('closeGroupSheet').onclick=()=>groupSheet.classList.add('hidden');
-  groupSheet.onclick=e=>{if(e.target===groupSheet)groupSheet.classList.add('hidden')};
+  function syncSheetLock(){
+    document.body.classList.toggle('sheet-open',!groupSheet.classList.contains('hidden')||!picker.classList.contains('hidden'));
+  }
+  function openGroupSheet(){groupSheet.classList.remove('hidden');syncSheetLock()}
+  function closeGroupSheet(){groupSheet.classList.add('hidden');syncSheetLock()}
+  $('openGroupSheet').onclick=openGroupSheet;
+  $('closeGroupSheet').onclick=closeGroupSheet;
+  groupSheet.onclick=e=>{if(e.target===groupSheet)closeGroupSheet()};
   const openGroupPickerButton=$('openGroupPicker');
   if(openGroupPickerButton)openGroupPickerButton.onclick=async()=>{
     await syncGroupsWithDatabase();
     await renderGroups();
     renderPicker();
     picker.classList.remove('hidden');
+    syncSheetLock();
   };
   $('closeGroupPicker').onclick=closePicker;
   picker.onclick=e=>{if(e.target===picker)closePicker()};
-  function closePicker(){picker.classList.add('hidden')}
+  function closePicker(){picker.classList.add('hidden');syncSheetLock()}
 
   function selectedPlanType(){return document.querySelector('input[name="planType"]:checked')?.value||''}
   function updatePlanForm(){
@@ -1351,7 +1393,7 @@ button{cursor:pointer}
     if(error){console.error(error);return showToast('그룹을 만들지 못했어요')}
     const memberSaved=await ensureGroupMembership(c,myName);
     if(!memberSaved)return;
-    myGroups.push({code:c,name,planType,startBook,chaptersPerDay,startedAt});await saveGroups();await renderGroups();$('newGroupName').value='';document.querySelectorAll('input[name="planType"]').forEach(input=>input.checked=false);updatePlanForm();groupSheet.classList.add('hidden');showToast('그룹을 만들었어요');openGroup(c);
+    myGroups.push({code:c,name,planType,startBook,chaptersPerDay,startedAt});await saveGroups();await renderGroups();$('newGroupName').value='';document.querySelectorAll('input[name="planType"]').forEach(input=>input.checked=false);updatePlanForm();closeGroupSheet();showToast('그룹을 만들었어요');openGroup(c);
   };
   $('joinGroup').onclick=async()=>{
     const c=$('joinCode').value.trim().toUpperCase();if(!c)return showToast('초대 코드를 입력해주세요');
@@ -1361,7 +1403,7 @@ button{cursor:pointer}
     const memberSaved=await ensureGroupMembership(c,myName);
     if(!memberSaved)return;
     if(!myGroups.some(g=>g.code===c)){myGroups.push({code:data.invite_code,name:data.name,planType:data.plan_type||'new',startBook:data.start_book||'MAT',chaptersPerDay:Number(data.chapters_per_day)||5,startedAt:data.started_at||koreanDateString()});await saveGroups();await renderGroups()}
-    $('joinCode').value='';groupSheet.classList.add('hidden');showToast('그룹에 참여했어요');openGroup(c);
+    $('joinCode').value='';closeGroupSheet();showToast('그룹에 참여했어요');openGroup(c);
   };
 
   $('openSolo').onclick=()=>openSpace({type:'solo',code:'solo-'+hash(myName),name:'나만의 묵상'});
