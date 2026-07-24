@@ -2,9 +2,9 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>잠잠 — 날짜별 묵상 기록</title>
-<meta name="app-version" content="1.2.3">
+<meta name="app-version" content="1.2.8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -22,7 +22,7 @@
   --danger:#9d4c44;
 }
 *{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink)}
+html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);-webkit-text-size-adjust:100%}
 body{font-family:"Noto Sans KR",sans-serif;-webkit-font-smoothing:antialiased}
 button,input,textarea{font:inherit}
 button{cursor:pointer}
@@ -259,7 +259,8 @@ button{cursor:pointer}
 .plan-select{width:100%;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:11px 12px;outline:0;font-size:13px}
 .plan-summary{font-family:"Gowun Batang",serif;font-size:13px;line-height:1.7;color:var(--brown);padding:13px 14px;background:var(--paper);border-radius:12px}
 body.sheet-open{overflow:hidden}
-.comment-sheet{max-height:min(78vh,680px);display:flex;flex-direction:column;padding-bottom:max(24px,env(safe-area-inset-bottom))}
+body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
+.comment-sheet{max-height:min(78dvh,680px);display:flex;flex-direction:column;padding-bottom:max(24px,calc(env(safe-area-inset-bottom) + 12px))}
 .comment-sheet .sheet-head{margin-bottom:12px}
 .comment-list{min-height:150px;overflow-y:auto;overscroll-behavior:contain;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .comment-item{padding:16px 0;border-bottom:1px solid var(--line)}
@@ -271,8 +272,8 @@ body.sheet-open{overflow:hidden}
 .comment-empty{text-align:center;padding:46px 18px;color:var(--muted)}
 .comment-empty strong{display:block;font-family:"Gowun Batang",serif;font-size:16px;font-weight:400;color:var(--ink);margin-bottom:8px}
 .comment-empty span{font-size:11px}
-.comment-form{display:flex;align-items:flex-end;gap:8px;padding-top:14px}
-.comment-input{flex:1;min-height:44px;max-height:112px;resize:none;border:1px solid var(--line);background:var(--paper);border-radius:14px;padding:11px 13px;outline:0;font-family:"Gowun Batang",serif;font-size:14px;line-height:1.55}
+.comment-form{display:flex;align-items:flex-end;gap:8px;padding-top:14px;flex:0 0 auto;background:var(--white)}
+.comment-input{flex:1;min-height:44px;max-height:112px;resize:none;border:1px solid var(--line);background:var(--paper);border-radius:14px;padding:11px 13px;outline:0;font-family:"Gowun Batang",serif;font-size:16px;line-height:1.55;-webkit-appearance:none}
 .comment-input:focus{border-color:var(--sage)}
 .comment-submit{height:44px;border:0;border-radius:12px;background:var(--ink);color:#fff;padding:0 16px;font-size:12px;white-space:nowrap}
 .comment-submit:disabled{opacity:.45;cursor:default}
@@ -319,6 +320,12 @@ body.sheet-open{overflow:hidden}
     padding-top:18px;
     padding-bottom:12px;
   }
+  .sheet input,.sheet textarea,.plan-select{font-size:16px}
+  .comment-sheet{
+    max-height:min(82dvh,680px);
+    padding-bottom:max(18px,calc(env(safe-area-inset-bottom) + 10px));
+  }
+  .comment-list{min-height:120px}
   @keyframes sheetUp{from{transform:translateY(24px);opacity:.7}to{transform:translateY(0);opacity:1}}
 }
 </style>
@@ -1667,7 +1674,21 @@ body.sheet-open{overflow:hidden}
   }
 
   const commentSheet=$('commentSheet');
-  function syncCommentSheetLock(){document.body.classList.toggle('sheet-open',!commentSheet.classList.contains('hidden'))}
+  let commentSheetScrollY=0;
+  function syncCommentSheetLock(){
+    const isOpen=!commentSheet.classList.contains('hidden');
+    if(isOpen&&!document.body.classList.contains('sheet-open-fixed')){
+      commentSheetScrollY=window.scrollY||window.pageYOffset||0;
+      document.body.style.top=`-${commentSheetScrollY}px`;
+      document.body.classList.add('sheet-open','sheet-open-fixed');
+    }else if(!isOpen&&document.body.classList.contains('sheet-open-fixed')){
+      document.body.classList.remove('sheet-open','sheet-open-fixed');
+      document.body.style.top='';
+      window.scrollTo(0,commentSheetScrollY);
+    }else{
+      document.body.classList.toggle('sheet-open',isOpen);
+    }
+  }
   async function openCommentSheet(entryId){
     if(!currentSpace||currentSpace.type!=='group')return;
     activeCommentEntryId=entryId;
@@ -1676,7 +1697,7 @@ body.sheet-open{overflow:hidden}
     await loadComments(entryId);
     window.setTimeout(()=>$('commentInput').focus(),80);
   }
-  function closeCommentSheet(){commentSheet.classList.add('hidden');activeCommentEntryId=null;syncCommentSheetLock()}
+  function closeCommentSheet(){$('commentInput').blur();commentSheet.classList.add('hidden');activeCommentEntryId=null;syncCommentSheetLock()}
   $('closeCommentSheet').onclick=closeCommentSheet;
   commentSheet.onclick=e=>{if(e.target===commentSheet)closeCommentSheet()};
   async function loadComments(entryId){
@@ -1702,6 +1723,7 @@ body.sheet-open{overflow:hidden}
     $('commentSubmit').disabled=false;
     if(error){console.error(error);return showToast('댓글을 남기지 못했어요')}
     $('commentInput').value='';
+    $('commentInput').blur();
     await loadComments(activeCommentEntryId);
     $('commentList').scrollTop=$('commentList').scrollHeight;
   };
