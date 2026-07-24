@@ -444,12 +444,11 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
     <section class="feedback-head">
       <button class="back-btn" id="backFromFeedback" type="button">← 돌아가기</button>
       <h2 class="feedback-title">함께 만들어가기</h2>
-      <p class="feedback-lead">잠잠은 더 많은 사람들이 하나님의 말씀 안에 거하며,<br>그 말씀으로 하나님과 더욱 가까워질 수 있도록 함께 만들어가고 있습니다.</p>
+      <p class="feedback-lead">더 많은 사람들이 하나님의 말씀 안에 거하며,<br>말씀으로 하나님과 더욱 가까워질 수 있도록<br>만들어가고 있습니다.</p>
     </section>
 
     <div class="feedback-copy">
-      추가되었으면 하는 기능이나 불편했던 점, 버그·오류 등<br>어떤 의견이든 자유롭게 남겨주세요.<br><br>
-      여러분의 소중한 의견은 잠잠을 더 좋은 공간으로 만들어가는 큰 힘이 됩니다. 🤎
+      추가되었으면 하는 기능이나 불편했던 점, 버그·오류 등<br>어떤 의견이든 자유롭게 남겨주세요.
     </div>
 
     <form class="feedback-form" id="feedbackForm">
@@ -1613,7 +1612,10 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
     feedbackModal.classList.remove('hidden');
     document.body.classList.add('sheet-open');
   };
-  $('closeFeedbackComplete').onclick=closeFeedbackModal;
+  $('closeFeedbackComplete').onclick=async()=>{
+    closeFeedbackModal();
+    await goHome();
+  };
   feedbackModal.onclick=e=>{if(e.target===feedbackModal)closeFeedbackModal()};
 
 
