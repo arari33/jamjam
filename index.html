@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>잠잠 — 날짜별 묵상 기록</title>
-<meta name="app-version" content="1.3.3">
+<title>잠잠 — 하나님의 말씀 앞에 잠잠히 머물러 보세요</title>
+<meta name="app-version" content="1.3.4">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -87,11 +87,10 @@ button{cursor:pointer}
 .members-section{margin:22px 0 0;border-top:1px solid var(--line)}
 .members-summary{display:flex;align-items:center;gap:8px;padding:15px 0 0;cursor:pointer;list-style:none;font-size:12px;font-weight:600}
 .members-summary::-webkit-details-marker{display:none}
-.members-summary::after{content:'⌄';margin-left:auto;color:var(--muted);font-size:16px;transition:transform .2s ease}
+.members-summary::after{content:'⌄';display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;margin-left:0;color:var(--muted);font-size:16px;line-height:1;transition:transform .2s ease;transform-origin:center}
 .members-section[open] .members-summary::after{transform:rotate(180deg)}
 .members-count{font-size:11px;color:var(--muted);font-weight:400}
 .members-participation{margin-left:auto;font-size:11px;color:var(--sage);font-weight:600}
-.members-summary::after{margin-left:0}
 .members-list{margin-top:14px;border-top:1px solid var(--line)}
 .member-row{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
 .member-row:last-child{border-bottom:0}
@@ -236,6 +235,37 @@ button{cursor:pointer}
   .reading-body{max-height:430px;padding-right:8px}
   .selected-passage{max-height:360px;padding-right:8px}
 }
+
+/* together / feedback */
+.site-footer{margin:58px 0 0;padding:26px 0 10px;border-top:1px solid var(--line)}
+.footer-link{width:100%;display:flex;align-items:center;gap:14px;border:1px solid #e6ded4;background:#f4eee7;color:var(--ink);border-radius:18px;padding:17px 18px;text-align:left;transition:background .18s ease,border-color .18s ease,transform .15s ease,box-shadow .18s ease}
+.footer-link:hover{background:#eee5dc;border-color:#d9cabe;box-shadow:0 8px 22px rgba(75,47,36,.07);transform:translateY(-1px)}
+.footer-link:active{transform:scale(.99)}
+.footer-link:focus-visible{outline:2px solid var(--brown);outline-offset:3px}
+.footer-link-icon{font-size:20px;line-height:1;flex:0 0 auto}
+.footer-link-copy{display:flex;flex-direction:column;gap:4px;min-width:0}
+.footer-link-title{font-family:"Gowun Batang",serif;font-size:17px;line-height:1.35;color:var(--ink)}
+.footer-link-desc{font-size:11px;line-height:1.55;color:var(--muted)}
+.footer-link-arrow{margin-left:auto;color:var(--brown);font-size:18px;line-height:1}
+.feedback-head{padding:34px 0 30px;border-bottom:1px solid var(--line)}
+.feedback-title{font-family:"Gowun Batang",serif;font-size:30px;font-weight:400;margin:0 0 20px}
+.feedback-lead{font-family:"Gowun Batang",serif;font-size:18px;line-height:1.95;word-break:keep-all;margin:0;color:var(--ink)}
+.feedback-copy{padding:28px 0 8px;font-size:13px;line-height:1.9;color:var(--muted);word-break:keep-all}
+.feedback-form{padding:22px 0 44px}
+.feedback-field label{display:block;font-size:11px;color:var(--muted);margin-bottom:10px}
+.feedback-field textarea{width:100%;min-height:180px;border:1px solid var(--line);border-radius:16px;background:var(--white);outline:0;resize:vertical;padding:17px 18px;font-family:"Gowun Batang",serif;font-size:16px;line-height:1.85;color:var(--ink)}
+.feedback-field textarea:focus{border-color:var(--sage);box-shadow:0 0 0 3px var(--sage-soft)}
+.feedback-meta{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:10px}
+.feedback-count{font-size:10px;color:var(--muted)}
+.feedback-submit{border:0;background:var(--ink);color:#fff;border-radius:999px;padding:12px 20px;font-size:12px}
+.feedback-submit:disabled{opacity:.45;cursor:default}
+.confirm-dialog{max-width:420px;text-align:center;padding:34px 28px 28px}
+.confirm-mark{font-size:24px;margin-bottom:16px}
+.confirm-dialog h3{font-family:"Gowun Batang",serif;font-size:22px;font-weight:400;margin:0 0 15px}
+.confirm-dialog p{font-size:12px;line-height:1.9;color:var(--muted);margin:0 0 24px;word-break:keep-all}
+.confirm-dialog strong{color:var(--ink);font-weight:500}
+.confirm-button{border:0;background:var(--ink);color:#fff;border-radius:999px;min-width:92px;padding:11px 18px;font-size:12px}
+@media(max-width:600px){.feedback-title{font-size:27px}.feedback-lead{font-size:17px}.feedback-field textarea{min-height:210px}}
 
 /* sheet */
 .overlay{position:fixed;inset:0;background:rgba(35,33,30,.28);display:flex;align-items:flex-end;justify-content:center;z-index:50;padding:18px;padding-bottom:max(18px,env(safe-area-inset-bottom))}
@@ -396,6 +426,42 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 
     <div class="section-label">함께하는 묵상</div>
     <div id="groupList"></div>
+
+    <footer class="site-footer">
+      <button type="button" class="footer-link" id="openFeedback" aria-label="함께 만들어가기 의견 남기기">
+        <span class="footer-link-icon" aria-hidden="true">🤎</span>
+        <span class="footer-link-copy">
+          <span class="footer-link-title">함께 만들어가기</span>
+          <span class="footer-link-desc">잠잠을 함께 만들어주세요.</span>
+        </span>
+        <span class="footer-link-arrow" aria-hidden="true">›</span>
+      </button>
+    </footer>
+  </main>
+
+
+  <main id="feedbackView" class="hidden">
+    <section class="feedback-head">
+      <button class="back-btn" id="backFromFeedback" type="button">← 돌아가기</button>
+      <h2 class="feedback-title">함께 만들어가기</h2>
+      <p class="feedback-lead">잠잠은 더 많은 사람들이 하나님의 말씀 안에 거하며,<br>그 말씀으로 하나님과 더욱 가까워질 수 있도록 함께 만들어가고 있습니다.</p>
+    </section>
+
+    <div class="feedback-copy">
+      추가되었으면 하는 기능이나 불편했던 점, 버그·오류 등<br>어떤 의견이든 자유롭게 남겨주세요.<br><br>
+      여러분의 소중한 의견은 잠잠을 더 좋은 공간으로 만들어가는 큰 힘이 됩니다. 🤎
+    </div>
+
+    <form class="feedback-form" id="feedbackForm">
+      <div class="feedback-field">
+        <label for="feedbackContent">의견</label>
+        <textarea id="feedbackContent" maxlength="1000" placeholder="의견을 자유롭게 남겨주세요."></textarea>
+        <div class="feedback-meta">
+          <span class="feedback-count" id="feedbackCount">0 / 1000</span>
+          <button class="feedback-submit" id="feedbackSubmit" type="submit">의견 보내기</button>
+        </div>
+      </div>
+    </form>
   </main>
 
   <main id="journalView" class="hidden">
@@ -572,6 +638,16 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
   </div>
 </div>
 
+
+<div class="overlay hidden" id="feedbackCompleteModal">
+  <div class="sheet confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="feedbackCompleteTitle">
+    <div class="confirm-mark">🤎</div>
+    <h3 id="feedbackCompleteTitle">의견이 잘 전달되었습니다.</h3>
+    <p>보내주신 의견은 하나씩 꼼꼼히 살펴보고,<br><strong>더 많은 사람들이 하나님의 말씀 안에 거할 수 있는 잠잠</strong>을 만들어가겠습니다.</p>
+    <button type="button" class="confirm-button" id="closeFeedbackComplete">확인</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -743,7 +819,7 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
   let activeCommentEntryId=null;
 
   const $=id=>document.getElementById(id);
-  const entranceView=$('entranceView'),appView=$('appView'),homeView=$('homeView'),journalView=$('journalView');
+  const entranceView=$('entranceView'),appView=$('appView'),homeView=$('homeView'),feedbackView=$('feedbackView'),journalView=$('journalView');
   const toast=$('toast');
   function showToast(msg){toast.textContent=msg;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1900)}
   async function copyText(text){
@@ -1484,6 +1560,7 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
   async function goHome(){
     closeProfileMenu();
     journalView.classList.add('hidden');
+    feedbackView.classList.add('hidden');
     homeView.classList.remove('hidden');
     currentSpace=null;
     window.scrollTo({top:0,behavior:'auto'});
@@ -1492,6 +1569,53 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
   }
   $('homeLogo').onclick=goHome;
   $('backHome').onclick=goHome;
+
+  const feedbackModal=$('feedbackCompleteModal');
+  function openFeedbackView(){
+    closeProfileMenu();
+    currentSpace=null;
+    journalView.classList.add('hidden');
+    homeView.classList.add('hidden');
+    feedbackView.classList.remove('hidden');
+    $('feedbackContent').value='';
+    $('feedbackCount').textContent='0 / 1000';
+    window.scrollTo({top:0,behavior:'auto'});
+    window.setTimeout(()=>$('feedbackContent').focus(),80);
+  }
+  function closeFeedbackModal(){
+    feedbackModal.classList.add('hidden');
+    document.body.classList.remove('sheet-open');
+  }
+  $('openFeedback').onclick=openFeedbackView;
+  $('backFromFeedback').onclick=goHome;
+  $('feedbackContent').oninput=e=>{$('feedbackCount').textContent=`${e.target.value.length} / 1000`};
+  $('feedbackForm').onsubmit=async e=>{
+    e.preventDefault();
+    const content=$('feedbackContent').value.trim();
+    if(!content)return showToast('의견을 입력해주세요');
+    const button=$('feedbackSubmit');
+    button.disabled=true;
+    button.textContent='보내는 중...';
+    const {error}=await supabaseClient.from('feedback').insert({
+      nickname:myName||null,
+      content,
+      page_path:location.pathname,
+      user_agent:navigator.userAgent
+    });
+    button.disabled=false;
+    button.textContent='의견 보내기';
+    if(error){
+      console.error('의견 저장 실패:',error);
+      return showToast('의견을 보내지 못했어요. 잠시 후 다시 시도해주세요');
+    }
+    $('feedbackContent').value='';
+    $('feedbackCount').textContent='0 / 1000';
+    feedbackModal.classList.remove('hidden');
+    document.body.classList.add('sheet-open');
+  };
+  $('closeFeedbackComplete').onclick=closeFeedbackModal;
+  feedbackModal.onclick=e=>{if(e.target===feedbackModal)closeFeedbackModal()};
+
 
   async function loadEntries(){
     if(!currentSpace)return;
