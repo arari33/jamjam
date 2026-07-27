@@ -13,7 +13,7 @@
 })();
 </script>
 <title>잠잠 — 하나님의 말씀 앞에 잠잠히 머물러 보세요</title>
-<meta name="app-version" content="1.4.4">
+<meta name="app-version" content="1.4.5">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -858,6 +858,40 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
     '2026-07-25':{
       label:'전도서 10–12장',
       ranges:[{bookName:'전도서',startChapter:10,endChapter:12}]
+    },
+    '2026-07-26':{
+      empty:true,
+      label:'',
+      ranges:[]
+    },
+    '2026-07-27':{
+      label:'아가 2–5장',
+      ranges:[{bookName:'아가',startChapter:2,endChapter:5}]
+    },
+    '2026-07-28':{
+      label:'아가 6–8장',
+      ranges:[{bookName:'아가',startChapter:6,endChapter:8}]
+    },
+    '2026-07-29':{
+      label:'이사야 1–4장',
+      ranges:[{bookName:'이사야',startChapter:1,endChapter:4}]
+    },
+    '2026-07-30':{
+      label:'이사야 5–8장',
+      ranges:[{bookName:'이사야',startChapter:5,endChapter:8}]
+    },
+    '2026-07-31':{
+      label:'이사야 9–12장',
+      ranges:[{bookName:'이사야',startChapter:9,endChapter:12}]
+    },
+    '2026-08-01':{
+      label:'이사야 13–16장',
+      ranges:[{bookName:'이사야',startChapter:13,endChapter:16}]
+    },
+    '2026-08-02':{
+      empty:true,
+      label:'',
+      ranges:[]
     }
   };
   const BIBLE_TRANSLATION_CODE='KRV_TEST';
@@ -1054,7 +1088,9 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
     $('prevReadingDate').disabled=followsTodayPlan?index<=0:isGroup?selectedReadingDate<=groupStart:index<=0;
     $('nextReadingDate').disabled=followsTodayPlan?(index<0||index>=READING_DATES.length-1):isGroup?selectedReadingDate>=koreanDateString():(index<0||index>=READING_DATES.length-1);
     const isToday=selectedReadingDate===koreanDateString();
-    document.querySelector('.composer').classList.toggle('hidden',!isToday);
+    const selectedReading=readingForDate(selectedReadingDate);
+    const isEmptyTodayPlan=followsTodayPlan&&(!selectedReading||selectedReading.empty===true);
+    document.querySelector('.composer').classList.toggle('hidden',!isToday||isEmptyTodayPlan);
     const isSolo=currentSpace&&currentSpace.type==='solo';
     $('toggleCustomVerse').classList.toggle('hidden',isGroup||isSolo||!isToday);
     if(isSolo){
@@ -1268,11 +1304,17 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
   async function loadDailyReading(date=selectedReadingDate){
     const reading=readingForDate(date);
     $('todayDate').textContent=dateLabelFor(date);
-    $('verseRef').textContent=reading?reading.label:'등록된 읽기표가 없어요.';
+    $('verseRef').textContent=reading&&!reading.empty?reading.label:'';
+    if(reading&&reading.empty===true){
+      $('dailyReadingBody').innerHTML='<div class="reading-empty"><div style="font-size:24px;margin-bottom:10px">📖</div><div>오늘 제공된 말씀이 없어요.</div></div>';
+      setMeditationVerseOptions([]);
+      currentVerse=null;
+      return;
+    }
     if(!reading){
       $('dailyReadingBody').innerHTML='<div class="reading-empty">해당 날짜의 성경 읽기표가 아직 등록되지 않았어요.</div>';
       setMeditationVerseOptions([]);
-      currentVerse={ref:'',date,sourceType:'daily_reading'};
+      currentVerse=null;
       return;
     }
     $('dailyReadingBody').innerHTML='<div class="reading-loading">본문을 불러오는 중이에요.</div>';
