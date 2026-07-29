@@ -14,8 +14,8 @@
 })();
 </script>
 <title>잠잠 — 하나님의 말씀 앞에 잠잠히 머물러 보세요</title>
-<meta content="1.4.9.3" name="app-version"/>
-<!-- v1.4.9.3: usage page copy update -->
+<meta content="1.5.0" name="app-version"/>
+<!-- v1.5.0: users table + solo entries database storage + local migration -->
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
@@ -1031,6 +1031,7 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
   let amenState=new Map();
   let commentCounts=new Map();
   let activeCommentEntryId=null;
+  const SOLO_DB_MIGRATION_KEY='solo-db-migrated-v1.5.0';
 
   const $=id=>document.getElementById(id);
   const entranceView=$('entranceView'),appView=$('appView'),homeView=$('homeView'),myPageView=$('myPageView'),usageView=$('usageView'),feedbackView=$('feedbackView'),journalView=$('journalView');
@@ -1564,6 +1565,82 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
     return normalized;
   }
 
+  function normalizeSoloDbEntry(item){
+    return {
+      id:item.id,
+      author:item.author||myName,
+      authorDeviceUserId:item.author_device_user_id||deviceUserId,
+      mode:item.mode||'structured',
+      verseRef:item.verse_ref||null,
+      selectedVerseRef:item.selected_verse_ref||null,
+      selectedVerseText:item.selected_verse_text||null,
+      feeling:item.feeling||null,
+      application:item.application||null,
+      freeText:item.free_text||null,
+      createdAt:item.created_at,
+      updatedAt:item.updated_at
+    };
+  }
+
+  async function upsertCurrentUser(nickname=myName){
+    const cleanName=String(nickname||'').trim();
+    if(!deviceUserId||!cleanName)return false;
+    const {error}=await supabaseClient.rpc('upsert_jamjam_user',{
+      p_device_user_id:deviceUserId,
+      p_nickname:cleanName,
+      p_icon_color:'teal'
+    });
+    if(error){
+      console.error('사용자 DB 저장 실패:',error);
+      showToast('사용자 정보를 저장하지 못했어요');
+      return false;
+    }
+    return true;
+  }
+
+  async function fetchSoloEntriesFromDatabase(){
+    if(!deviceUserId)return [];
+    const {data,error}=await supabaseClient.rpc('get_solo_entries',{
+      p_device_user_id:deviceUserId
+    });
+    if(error){
+      console.error('나만의 묵상 DB 조회 실패:',error);
+      throw error;
+    }
+    return (data||[]).map(normalizeSoloDbEntry);
+  }
+
+  async function migrateLocalSoloEntriesToDatabase(nickname=myName){
+    if(!deviceUserId||!nickname)return false;
+    const migrated=await storage.get(SOLO_DB_MIGRATION_KEY);
+    if(migrated&&migrated.value==='true')return true;
+    const localEntries=await migrateSoloEntriesToDevice(nickname,nickname);
+    const {error}=await supabaseClient.rpc('import_solo_entries',{
+      p_device_user_id:deviceUserId,
+      p_nickname:nickname,
+      p_entries:localEntries
+    });
+    if(error){
+      console.error('기존 나만의 묵상 DB 이전 실패:',error);
+      return false;
+    }
+    await storage.set(SOLO_DB_MIGRATION_KEY,'true');
+    return true;
+  }
+
+  async function saveSoloEntryToDatabase(entry){
+    const {error}=await supabaseClient.rpc('save_solo_entry',{
+      p_device_user_id:deviceUserId,
+      p_nickname:myName,
+      p_entry:entry
+    });
+    if(error){
+      console.error('나만의 묵상 DB 저장 실패:',error);
+      return false;
+    }
+    return true;
+  }
+
   async function claimCurrentIdentity(nickname){
     const cleanName=String(nickname||'').trim();
     const groupCodes=currentGroupCodes();
@@ -1610,10 +1687,11 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
     await syncGroupsWithDatabase();
     if(myName){
       await migrateSoloEntriesToDevice(myName,myName);
+      await upsertCurrentUser(myName);
+      await migrateLocalSoloEntriesToDatabase(myName);
       await claimCurrentIdentity(myName);
       await ensureLocalMemberships();
     }
-    await renderGroups();
   }
   function showApp(){entranceView.classList.add('hidden');appView.classList.remove('hidden');$('topName').textContent=myName;$('profileName').textContent=myName;$('myPageName').textContent=myName}
   async function setName(name){
@@ -1627,14 +1705,17 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
     }else{
       await migrateSoloEntriesToDevice(nextName,nextName);
     }
+    const userSaved=await upsertCurrentUser(nextName);
+    if(!userSaved)return;
     myName=nextName;
     await storage.set('author-name',myName);
+    await migrateLocalSoloEntriesToDatabase(myName);
     showApp();
     await ensureLocalMemberships();
     await renderGroups();
-    if(currentSpace&&currentSpace.type==='group'){
+    if(currentSpace){
       await loadEntries();
-      await renderGroupMembers(currentSpace.code);
+      if(currentSpace.type==='group')await renderGroupMembers(currentSpace.code);
       renderFeed();
     }
   }
@@ -1712,9 +1793,14 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
   }
   async function loadMyPageRecords(){
     $('myPageRecords').innerHTML='<div class="mypage-loading">묵상 기록을 불러오고 있어요.</div>';
-    const soloCode=soloSpaceCode();
-    const soloStored=await storage.get('entries:'+soloCode);
-    try{myPageSoloEntries=soloStored&&soloStored.value?JSON.parse(soloStored.value):[]}catch(e){myPageSoloEntries=[]}
+    try{
+      myPageSoloEntries=await fetchSoloEntriesFromDatabase();
+      await storage.set('entries:'+soloSpaceCode(),JSON.stringify(myPageSoloEntries));
+    }catch(error){
+      const soloStored=await storage.get('entries:'+soloSpaceCode());
+      myPageSoloEntries=parseStoredEntries(soloStored);
+      showToast('나만의 묵상은 기기에 저장된 기록으로 보여드려요');
+    }
     const {data,error}=await supabaseClient
       .from('entries')
       .select('id,group_code,author,author_device_user_id,mode,verse_ref,selected_verse_ref,selected_verse_text,feeling,application,free_text,created_at')
@@ -2189,7 +2275,15 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
   async function loadEntries(){
     if(!currentSpace)return;
     if(currentSpace.type==='solo'){
-      const r=await storage.get('entries:'+currentSpace.code);entries=r&&r.value?JSON.parse(r.value):[];return;
+      try{
+        entries=await fetchSoloEntriesFromDatabase();
+        await storage.set('entries:'+currentSpace.code,JSON.stringify(entries));
+      }catch(error){
+        const r=await storage.get('entries:'+currentSpace.code);
+        entries=parseStoredEntries(r);
+        showToast('기기에 저장된 묵상 기록을 불러왔어요');
+      }
+      return;
     }
 
     const requestedSpaceCode=currentSpace.code;
@@ -2232,7 +2326,10 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
       entry.selectedVerseText=selectedVerse.text;
     }else{entry.freeText=$('freeInput').value.trim();if(!entry.freeText)return showToast('기록을 적어주세요')}
     if(currentSpace.type==='solo'){
-      entries.push(entry);await saveSoloEntries();
+      const saved=await saveSoloEntryToDatabase(entry);
+      if(!saved)return showToast('기록을 저장하지 못했어요');
+      entries.push(entry);
+      await saveSoloEntries();
     }else{
       const {error}=await supabaseClient.from('entries').insert({id:entry.id,group_code:currentSpace.code,author:entry.author,author_device_user_id:deviceUserId,mode:entry.mode,verse_ref:entry.verseRef||null,selected_verse_ref:entry.selectedVerseRef||null,selected_verse_text:entry.selectedVerseText||null,feeling:entry.feeling||null,application:entry.application||null,free_text:entry.freeText||null,created_at:entry.createdAt});
       if(error){console.error(error);return showToast('기록을 저장하지 못했어요')}
