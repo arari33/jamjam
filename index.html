@@ -14,8 +14,8 @@
 })();
 </script>
 <title>잠잠 — 하나님의 말씀 앞에 잠잠히 머물러 보세요</title>
-<meta content="1.5.0" name="app-version"/>
-<!-- v1.5.0: users table + solo entries database storage + local migration -->
+<meta content="1.5.2" name="app-version"/>
+<!-- v1.5.2: reviewed data normalization + input guards + v1.5.1 fixes -->
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
@@ -532,7 +532,7 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 <h1>잠잠</h1>
 <p class="entrance-copy">하루의 말씀 앞에 잠시 머물고,<br/>조용히 마음을 기록해요.</p>
 <div class="name-form">
-<input id="entranceName" placeholder="기록에 사용할 이름" type="text"/>
+<input id="entranceName" maxlength="20" placeholder="기록에 사용할 이름" type="text"/>
 <button id="enterBtn">들어가기</button>
 </div>
 <div class="entrance-note">회원가입 없이 바로 시작할 수 있어요.</div>
@@ -760,7 +760,7 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 <div class="plan-form">
 <div class="plan-field">
 <label class="plan-label" for="newGroupName">그룹 이름</label>
-<input id="newGroupName" placeholder="예: 함께 묵상방"/>
+<input id="newGroupName" maxlength="30" placeholder="예: 함께 묵상방"/>
 </div>
 <div class="plan-field">
 <span class="plan-label">성경 읽기 플랜</span>
@@ -1685,6 +1685,10 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
     if(n&&n.value){myName=n.value;showApp()}else entranceView.classList.remove('hidden');
     await loadGroups();
     await syncGroupsWithDatabase();
+    // 최초 진입 및 새로고침 때도 함께하는 묵상방 목록을 즉시 렌더링한다.
+    // 기존에는 홈 아이콘을 눌러 goHome()이 실행될 때만 renderGroups()가 호출되어
+    // 저장된 그룹이 초기 화면에서 보이지 않는 문제가 있었다.
+    await renderGroups();
     if(myName){
       await migrateSoloEntriesToDevice(myName,myName);
       await upsertCurrentUser(myName);
@@ -2164,7 +2168,7 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
     if(!data)return showToast('그룹을 찾을 수 없어요');
     const memberSaved=await ensureGroupMembership(c,myName);
     if(!memberSaved)return;
-    if(!myGroups.some(g=>g.code===c)){myGroups.push({code:data.invite_code,name:data.name,planType:data.plan_type||'new',startBook:data.start_book||'MAT',chaptersPerDay:Number(data.chapters_per_day)||5,startedAt:data.started_at||koreanDateString()});await saveGroups();await renderGroups()}
+    if(!myGroups.some(g=>g.code===c)){myGroups.push({code:data.invite_code,name:data.name,planType:data.plan_type||'new',startBook:data.plan_type==='today'?null:(data.start_book||'MAT'),chaptersPerDay:data.plan_type==='today'?null:(Number(data.chapters_per_day)||5),startedAt:data.started_at||koreanDateString()});await saveGroups();await renderGroups()}
     $('joinCode').value='';closeGroupSheet();showToast('그룹에 참여했어요');openGroup(c);
   };
 
@@ -2178,7 +2182,7 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
     $('journalSub').textContent=space.type==='solo'?'오직 나만 볼 수 있는 기록 공간이에요.':groupPlanDescription(space);
     $('journalKicker').innerHTML=space.type==='solo'?'PRIVATE SPACE':`GROUP <span class="code">${esc(space.code)}</span> <button id="copyInline" style="border:0;background:transparent;color:var(--muted);font-size:10px;padding:0">코드 복사</button>`;
     if(space.type==='group'){
-      setTimeout(()=>$('copyInline').onclick=()=>copyText(space.code),0);
+      setTimeout(()=>{const copyInline=$('copyInline');if(copyInline)copyInline.onclick=()=>copyText(space.code)},0);
       await ensureGroupMembership(space.code,myName);
     }
     selectedReadingDate=initialDate||koreanDateString();
