@@ -14,23 +14,27 @@
 })();
 </script>
 <title>잠잠 — 하나님의 말씀 앞에 잠잠히 머물러 보세요</title>
-<meta content="1.5.6" name="app-version"/>
-<!-- v1.5.6: 2026-08-19~22 예레미야 4~18장 오늘의 말씀 일정 추가 + 기존 기능 유지 -->
+<meta content="1.5.10" name="app-version"/>
+<!-- v1.5.10: 올리브 텍스트 대비 개선 + topbar 배경 팔레트 통일 + 기존 기능/폰트 유지 -->
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <style>
 :root{
-  --paper:#f8f6f1;
-  --paper-deep:#f0ece4;
-  --ink:#4b2f24;
-  --muted:#8d887f;
-  --line:#ded9cf;
-  --sage:#77826d;
-  --sage-soft:#e5e9e1;
-  --brown:#8a6f59;
-  --white:#fffdf9;
-  --danger:#9d4c44;
+  --paper:#FBF9F2;
+  --paper-deep:#F9EDC3;
+  --ink:#523719;
+  --muted:#795C5F;
+  --line:#E6DCC5;
+  --sage:#9FB768;
+  --sage-text:#667A48;
+  --sage-soft:#EEF2DF;
+  --brown:#A69658;
+  --gold:#D9B26F;
+  --peach:#FFBC92;
+  --lime:#D1D052;
+  --white:#FFFDF8;
+  --danger:#A85F58;
 }
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);-webkit-text-size-adjust:100%}
@@ -46,14 +50,14 @@ button{cursor:pointer}
 .brand-mark{width:92px;height:64px;margin:0 auto 30px;display:flex;align-items:center;justify-content:center}
 .brand-mark img{display:block;width:92px;height:auto;object-fit:contain;filter:drop-shadow(0 5px 10px rgba(82,44,24,.05))}
 .entrance h1{font-family:"Gowun Batang",serif;font-size:40px;font-weight:400;margin:0 0 14px;letter-spacing:-.04em}
-.entrance-copy{font-family:"Gowun Batang",serif;font-size:17px;line-height:1.85;color:#5c5851;margin:0 0 46px}
+.entrance-copy{font-family:"Gowun Batang",serif;font-size:17px;line-height:1.85;color:#795C5F;margin:0 0 46px}
 .name-form{display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--ink);padding-bottom:8px}
 .name-form input{flex:1;border:0;background:transparent;outline:0;font-size:15px;padding:10px 2px}
-.name-form button{border:0;background:transparent;font-weight:600;font-size:13px;color:var(--sage);padding:10px 2px}
+.name-form button{border:0;background:transparent;font-weight:600;font-size:13px;color:var(--sage-text);padding:10px 2px}
 .entrance-note{font-size:11px;color:var(--muted);margin-top:14px}
 
 /* top bar */
-.topbar{height:84px;display:flex;align-items:center;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(248,246,241,.94);backdrop-filter:blur(12px);z-index:20}
+.topbar{height:84px;display:flex;align-items:center;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(251,249,242,.94);backdrop-filter:blur(12px);z-index:20}
 .home-logo{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:0;background:transparent;color:var(--ink);padding:3px;margin-left:-7px;border-radius:50%;transition:background .15s ease,transform .15s ease}
 .home-logo:hover{background:var(--paper-deep)}
 .home-logo:active{transform:scale(.96)}
@@ -79,7 +83,7 @@ button{cursor:pointer}
 .space-row:hover .space-arrow{transform:translateX(3px)}
 .space-symbol{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 auto;font-family:"Gowun Batang",serif;font-size:18px}
 .space-symbol.solo{background:var(--paper-deep)}
-.space-symbol.group{background:var(--sage-soft);color:#53604c}
+.space-symbol.group{background:var(--sage-soft);color:#667A48}
 .space-copy{flex:1}
 .space-title{font-family:"Gowun Batang",serif;font-size:21px;margin-bottom:5px}
 .space-desc{display:block;font-size:12px;color:var(--muted);line-height:1.65}
@@ -88,12 +92,12 @@ button{cursor:pointer}
 .group-list{display:flex;flex-direction:column;border-top:1px solid var(--line)}
 .group-row{display:flex;align-items:center;gap:16px;width:100%;padding:21px 0;border:0;border-bottom:1px solid var(--line);background:transparent;text-align:left;color:var(--ink);cursor:pointer}
 .group-row:hover .group-arrow{transform:translateX(3px)}
-.group-mark{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 auto;background:var(--sage-soft);color:#53604c;font-family:"Gowun Batang",serif;font-size:17px}
+.group-mark{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 auto;background:var(--sage-soft);color:#667A48;font-family:"Gowun Batang",serif;font-size:17px}
 .group-copy{flex:1;min-width:0}
 .group-name{display:block;font-family:"Gowun Batang",serif;font-size:19px;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .group-status{display:block;font-size:12px;color:var(--muted);line-height:1.6}
 .invite-copy-btn{background:transparent;border:1px solid var(--line);border-radius:999px;padding:8px 12px;cursor:pointer;font:inherit;color:var(--ink)}
-.invite-copy-btn:hover{background:#f8f8f5}
+.invite-copy-btn:hover{background:#FBF8E0}
 .group-arrow{font-size:18px;color:var(--muted);transition:.15s}
 .empty-groups{padding:22px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:12px;color:var(--muted);line-height:1.7}
 .members-section{margin:22px 0 0;border-top:1px solid var(--line)}
@@ -103,14 +107,18 @@ button{cursor:pointer}
 .members-summary::after{content:'';display:inline-block;flex:0 0 auto;width:7px;height:7px;margin-left:3px;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:rotate(45deg);transform-origin:50% 50%;transition:transform .2s ease;align-self:center}
 .members-section[open] .members-summary::after{transform:rotate(225deg)}
 .members-count{font-size:11px;color:var(--muted);font-weight:400}
-.members-participation{margin-left:auto;font-size:11px;color:var(--sage);font-weight:600}
+.members-participation{margin-left:auto;font-size:11px;color:var(--sage-text);font-weight:600}
 .members-list{margin-top:14px;border-top:1px solid var(--line)}
 .member-row{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
 .member-row:last-child{border-bottom:0}
-.member-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 auto;background:var(--sage-soft);color:#53604c;font-family:"Gowun Batang",serif;font-size:14px}
+.member-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 auto;background:var(--sage-soft);color:#667A48;font-family:"Gowun Batang",serif;font-size:14px}
+.member-row:nth-child(4n+1) .member-avatar{background:var(--peach);color:var(--ink)}
+.member-row:nth-child(4n+2) .member-avatar{background:var(--sage-soft);color:#667A48}
+.member-row:nth-child(4n+3) .member-avatar{background:var(--paper-deep);color:var(--brown)}
+.member-row:nth-child(4n) .member-avatar{background:var(--gold);color:var(--ink)}
 .member-name{min-width:0;flex:1;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .member-state{font-size:11px;color:var(--muted)}
-.member-state.done{color:var(--sage);font-weight:600}
+.member-state.done{color:var(--sage-text);font-weight:600}
 .members-empty{padding:16px 0;font-size:12px;color:var(--muted)}
 .selected-verse-field{margin-bottom:26px}
 .meditation-reference-picker{display:flex;flex-direction:column;gap:14px;margin-top:10px}
@@ -120,7 +128,7 @@ button{cursor:pointer}
 .meditation-fixed-value,.meditation-reference-select{display:flex;align-items:center;width:100%;min-height:50px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:14px;padding:0 16px;font-family:"Gowun Batang",serif;font-size:14px;box-sizing:border-box;transition:border-color .18s ease,background .18s ease,box-shadow .18s ease}
 .meditation-fixed-value{cursor:default}
 .meditation-reference-select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 20px) 22px,calc(100% - 15px) 22px;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:44px}
-.meditation-reference-select:focus{outline:none;border-color:var(--sage);background-color:var(--white);box-shadow:0 0 0 3px var(--sage-soft)}
+.meditation-reference-select:focus{outline:none;border-color:var(--sage-text);background-color:var(--white);box-shadow:0 0 0 3px var(--sage-soft)}
 .meditation-reference-select:disabled{color:var(--muted);cursor:default;background-image:none}
 .meditation-verse-select{width:100%;border:1px solid var(--line);background:var(--white);color:var(--ink);border-radius:2px;padding:13px;font:inherit;font-size:13px}
 .selected-verse-preview{margin-top:10px;padding:14px 15px;background:var(--paper);border-left:2px solid var(--sage);font-family:"Gowun Batang",serif;font-size:14px;line-height:1.8}
@@ -171,13 +179,14 @@ button{cursor:pointer}
 .entry{position:relative;padding:28px 0 36px}
 .entry:not(:last-child)::after{content:'';display:block;width:100%;height:1px;background:var(--line);margin-top:34px}
 .entry-meta{display:flex;align-items:center;gap:9px;margin-bottom:20px}
-.avatar{width:26px;height:26px;border-radius:50%;background:var(--sage-soft);display:flex;align-items:center;justify-content:center;font-size:11px;color:#53604c}
+.avatar{width:26px;height:26px;border-radius:50%;background:var(--sage-soft);display:flex;align-items:center;justify-content:center;font-size:11px;color:#667A48}
 .author{font-size:12px;font-weight:600}
 .date{font-size:10px;color:var(--muted)}
 .entry-actions{display:flex;align-items:center;gap:18px;margin-top:26px;padding-top:0}
 .entry-action{display:inline-flex;align-items:center;gap:6px;border:0;background:transparent;color:var(--muted);font-size:12px;padding:5px 0;cursor:pointer;transition:color .15s,transform .15s}
 .entry-action:hover{color:var(--ink);transform:translateY(-1px)}
-.entry-action.active{color:var(--brown)}
+.entry-action.active{color:var(--ink)}
+
 .entry-action-icon{font-size:17px;line-height:1}
 .entry-action-count{font-size:11px;min-width:8px;text-align:left}
 .entry-action:focus-visible{outline:1px solid var(--brown);outline-offset:4px;border-radius:6px}
@@ -253,8 +262,8 @@ button{cursor:pointer}
 
 /* together / feedback */
 .site-footer{margin:58px 0 0;padding:26px 0 10px;border-top:1px solid var(--line)}
-.footer-link{width:100%;display:flex;align-items:center;gap:14px;border:1px solid #e6ded4;background:#f4eee7;color:var(--ink);border-radius:18px;padding:17px 18px;text-align:left;transition:background .18s ease,border-color .18s ease,transform .15s ease,box-shadow .18s ease}
-.footer-link:hover{background:#eee5dc;border-color:#d9cabe;box-shadow:0 8px 22px rgba(75,47,36,.07);transform:translateY(-1px)}
+.footer-link{width:100%;display:flex;align-items:center;gap:14px;border:1px solid #E6DCC5;background:#FBF8E0;color:var(--ink);border-radius:18px;padding:17px 18px;text-align:left;transition:background .18s ease,border-color .18s ease,transform .15s ease,box-shadow .18s ease}
+.footer-link:hover{background:#F9EDC3;border-color:#D9B26F;box-shadow:0 8px 22px rgba(75,47,36,.07);transform:translateY(-1px)}
 .footer-link:active{transform:scale(.99)}
 .footer-link:focus-visible{outline:2px solid var(--brown);outline-offset:3px}
 .footer-link-icon{font-size:20px;line-height:1;flex:0 0 auto}
@@ -269,7 +278,7 @@ button{cursor:pointer}
 .feedback-form{padding:22px 0 44px}
 .feedback-field label{display:block;font-size:11px;color:var(--muted);margin-bottom:10px}
 .feedback-field textarea{width:100%;min-height:180px;border:1px solid var(--line);border-radius:16px;background:var(--white);outline:0;resize:vertical;padding:17px 18px;font-family:"Gowun Batang",serif;font-size:16px;line-height:1.85;color:var(--ink)}
-.feedback-field textarea:focus{border-color:var(--sage);box-shadow:0 0 0 3px var(--sage-soft)}
+.feedback-field textarea:focus{border-color:var(--sage-text);box-shadow:0 0 0 3px var(--sage-soft)}
 .feedback-meta{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:10px}
 .feedback-count{font-size:10px;color:var(--muted)}
 .feedback-submit{border:0;background:var(--ink);color:#fff;border-radius:999px;padding:12px 20px;font-size:12px}
@@ -299,7 +308,7 @@ button{cursor:pointer}
 .usage-mini-row{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
 .usage-mini-row:last-child{border-bottom:0}
 .usage-mini-icon{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--paper-deep);font-family:"Gowun Batang",serif;flex:0 0 auto}
-.usage-mini-step{width:54px;height:28px;border-radius:999px;font-family:inherit;font-size:9px;font-weight:600;letter-spacing:.06em;color:var(--brown);white-space:nowrap}
+.usage-mini-step{width:54px;height:28px;border-radius:999px;font-family:inherit;font-size:9px;font-weight:600;letter-spacing:.06em;color:var(--ink);background:var(--peach);white-space:nowrap}
 .usage-mini-copy strong{display:block;font-family:"Gowun Batang",serif;font-size:17px;font-weight:400;margin-bottom:4px}
 .usage-mini-copy span{display:block;font-size:11px;line-height:1.6;color:var(--muted)}
 .usage-closing{text-align:center;padding:38px 12px 10px;font-family:"Gowun Batang",serif;font-size:16px;line-height:1.9;color:var(--ink)}
@@ -336,7 +345,7 @@ button{cursor:pointer}
 .plan-option{display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:10px 13px;font-size:12px;background:var(--paper);color:var(--muted);cursor:pointer;transition:background .18s ease,color .18s ease,border-color .18s ease,transform .12s ease}
 .plan-option:hover{border-color:var(--brown);color:var(--brown)}
 .plan-option:active{transform:scale(.97)}
-.plan-option.selected{background:var(--brown);border-color:var(--brown);color:#fff;font-weight:600}
+.plan-option.selected{background:var(--gold);border-color:var(--gold);color:var(--ink);font-weight:600}
 .plan-option input{position:absolute;opacity:0;pointer-events:none}
 .plan-select{width:100%;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:11px 12px;outline:0;font-size:13px}
 .plan-summary{font-family:"Gowun Batang",serif;font-size:13px;line-height:1.7;color:var(--brown);padding:13px 14px;background:var(--paper);border-radius:12px}
@@ -359,7 +368,7 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .comment-input:focus{border-color:var(--sage)}
 .comment-submit{height:44px;border:0;border-radius:12px;background:var(--ink);color:#fff;padding:0 16px;font-size:12px;white-space:nowrap}
 .comment-submit:disabled{opacity:.45;cursor:default}
-.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:999px;padding:10px 16px;font-size:11px;opacity:0;pointer-events:none;transition:.2s;z-index:100}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--peach);color:var(--ink);border-radius:999px;padding:10px 16px;font-size:11px;opacity:0;pointer-events:none;transition:.2s;z-index:100}
 .toast.show{opacity:1}
 @media(max-width:600px){
   .shell{padding:0 20px 100px}
@@ -414,7 +423,7 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 /* first-entry / reload splash */
 .jamjam-splash{
   position:fixed;inset:0;z-index:99999;display:none;place-items:center;
-  background:#f7f2ea;overflow:hidden;opacity:1;
+  background:#FBF8E0;overflow:hidden;opacity:1;
 }
 .jamjam-splash-on .jamjam-splash{display:grid}
 .jamjam-splash-inner{
@@ -437,7 +446,7 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .jamjam-splash-copy{
   position:relative;z-index:1;margin:18px 0 0;text-align:center;
   font-family:"Gowun Batang",serif;font-size:17px;line-height:1.72;
-  letter-spacing:-.02em;color:#5b3524;word-break:keep-all;
+  letter-spacing:-.02em;color:#523719;word-break:keep-all;
   opacity:0;transform:translateY(8px) scale(.985);
   animation:jamjamCopy .42s cubic-bezier(.18,.9,.26,1.08) .38s both;
 }
@@ -962,10 +971,6 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
         {bookName:'이사야',startChapter:66,endChapter:66},
         {bookName:'예레미야',startChapter:1,endChapter:3}
       ]
-    },
-    '2026-08-19':{
-      label:'예레미야 4–7장',
-      ranges:[{bookName:'예레미야',startChapter:4,endChapter:7}]
     },
     '2026-08-20':{
       label:'예레미야 8–10장',
@@ -2425,7 +2430,7 @@ body.sheet-open-fixed{position:fixed;left:0;right:0;width:100%;overflow:hidden}
       await renderGroupMembers(currentSpace.code,selectedReadingDate);
       await renderGroups();
     }
-    showToast('오늘의 기록을 완료했어요 🤎');
+    showToast('오늘의 기록을 완료했어요! 🤍');
   };
   const HEARTS_KEY='jamjam-entry-hearts';
   function getHeartedEntries(){
